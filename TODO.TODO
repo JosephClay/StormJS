@@ -1,0 +1,47 @@
+ ☐ Collection
+ ☐ Comparator
+ ☐ Constants
+ ☐ AjaxCall
+ ☐ DataContext
+ ☐ Model
+ ☐ Request
+
+   ---- ✄ -----------------------
+   ☐ Xaja - no jquery dependancy
+   ☐ Smaller arrays
+   ☐ ++ to +=
+   ☐ Change *** to ---
+   ☐ Change === to ###
+   ☐ Optimization
+   ☐ Documentation
+
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+Archive:
+ ✔ Animate @done (13-12-20 20:46)
+ ✔ Storm @done (13-12-20 20:44)
+ ✔ Outro @done (13-12-20 20:44)
+ ✔ toString - add @done (13-12-20 20:41)
+ ✔ toJSON - normalize @done (13-12-20 20:41)
+ ✔ Normalize encapsulation @done (13-12-20 20:36)
+ ✔ _.extend to _construct @done (13-12-20 20:17)
+ ✔ Rename ContextCall @done (13-12-20 17:17)
+ ✔ string.format @done (13-12-20 16:21)
+ ✔ Prefix errors with "Storm" @done (13-12-20 16:21)
+ ✔ Fix indentation @done (13-12-20 15:38)
+ ✔ Set constructors @done (13-12-20 15:33)
+ ✔ Extend @done (13-12-20 15:07)
+ ✔ Events @done (13-12-20 15:07)
+ ✔ throw Error to console.error @done (13-12-20 14:53)
+ ✔ When @done (13-12-20 14:51)
+ ✔ Promise @done (13-12-20 14:51)
+ ✔ Module @done (13-12-20 14:33)
+ ✔ View @done (13-12-20 14:32)
+ ✔ initialize - remove @done (13-12-20 14:30)
+ ✔ Events.call to Events.core.call @done (13-12-20 14:28)
+ ✔ Events.prototype to Events.core.prototype @done (13-12-20 14:25)
+ ✔ Intro @done (13-12-20 14:23)
+ ✔ Storage @done (13-12-20 14:22)
+ ✔ _.isObject checks - remove @done (13-12-20 14:21)
+ ✔ Remove _DOC references @done (13-12-20 14:20)
+ ✔ Cache @done (13-12-20 13:13)
+ ✔ Template @done (13-12-20 12:40)

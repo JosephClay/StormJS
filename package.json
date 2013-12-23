@@ -1,0 +1,25 @@
+{
+	"name": "StormJS",
+	"title": "StormJS",
+	"description": "Client-side MVC framework inspired by Backbone",
+	"version": "0.3.8a",
+	"homepage": "https://github.com/dci-artform/StormJS",
+	"author": {
+		"name": "Joe Clay",
+		"email": "clay@dcim.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/dci-artform/StormJS.git"
+	},
+	"devDependencies": {
+		"grunt": "~0.4.1",
+		"grunt-contrib-jshint": "~0.6.0",
+		"grunt-contrib-qunit": "~0.2.0",
+		"grunt-contrib-concat": "~0.3.0",
+		"grunt-contrib-uglify": "~0.2.0",
+		"grunt-contrib-watch": "~0.4.0",
+		"grunt-contrib-clean": "~0.4.0",
+		"grunt-rename": "~0.1.3"
+	}
+}
