@@ -1,5 +1,7 @@
-/* Collection =======================================================================
-===================================================================================== */
+//###################################################################################
+// Collection #######################################################################
+//###################################################################################
+
 var Collection = Storm.Collection = (function(Model) {
 	
 	var Collection = function(data) {
@@ -8,8 +10,8 @@ var Collection = Storm.Collection = (function(Model) {
 		data = data || {};
 
 		this._id = _uniqueId('Collection');
-
 		this._models = [];
+
 		this.add(data.models, { isSilent: true }, data);
 	};
 
@@ -27,11 +29,11 @@ var Collection = Storm.Collection = (function(Model) {
 		},
 
 		getModels: function() {
-			return this.models;
+			return this._models;
 		},
 
 		getBy: function(key, value) {
-			var models = this.getModels(),
+			var models = this._models,
 				idx = models.length;
 			while (idx--) {
 				if (models[idx].get(key) === value) {
@@ -42,16 +44,16 @@ var Collection = Storm.Collection = (function(Model) {
 		},
 
 		length: function() {
-			return this.models.length;
+			return this._models.length;
 		},
 
 		at: function(idx) {
-			return this.getModels()[idx];
+			return this._models[idx];
 		},
 
 		indexOf: function(model) {
 			var id = model.getId(),
-				models = this.getModels(),
+				models = this._models,
 				idx = models.length;
 			while (idx--) {
 				if (models[idx].getId() === id) { return idx; }
@@ -62,7 +64,7 @@ var Collection = Storm.Collection = (function(Model) {
 		/* Mass Set ************************************************************************/
 		// To go with "get" below
 		set: function(attr, value, models) {
-			models = models || this.getModels;
+			models = models || this._models;
 
 			var idx = models.length;
 			while (idx--) {
@@ -78,11 +80,13 @@ var Collection = Storm.Collection = (function(Model) {
 			var idx = 0, length = models.length,
 				model, obj,
 				add = [],
-				at = options.at || null;
+				at = options.at;
 
 			for (; idx < length; idx++) {
 				obj = models[idx];
 				model = models[idx];
+
+				if (!model) { continue; }
 
 				// If the model in not a Storm.Model, make it into one
 				if (!(model instanceof Storm.Model)) {
@@ -115,32 +119,30 @@ var Collection = Storm.Collection = (function(Model) {
 			// Add the new models
 			if (add.length) {
 				if (_exists(at)) {
-					([]).splice.apply(this.models, ([at, 0]).concat(add));
+					this._models.splice(([at, 0]).concat(add));
 				} else {
-					([]).push.apply(this.models, add);
+					this._models.push(add);
 				}
 
-				// Sort
-				this.sort({ isSilent: true });
+				if (!options.skipSort) {
+					this.sort({ isSilent: true });
+				}
 			}
 
 			// Stop if silent
 			if (options.isSilent) { return this; }
-			// If we sorted, trigger the sort event
-			this.trigger('sort', this, options);
 
-			// Trigger add & sort events
+			var self = this;
 			this.each(function(model, idx) {
-				model.trigger('collection:add', this);
-				model.trigger('collection:sort', this, idx);
-			}.bind(this));
+				model.trigger('collection:add', self);
+			});
 
 			this.trigger('add', add, options);
 
 			return this;
 		},
 		push: function(model, options) {
-			options = _.extend({ at: this.models.length }, options);
+			options = _.extend({ at: this._models.length }, options);
 			this.add(model, options);
 			return model;
 		},
@@ -161,7 +163,7 @@ var Collection = Storm.Collection = (function(Model) {
 				model = this.get(models[idx]);
 				if (!model) { continue; }
 
-				this.models.splice(this.indexOf(model), 1);
+				this._models.splice(this.indexOf(model), 1);
 				if (!options.isSilent) {
 					model.trigger('collection:remove', this);
 				}
@@ -182,7 +184,7 @@ var Collection = Storm.Collection = (function(Model) {
 			return model;
 		},
 		slice: function(begin, end) {
-			return this.models.slice(begin, end);
+			return this._models.slice(begin, end);
 		},
 
 		/* Sort *****************************************************************************/
@@ -192,7 +194,7 @@ var Collection = Storm.Collection = (function(Model) {
 		sort: function(opts) {
 			opts = opts || {};
 
-			this.models.sort(function(a, b) {
+			this._models.sort(function(a, b) {
 				return a.compareTo(b);
 			});
 			
@@ -209,7 +211,7 @@ var Collection = Storm.Collection = (function(Model) {
 
 		/* Get *****************************************************************************/
 		get: function(model) {
-			return this.models[this.indexOf(model)];
+			return this._models[this.indexOf(model)];
 		},
 		where: function(attrs) {
 			if (_.isEmpty(attrs)) { return []; }
@@ -221,11 +223,10 @@ var Collection = Storm.Collection = (function(Model) {
 			});
 		},
 		pluck: function(attr) {
-			return _.invoke(this.models, 'get', attr);
+			return _.invoke(this._models, 'get', attr);
 		},
-
 		getModelById: function(id) {
-			var models = this.getModels(),
+			var models = this._models,
 				idx = (models.length - 1);
 			for (; idx >= 0; idx--) {
 				if (models[idx].getId() === id) {
@@ -238,24 +239,27 @@ var Collection = Storm.Collection = (function(Model) {
 		/* Reset | Clone ***************************************************************************/
 		reset: function(opts) {
 			opts = opts || {};
-			this.models = [];
-			if (opts.isSilent) { return this; }
-			this.trigger('reset');
+			this._models.length = 0;
+			if (!opts.isSilent) {
+				this.trigger('reset');
+			}
 			return this;
 		},
 		clone: function() {
-			return new this.constructor({ model: this.model, models: this.models });
+			return new this.constructor({ model: this.model, models: this._models });
 		},
 
 		/* Data Retrieval ******************************************************************/
-		retrieve: function() {
-			return _.map(this.models, function(model) {
+		retrieve: function() { // To match model.retrieve()
+			return _.map(this._models, function(model) {
 				return model.retrieve();
 			});
 		},
+
 		toJSON: function() {
 			return this.retrieve();
 		},
+
 		toString: function() {
 			return JSON.stringify(this.retrieve());
 		}
@@ -273,7 +277,7 @@ var Collection = Storm.Collection = (function(Model) {
 
 			// Add this Collection's models as the first
 			// argument
-			args.unshift(this.models);
+			args.unshift(this._models);
 
 			// the method is the underscore methods with
 			// an underscore context and the arguments with
@@ -290,7 +294,7 @@ var Collection = Storm.Collection = (function(Model) {
 			var iterator = _.isFunction(value) ? value : function(model) {
 				return model.get(value);
 			};
-			return _[method](this.models, iterator, context);
+			return _[method](this._models, iterator, context);
 		};
 	});
 

@@ -1,22 +1,25 @@
- ☐ Collection
- ☐ Comparator
- ☐ Constants
  ☐ AjaxCall
- ☐ DataContext
  ☐ Model
  ☐ Request
 
    ---- ✄ -----------------------
-   ☐ Xaja - no jquery dependancy
-   ☐ Smaller arrays
    ☐ ++ to +=
    ☐ Change *** to ---
-   ☐ Change === to ###
    ☐ Optimization
    ☐ Documentation
+   ☐ Add filterBy to Collection
+   ☐ toString should be formatted '[foo]'
 
 ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 Archive:
+ ✔ Break apart outro @done (13-12-25 14:08)
+ ✔ Try to remove unnecessary .binds() for speed @done (13-12-25 14:06)
+ ✔ Change === to ### @done (13-12-25 14:05)
+ ✔ DataContext @done (13-12-25 14:01)
+ ✔ Constants @done (13-12-25 13:51)
+ ✔ Collection @done (13-12-25 13:17)
+ ✔ Comparator @done (13-12-25 13:16)
+ ✔ Xaja - no jquery dependancy @done (13-12-25 13:13)
  ✔ Animate @done (13-12-20 20:46)
  ✔ Storm @done (13-12-20 20:44)
  ✔ Outro @done (13-12-20 20:44)

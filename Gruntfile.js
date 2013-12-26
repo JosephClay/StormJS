@@ -10,27 +10,39 @@ module.exports = function(grunt) {
 
 	var srcFiles = [
 		'src/Intro.js',
+		
 		'src/Storm.js',
 		'src/Helpers.js',
 		'src/Constants.js',
 		'src/Mixin.js',
 		'src/UniqId.js',
 		'src/Extend.js',
+		
 		'src/Events.js',
 		'src/Promise.js',
 		'src/When.js',
+		
 		'src/Animate.js',
-		'src/Cache.js',
+		
+		'src/Xaja.js',
 		'src/Request.js',
 		'src/DataContext.js',
 		'src/AjaxCall.js',
+		
+		'src/Template.js',
+		
+		'src/View.js',
 		'src/Model.js',
 		'src/Comparator.js',
 		'src/Collection.js',
-		'src/Template.js',
-		'src/View.js',
+
 		'src/Module.js',
+		
+		'src/Cache.js',
 		'src/Storage.js',
+		
+		'src/Extensions.js',
+		'src/NoConflict.js',
 		'src/Outro.js'
 	];
 

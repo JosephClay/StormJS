@@ -1,5 +1,7 @@
-/* Cache ============================================================================
-===================================================================================== */
+//###################################################################################
+// Cache ############################################################################
+//###################################################################################
+
 var Cache = Storm.Cache = (function() {
 
 	var Cache = function() {
@@ -65,10 +67,13 @@ var Cache = Storm.Cache = (function() {
 				clearTimeout(this._timeouts[key]);
 			}
 
+			var self = this;
 			this._timeouts[key] = setTimeout(function() {
-				delete this._cache[key];
-				delete this._timeouts[key];
-			}.bind(this), _.isNaN(duration) ? 0 : duration);
+				
+				delete self._cache[key];
+				delete self._timeouts[key];
+
+			}, _.isNaN(duration) ? 0 : duration);
 		},
 
 		_clearExpirations: function() {
@@ -82,10 +87,12 @@ var Cache = Storm.Cache = (function() {
 			clearTimeout(this._timeouts[key]);
 			delete this._timeouts[key];
 		},
+		
 		toJSON: function(key) {
 			var value = (key) ? this.get(key) : this._cache;
 			return value;
 		},
+
 		toString: function(key) {
 			var value = (key) ? this.get(key) : this._cache;
 			return JSON.stringify(value);

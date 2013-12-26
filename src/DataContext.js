@@ -1,5 +1,7 @@
-/* Data Context =====================================================================
-===================================================================================== */
+//###################################################################################
+// Data Context #####################################################################
+//###################################################################################
+
 var DataContext = Storm.DataContext = (function(AjaxCall) {
 
 	var DataContext = function() {
@@ -26,7 +28,6 @@ var DataContext = Storm.DataContext = (function(AjaxCall) {
 	DataContext.getSetting = function(settingName) {
 		return DataContext.settings[settingName];
 	};
-
 	DataContext.removeSetting = function(settingName) {
 		if (DataContext.settings[settingName]) {
 			delete DataContext.settings[settingName];
@@ -81,15 +82,15 @@ var DataContext = Storm.DataContext = (function(AjaxCall) {
 			return this;
 		},
 
-		/* Configure Call ************************************************/
+		/* Create Call ************************************************/
 		/**
 		 * Creates and returns a new AjaxCall
-		 * @param  {Object}      providedCall   A base call object
+		 * @param  {Object}      callData   A base call object
 		 * @param  {Object}      extensionData  Addition configurations for the url
 		 * @return {AjaxCall}
 		 */
-		configureCall: function(providedCall, extensionData) {
-			return new AjaxCall(providedCall, extensionData, this.options);
+		createCall: function(callData, extensionData) {
+			return new AjaxCall(callData, extensionData, this.options);
 		},
 
 		toString: function() {

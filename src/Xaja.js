@@ -1,3 +1,7 @@
+//###################################################################################
+// Xaja #############################################################################
+//###################################################################################
+
 // Xaja.js 0.0.1
 // Xaja may be freely distributed under the MIT license.
 // https://github.com/JosephClay/Xaja.git
@@ -86,6 +90,10 @@ var Xaja = (function(root) {
 
 		_getRegistry: function(type) {
 			return this._e[_EVT.complete] || (this._e[_EVT.complete] = []);
+		},
+
+		toString: function() {
+			return '[Xaja]';
 		}
 	};
 	// Protect ability to call registered functions
@@ -164,7 +172,7 @@ var Xaja = (function(root) {
 			headers['Content-Type'] = 'application/x-www-form-urlencoded';
 		}
 
-		headers.Accept = _accepts[type];
+		headers.Accept = config.content ? config.content : _accepts[type];
 
 		var key;
 		for (key in headers) {
@@ -186,7 +194,7 @@ var Xaja = (function(root) {
 	};
 
 	var _handleResponse = function(xhr, url, isTypeSupported, type, request) {
-		var response,
+		var response = '',
 			parseError = 'parseError',
 			responseText = 'responseText',
 			responseXML = 'responseXML';

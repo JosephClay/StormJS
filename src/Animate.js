@@ -1,5 +1,7 @@
-/* Animation Frame ==================================================================
-===================================================================================== */
+//###################################################################################
+// Animate ##########################################################################
+//###################################################################################
+
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 // requestAnimationFrame polyfill by Erik Möller
@@ -74,9 +76,10 @@ Storm.animate = (function() {
 			_loop.push(func);
 			return id;
 		},
+		
 		/**
 		 * Remove a function from requestAnimationFrame
-		 * @param  {String}       id Function id
+		 * @param  {String} id Function id
 		 * @return {this}
 		 */
 		unhook: function(id) {
@@ -85,6 +88,10 @@ Storm.animate = (function() {
 			return this;
 		},
 
+		/**
+		 * Check if animate is running
+		 * @return {this}
+		 */
 		isRunning: function() {
 			return this._isRunning;
 		},

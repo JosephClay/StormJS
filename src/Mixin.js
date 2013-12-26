@@ -1,9 +1,12 @@
-/* Mixin ============================================================================
-===================================================================================== */
+//###################################################################################
+// Mixin ############################################################################
+//###################################################################################
+
 var _mixin = function(name, prop) {
 	if (Storm[name] !== undefined) { return console.error(STORM.name +': Cannot mixin, '+ name +' already exists: ', Storm[name]); }
 	Storm[name] = prop;
 };
+
 /**
  * Protect Storm from mixins that would overwrite pre-existing keys.
  * @param  {String||Object} name Name of the object

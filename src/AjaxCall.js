@@ -1,5 +1,6 @@
-/* Data Context =====================================================================
-===================================================================================== */
+//###################################################################################
+// Ajax Call ########################################################################
+//###################################################################################
 
 /**
  * A wrapper for an ajax "call" configuration (referred to as a call
@@ -89,7 +90,7 @@ var AjaxCall = (function() {
 			var self = this,
 				call = this.call;
 
-			var request = this.request = $.ajax({
+			var request = this.request = Xaja.ajax({
 				type: call.type,
 				url: call.url,
 				contentType: call.content,
