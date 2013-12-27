@@ -97,7 +97,7 @@ var Comparator = Storm.Comparator = (function() {
 		},
 
 		toString: function() {
-			return '[Storm Comparator]';
+			return '['+ STORM.name +' Comparator]';
 		}
 	};
 

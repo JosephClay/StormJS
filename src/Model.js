@@ -7,7 +7,7 @@ var Model = Storm.Model = (function() {
 	var Model = function(data, options, collectionData) {
 		Events.core.call(this);
 
-		this._id = _uniqueId('Model');
+		this._id = _uniqId('Model');
 
 		this.__data = {}; // The current model, __ === super secret!
 		this.options = {};
@@ -227,14 +227,17 @@ var Model = Storm.Model = (function() {
 			return this.retrieve();
 		},
 		toString: function() {
-			return JSON.stringify(this.retrieve());
+			return '['+ STORM.name +' Model]';
 		}
 	});
 
 	// Underscore methods that we want to implement on the Model.
-	_.each(
-		[ 'each', 'size', 'toArray', 'pluck' ]
-	, function(method) {
+	_.each([
+		'each',
+		'size',
+		'toArray',
+		'pluck'
+	], function(method) {
 		Model.prototype[method] = function() {
 			var args = _.toArray(arguments);
 

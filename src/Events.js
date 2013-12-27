@@ -268,7 +268,7 @@ var Events = Storm.Events = (function() {
 		},
 
 		toString: function() {
-			return '[Storm Events]';
+			return '['+ STORM.name +' Events]';
 		}
 	};
 
@@ -287,4 +287,4 @@ var Events = Storm.Events = (function() {
 
 }());
 
-_extend(Storm, Events.construct());
+_extend(Storm, Events.core.construct());

@@ -9,7 +9,7 @@ var Collection = Storm.Collection = (function(Model) {
 		
 		data = data || {};
 
-		this._id = _uniqueId('Collection');
+		this._id = _uniqId('Collection');
 		this._models = [];
 
 		this.add(data.models, { isSilent: true }, data);
@@ -261,17 +261,38 @@ var Collection = Storm.Collection = (function(Model) {
 		},
 
 		toString: function() {
-			return JSON.stringify(this.retrieve());
+			return '['+ STORM.name +' Collection]';
 		}
 	});
 
 	// Underscore methods that we want to implement on the Collection.
-	_.each(
-		[ 'each', 'map', 'reduce', 'reduceRight', 'find', 'filter', 'select',
-		'reject', 'every', 'all', 'some', 'any', 'include', 'contains', 'invoke',
-		'size', 'first', 'initial', 'rest', 'last', 'without', 'indexOf', 'shuffle',
-		'lastIndexOf', 'isEmpty' ]
-	, function(method) {
+	_.each([
+		'each',
+		'map',
+		'reduce',
+		'reduceRight',
+		'find',
+		'filter',
+		'select',
+		'reject',
+		'every',
+		'all',
+		'some',
+		'any',
+		'include',
+		'contains',
+		'invoke',
+		'size',
+		'first',
+		'initial',
+		'rest',
+		'last',
+		'without',
+		'indexOf',
+		'shuffle',
+		'lastIndexOf',
+		'isEmpty'
+	], function(method) {
 		Collection.prototype[method] = function() {
 			var args = _.toArray(arguments);
 
@@ -287,9 +308,11 @@ var Collection = Storm.Collection = (function(Model) {
 	});
 
 	// Underscore methods that take a property name as an argument.
-	_.each(
-		[ 'groupBy', 'countBy', 'sortBy'];
-	, function(method) {
+	_.each([
+		'groupBy',
+		'countBy',
+		'sortBy'
+	], function(method) {
 		Collection.prototype[method] = function(value, context) {
 			var iterator = _.isFunction(value) ? value : function(model) {
 				return model.get(value);

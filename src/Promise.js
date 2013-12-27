@@ -88,8 +88,8 @@ var Promise = Storm.Promise = (function() {
 			return args;
 		},
 
-		_ensureCallType: function(type) {
-			this._calls[_CALL_NAME[callType]]
+		_getCalls: function(type) {
+			return this._calls[_CALL_NAME[callType]] || (this._calls[_CALL_NAME[callType]] = []);
 		},
 
 		// Allows a promise to be called like a
@@ -107,7 +107,7 @@ var Promise = Storm.Promise = (function() {
 		},
 
 		toString: function() {
-			return '[Storm Promise]';
+			return '['+ STORM.name +' Promise]';
 		}
 	};
 

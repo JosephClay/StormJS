@@ -44,7 +44,7 @@ Storm.template = (function() {
 		var compTpl = _compiledTemplates[name];
 		if (compTpl) { return compTpl; }
 
-		if (!_engine) { console.error(STORM.name +': No template engine has been registered');
+		if (!_engine) { console.error(STORM.name +': No template engine has been registered'); }
 		return (_compiledTemplates[name] = _engine.compile(_templates[name]));
 	};
 
@@ -71,8 +71,7 @@ Storm.template = (function() {
 			return value;
 		},
 		toString: function(key) {
-			var value = (key) ? _templates[key] : _templates;
-			return JSON.stringify(value);
+			return '['+ STORM.name +' template]';
 		}
 	};
 }());

@@ -8,7 +8,7 @@ var View = Storm.View = (function() {
 		Events.core.call(this);
 
 		opts = opts || {};
-		this._id = _uniqueId('View');
+		this._id = _uniqId('View');
 		this.elem = opts.elem || null;
 		this.template = this.template || opts.template || '';
 	};
@@ -30,8 +30,10 @@ var View = Storm.View = (function() {
 		},
 
 		toString: function() {
-			return '[Storm View]';
+			return '['+ STORM.name +' View]';
 		}
 	});
+
+	return View;
 
 }());

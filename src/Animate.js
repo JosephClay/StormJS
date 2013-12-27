@@ -71,7 +71,7 @@ Storm.animate = (function() {
 		 */
 		hook: function(func) {
 			if (!_.isFunction(func)) { return console.error(STORM.name +': Parameter must be a function: ', func); }
-			var id = _uniqueId('Animate');
+			var id = _uniqId('Animate');
 			_hooks[id] = _loop.length;
 			_loop.push(func);
 			return id;

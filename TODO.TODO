@@ -8,10 +8,10 @@
    ☐ Optimization
    ☐ Documentation
    ☐ Add filterBy to Collection
-   ☐ toString should be formatted '[foo]'
 
 ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 Archive:
+ ✔ toString should be formatted '[foo]' @done (13-12-26 21:42)
  ✔ Break apart outro @done (13-12-25 14:08)
  ✔ Try to remove unnecessary .binds() for speed @done (13-12-25 14:06)
  ✔ Change === to ### @done (13-12-25 14:05)

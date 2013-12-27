@@ -5,7 +5,7 @@
 var Cache = Storm.Cache = (function() {
 
 	var Cache = function() {
-		this._id = _uniqueId('Cache');
+		this._id = _uniqId('Cache');
 		this._cache = {};
 		this._timeouts = {};
 	};
@@ -94,8 +94,7 @@ var Cache = Storm.Cache = (function() {
 		},
 
 		toString: function(key) {
-			var value = (key) ? this.get(key) : this._cache;
-			return JSON.stringify(value);
+			return '['+ STORM.name +' Cache]';
 		}
 	};
 

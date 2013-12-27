@@ -170,8 +170,7 @@ var Storage = Storm.Storage = (function() {
 			return value;
 		},
 		toString: function(key) {
-			var value = (key) ? this.get(key) : this._getData();
-			return JSON.stringify(value);
+			return '['+ STORM.name +' Storage]';
 		}
 	};
 

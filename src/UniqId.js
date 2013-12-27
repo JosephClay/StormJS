@@ -2,18 +2,22 @@
 // Unique Id ########################################################################
 //###################################################################################
 
-var _uniqIdentifier = 0,
-	_scopedIdentifiers = {},
 	/**
 	 * Generate a unique id
 	 * @param  {String}         prefix [optional] Defines a scope for the identifiers
 	 * @return {Number||String} id
 	 */
-	_uniqId = Storm.uniqId = function(scope) {
-		if (!_exists(scope)) { return _uniqIdentifier += 1; }
+var _uniqId = Storm.uniqId = (function() {
+		
+		var _scopedIdentifiers = {};
 
-		return (_scopedIdentifiers[scope] || (_scopedIdentifiers[scope] = 0)) += 1;
-	},
+		return function(scope) {
+			scope = scope || '';
+			var inc = (_scopedIdentifiers[scope] || 0) + 1;
+			return (_scopedIdentifiers[scope] = inc);
+		};
+		
+	}()),
 	_uniqIdStr = Storm.uniqIdStr = function(scope) {	
-		return scope + '' + _uniqId(scope);
+		return (scope || 'id') + '' + _uniqId(scope);
 	};

@@ -5,7 +5,7 @@
 var DataContext = Storm.DataContext = (function(AjaxCall) {
 
 	var DataContext = function() {
-		this._id = _uniqueId('DataContext');
+		this._id = _uniqId('DataContext');
 	};
 
 	/* Setup (global) ************************************************/
@@ -94,7 +94,7 @@ var DataContext = Storm.DataContext = (function(AjaxCall) {
 		},
 
 		toString: function() {
-			return '[Storm DataContext]';
+			return '['+ STORM.name +' DataContext]';
 		}
 	};
 

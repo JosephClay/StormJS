@@ -17,7 +17,7 @@
 var AjaxCall = (function() {
 
 	var AjaxCall = function(callObj, extensionObj, options) {
-		this._id = _uniqueId('AjaxCall');
+		this._id = _uniqId('AjaxCall');
 		this.call = this.configure(callObj, extensionObj, options);
 		this.data = '';
 	};
@@ -97,7 +97,7 @@ var AjaxCall = (function() {
 				data: call.data || this.data,
 				cache: call.cache,
 				success: function(data) {
-					data = _exists(data) ? (data.d || data) : null;
+					data = _exists(data) ? (data.d || data) : null; // ASP.NET uses a paradign of {}.d
 					if (promise) {
 						promise.resolve(data);
 					}

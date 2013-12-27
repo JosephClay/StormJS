@@ -94,7 +94,7 @@ var Request = Storm.request = (function() {
 		},
 
 		toString: function() {
-			return '[Storm Request]';
+			return '['+ STORM.name +' Request]';
 		}
 	});
 
