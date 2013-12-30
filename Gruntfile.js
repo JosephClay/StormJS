@@ -23,7 +23,6 @@ module.exports = function(grunt) {
 		
 		'src/Animate.js',
 		
-		'src/Xaja.js',
 		'src/Request.js',
 		'src/AjaxCall.js',
 		'src/DataContext.js',
