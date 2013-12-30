@@ -26,6 +26,6 @@
  *  - A dedicated, extensible "Module" class for separation-of-concerns
  *  - A focus on speed to keep your front-end snappy! 
  */
-(function(root, _, undefined) {
+(function(root, _, Signal, undefined) {
 	// "root" is a safe reference to the environment.
 	// setup so that this can be used in a node environment
