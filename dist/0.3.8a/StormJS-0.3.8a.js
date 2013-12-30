@@ -44,7 +44,7 @@ var _stringFormat = (function() {
  * loop, increasing initialization time.
  * @return {Object}
  */
-var _extend = function() {
+var _.extend = function() {
 	var args = arguments,
 		base = args[0],
 		idx = 1, length = args.length,
@@ -67,7 +67,7 @@ var _extend = function() {
 //###################################################################################
 
 var STORM = {};
-_extend(STORM, {
+_.extend(STORM, {
 	version: '0.0.1',
 	name: 'StormJS',
 	category: {
@@ -85,7 +85,7 @@ Storm.constants = function() { return STORM; };
 //###################################################################################
 
 var _mixin = function(name, prop) {
-	if (Storm[name] !== undefined) { return console.error(STORM.name +': Cannot mixin, '+ name +' already exists: ', Storm[name]); }
+	if (Storm[name] !== undefined) { return console.error(Storm.name +': Cannot mixin, '+ name +' already exists: ', Storm[name]); }
 	Storm[name] = prop;
 };
 
@@ -160,7 +160,7 @@ var Extend = Storm.Extend = function(constructor, extension) {
 		};
 
 	// Add properties to the object
-	_extend(fn, this);
+	_.extend(fn, this);
 
 	// Duplicate the prototype
 	var NoOp = function() {};
@@ -168,7 +168,7 @@ var Extend = Storm.Extend = function(constructor, extension) {
 	fn.prototype = new NoOp();
 
 	// Merge the prototypes
-	_extend(fn.prototype, this.prototype, extension);
+	_.extend(fn.prototype, this.prototype, extension);
 	fn.prototype.constructor = constructor || fn;
 
 	return fn;
@@ -189,7 +189,7 @@ var Events = Storm.Events = (function() {
 	var _NAME_REGEX = /\w([^:\.])*/g,
 		_NAME = 'signal',
 		_splicer = ([]).splice,
-		_extend = function() {
+		_.extend = function() {
 			var args = arguments,
 				base = args[0],
 				idx = 1, length = args.length,
@@ -260,7 +260,7 @@ var Events = Storm.Events = (function() {
 		/* Disable | Enable *************************************/
 		disable: function(handle) {
 			this._inactive[handle] = this._inactive[handle] || {};
-			this._inactive[handle] = _extend({}, this._active[handle]);
+			this._inactive[handle] = _.extend({}, this._active[handle]);
 			delete this._active[handle];
 
 			return this;
@@ -268,7 +268,7 @@ var Events = Storm.Events = (function() {
 
 		enable: function(handle) {
 			this._active[handle] = this._active[handle] || {};
-			this._active[handle] = _extend({}, this._inactive[handle]);
+			this._active[handle] = _.extend({}, this._inactive[handle]);
 			delete this._inactive[handle];
 
 			return this;
@@ -446,7 +446,7 @@ var Events = Storm.Events = (function() {
 		},
 
 		toString: function() {
-			return '['+ STORM.name +' Events]';
+			return '['+ Storm.name +' Events]';
 		}
 	};
 
@@ -465,7 +465,7 @@ var Events = Storm.Events = (function() {
 
 }());
 
-_extend(Storm, Events.core.construct());
+_.extend(Storm, Events.core.construct());
 
 //----
 
@@ -578,7 +578,7 @@ var Promise = Storm.Promise = (function() {
 		},
 
 		toString: function() {
-			return '['+ STORM.name +' Promise]';
+			return '['+ Storm.name +' Promise]';
 		}
 	};
 
@@ -738,7 +738,7 @@ Storm.animate = (function() {
 		 * @return {String}   id
 		 */
 		hook: function(func) {
-			if (!_.isFunction(func)) { return console.error(STORM.name +': Parameter must be a function: ', func); }
+			if (!_.isFunction(func)) { return console.error(Storm.name +': Parameter must be a function: ', func); }
 			var id = _uniqId('Animate');
 			_hooks[id] = _loop.length;
 			_loop.push(func);
@@ -1148,7 +1148,7 @@ var Request = Storm.request = (function() {
 		});
 	};
 
-	_extend(Request.prototype, Events.core.prototype, {
+	_.extend(Request.prototype, Events.core.prototype, {
 		constructor: Request,
 
 		record: function(call) {
@@ -1202,7 +1202,7 @@ var Request = Storm.request = (function() {
 
 		addCategory: function(name) {
 			if (STORM.category[name] !== undefined) {
-				return console.error(STORM.name +': Cannot add category, "'+ name + '" already exists: ', STORM.category[name]);
+				return console.error(Storm.name +': Cannot add category, "'+ name + '" already exists: ', STORM.category[name]);
 			}
 
 			// _.size() on Storm.category ensures a unique
@@ -1223,7 +1223,7 @@ var Request = Storm.request = (function() {
 		},
 
 		toString: function() {
-			return '['+ STORM.name +' Request]';
+			return '['+ Storm.name +' Request]';
 		}
 	});
 
@@ -1329,7 +1329,7 @@ var DataContext = Storm.DataContext = (function(AjaxCall) {
 		},
 
 		toString: function() {
-			return '['+ STORM.name +' DataContext]';
+			return '['+ Storm.name +' DataContext]';
 		}
 	};
 
@@ -1521,7 +1521,7 @@ Storm.template = (function() {
 		// id string, go get the html for the template
 		if (name[0] === '#') {
 			var element = document.getElementById(name.substring(1, name.length));
-			if (!element) { return console.error(STORM.name +': Cannot find reference to "'+ name +'" in DOM'); }
+			if (!element) { return console.error(Storm.name +': Cannot find reference to "'+ name +'" in DOM'); }
 			tpl = element.innerHTML;
 		}
 
@@ -1533,7 +1533,7 @@ Storm.template = (function() {
 		if (_.isFunction(tpl)) { tpl = tpl.call(); }
 		if (_.isString(tpl)) { return tpl.trim(); }
 		if (_.isArray(tpl)) { return tpl.join('\n').trim(); }
-		console.error(STORM.name +': Template (or the return value) was of unknown type');
+		console.error(Storm.name +': Template (or the return value) was of unknown type');
 	};
 
 	/* Retrieve | Remove *****************************************************/
@@ -1542,7 +1542,7 @@ Storm.template = (function() {
 		var compTpl = _compiledTemplates[name];
 		if (compTpl) { return compTpl; }
 
-		if (!_engine) { console.error(STORM.name +': No template engine has been registered'); }
+		if (!_engine) { console.error(Storm.name +': No template engine has been registered'); }
 		return (_compiledTemplates[name] = _engine.compile(_templates[name]));
 	};
 
@@ -1569,7 +1569,7 @@ Storm.template = (function() {
 			return value;
 		},
 		toString: function(key) {
-			return '['+ STORM.name +' template]';
+			return '['+ Storm.name +' template]';
 		}
 	};
 }());
@@ -1591,7 +1591,7 @@ var View = Storm.View = (function() {
 		this.template = this.template || opts.template || '';
 	};
 
-	_extend(View.prototype, Events.core.prototype, {
+	_.extend(View.prototype, Events.core.prototype, {
 		constructor: View,
 
 		render: function() {},
@@ -1608,7 +1608,7 @@ var View = Storm.View = (function() {
 		},
 
 		toString: function() {
-			return '['+ STORM.name +' View]';
+			return '['+ Storm.name +' View]';
 		}
 	});
 
@@ -1642,7 +1642,7 @@ var Model = Storm.Model = (function() {
 		this._setup(data, options);
 	};
 
-	_extend(Model.prototype, Events.core.prototype, {
+	_.extend(Model.prototype, Events.core.prototype, {
 		constructor: Model,
 		
 		_setup: function(data, options) {
@@ -1847,7 +1847,7 @@ var Model = Storm.Model = (function() {
 			return this.retrieve();
 		},
 		toString: function() {
-			return '['+ STORM.name +' Model]';
+			return '['+ Storm.name +' Model]';
 		}
 	});
 
@@ -1976,7 +1976,7 @@ var Comparator = Storm.Comparator = (function() {
 		},
 
 		toString: function() {
-			return '['+ STORM.name +' Comparator]';
+			return '['+ Storm.name +' Comparator]';
 		}
 	};
 
@@ -2003,7 +2003,7 @@ var Collection = Storm.Collection = (function(Model) {
 		this.add(data.models, { isSilent: true }, data);
 	};
 
-	_extend(Collection.prototype, Events.core.prototype, {
+	_.extend(Collection.prototype, Events.core.prototype, {
 		constructor: Collection,
 		
 		Model: Model,
@@ -2249,7 +2249,7 @@ var Collection = Storm.Collection = (function(Model) {
 		},
 
 		toString: function() {
-			return '['+ STORM.name +' Collection]';
+			return '['+ Storm.name +' Collection]';
 		}
 	});
 
@@ -2326,11 +2326,11 @@ var Module = Storm.Module = (function() {
 		this._id = _uniqId('Module');
 	};
 
-	_extend(Module.prototype, Events.core.prototype, {
+	_.extend(Module.prototype, Events.core.prototype, {
 		constructor: Module,
 
 		toString: function() {
-			return '['+ STORM.name +' Module]';
+			return '['+ Storm.name +' Module]';
 		}
 	});
 
@@ -2392,12 +2392,12 @@ var Cache = Storm.Cache = (function() {
 		_store: function(key, data, opts) {
 			// Expiration
 			if (_exists(opts.expiration)) {
-				if (!_.isNumber(opts.expiration)) { return console.error(STORM.name +': Cannot set expiration. Value is not a number: ', opts.expiration); }
+				if (!_.isNumber(opts.expiration)) { return console.error(Storm.name +': Cannot set expiration. Value is not a number: ', opts.expiration); }
 				this._setExpiration(key, opts.expiration);
 			}
 			// Entend
 			if (opts.extend) {
-				if (!_.isObject(this._cache[key])) { return console.error(STORM.name +': Cannot extend store value. Value is not an object: ', opts.extend); }
+				if (!_.isObject(this._cache[key])) { return console.error(Storm.name +': Cannot extend store value. Value is not an object: ', opts.extend); }
 				data = _.extend(this._cache[key], data);
 			}
 
@@ -2436,7 +2436,7 @@ var Cache = Storm.Cache = (function() {
 		},
 
 		toString: function(key) {
-			return '['+ STORM.name +' Cache]';
+			return '['+ Storm.name +' Cache]';
 		}
 	};
 
@@ -2620,7 +2620,7 @@ var Storage = Storm.Storage = (function() {
 			return value;
 		},
 		toString: function(key) {
-			return '['+ STORM.name +' Storage]';
+			return '['+ Storm.name +' Storage]';
 		}
 	};
 

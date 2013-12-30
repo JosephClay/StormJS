@@ -1,6 +1,4 @@
-//###################################################################################
 // Storage ##########################################################################
-//###################################################################################
 
 // Based off of Remy's polyfill: https://gist.github.com/remy/350433
 var Storage = Storm.Storage = (function() {
@@ -170,7 +168,7 @@ var Storage = Storm.Storage = (function() {
 			return value;
 		},
 		toString: function(key) {
-			return '['+ STORM.name +' Storage]';
+			return '['+ Storm.name +' Storage]';
 		}
 	};
 

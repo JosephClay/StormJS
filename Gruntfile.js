@@ -13,7 +13,6 @@ module.exports = function(grunt) {
 		
 		'src/Storm.js',
 		'src/Helpers.js',
-		'src/Constants.js',
 		'src/Mixin.js',
 		'src/UniqId.js',
 		'src/Extend.js',
@@ -26,8 +25,8 @@ module.exports = function(grunt) {
 		
 		'src/Xaja.js',
 		'src/Request.js',
-		'src/DataContext.js',
 		'src/AjaxCall.js',
+		'src/DataContext.js',
 		
 		'src/Template.js',
 		

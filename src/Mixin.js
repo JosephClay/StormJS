@@ -1,9 +1,7 @@
-//###################################################################################
 // Mixin ############################################################################
-//###################################################################################
 
 var _mixin = function(name, prop) {
-	if (Storm[name] !== undefined) { return console.error(STORM.name +': Cannot mixin, '+ name +' already exists: ', Storm[name]); }
+	if (Storm[name] !== undefined) { return console.error(Storm.name +': Cannot mixin, '+ name +' already exists: ', Storm[name]); }
 	Storm[name] = prop;
 };
 

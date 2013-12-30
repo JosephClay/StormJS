@@ -1,105 +1,173 @@
-//###################################################################################
 // Cache ############################################################################
-//###################################################################################
 
-var Cache = Storm.Cache = (function() {
+/**
+ * An in-memory key-value store
+ */
+var Cache = Storm.Cache = function() {
+	this._id = _uniqId('Cache');
+	
+	// Holds the private cache
+	this._cache = {};
 
-	var Cache = function() {
-		this._id = _uniqId('Cache');
-		this._cache = {};
-		this._timeouts = {};
-	};
+	// Holds timeouts used to expire the cache
+	this._timeouts = {};
+};
 
-	Cache.prototype = {
-		constructor: Cache,
+Cache.prototype = {
+	constructor: Cache,
 
-		store: function(key, data, opts) {
-			opts = opts || {};
+	/**
+	 * Stores data in the cache
+	 * @param  {String || Object} key
+	 * @param  {Value} data
+	 * @param  {Object} opts [optional]
+	 * @return {Cache}
+	 */
+	store: function(key, data, opts) {
+		opts = opts || {};
 
-			if (!_.isString(key)) {
-				opts = data;
-				data = key;
-				var prop;
-				for (prop in data) {
-					this._store(prop, data[prop], opts);
-				}
+		if (!_.isString(key)) {
+			opts = data;
+			data = key;
+			var prop;
+			for (prop in data) {
+				this._store(prop, data[prop], opts);
 			}
-
-			this._store(key, data, opts);
-
 			return this;
-		},
-
-		get: function(key) {
-			return this._cache[key];
-		},
-
-		remove: function(key) {
-			this._clearExpiration(key);
-			delete this._cache[key];
-			return this;
-		},
-
-		flush: function() {
-			this._clearExpirations();
-			this._cache = {};
-			return this;
-		},
-
-		/* Private ******/
-		_store: function(key, data, opts) {
-			// Expiration
-			if (_exists(opts.expiration)) {
-				if (!_.isNumber(opts.expiration)) { return console.error(STORM.name +': Cannot set expiration. Value is not a number: ', opts.expiration); }
-				this._setExpiration(key, opts.expiration);
-			}
-			// Entend
-			if (opts.extend) {
-				if (!_.isObject(this._cache[key])) { return console.error(STORM.name +': Cannot extend store value. Value is not an object: ', opts.extend); }
-				data = _.extend(this._cache[key], data);
-			}
-
-			this._cache[key] = data;
-		},
-
-		_setExpiration: function(key, duration) {
-			if (this._timeouts[key]) {
-				clearTimeout(this._timeouts[key]);
-			}
-
-			var self = this;
-			this._timeouts[key] = setTimeout(function() {
-				
-				delete self._cache[key];
-				delete self._timeouts[key];
-
-			}, _.isNaN(duration) ? 0 : duration);
-		},
-
-		_clearExpirations: function() {
-			var key;
-			for (key in this._timeouts) {
-				this._clearExpiration(key);
-			}
-		},
-
-		_clearExpiration: function(key) {
-			clearTimeout(this._timeouts[key]);
-			delete this._timeouts[key];
-		},
-		
-		toJSON: function(key) {
-			var value = (key) ? this.get(key) : this._cache;
-			return value;
-		},
-
-		toString: function(key) {
-			return '['+ STORM.name +' Cache]';
 		}
-	};
 
-	return Cache;
+		this._store(key, data, opts);
 
-}());
+		return this;
+	},
 
+	/**
+	 * Gets an item from cache or an array
+	 * of values
+	 * @param  {String || Array[String]} key
+	 * @return {Value || Array[Values]}
+	 */
+	get: function(key) {
+		if (_.isArray(key)) {
+			// Reuse the array passed, replacing
+			// each index with the value retrieved
+			// from the cache.
+			var idx = key.length;
+			while (idx--) {
+				key[idx] = this._cache[key[idx]];
+			}
+			return key;
+		}
+
+		return this._cache[key];
+	},
+
+	/**
+	 * Remove an item from cache or multiple
+	 * items if an array is passed
+	 * @param  {String || Array[String]} keys
+	 * @return {Cache}
+	 */
+	remove: function(keys) {
+		keys = _.isArray(keys) ? keys : [keys];
+
+		var idx = keys.length;
+		while (idx--) {
+			this._clearExpiration(keys[idx]);
+			delete this._cache[keys[idx]];
+		}
+
+		return this;
+	},
+
+	/**
+	 * Resets the cache, emptying the cache
+	 * and clearing any expirations
+	 * @return {Cache}
+	 */
+	flush: function() {
+		this._clearExpirations();
+		this._cache = {};
+		return this;
+	},
+
+	/**
+	 * Stores data in the cache
+	 * @param  {String} key
+	 * @param  {Value} data
+	 * @param  {Object} opts [optional]
+	 */
+	_store: function(key, data, opts) {
+		// Expiration
+		if (_exists(opts.expiration)) {
+			this._setExpiration(key, opts.expiration);
+		}
+
+		// Extend
+		if (opts.extend) {
+			data = _.extend(this._cache[key], data);
+		}
+
+		this._cache[key] = data;
+	},
+
+	/**
+	 * Sets a key in the cache to expire
+	 * after a set duration by storing a
+	 * timeout
+	 * @param {String} key
+	 * @param {Number} duration
+	 */
+	_setExpiration: function(key, duration) {
+		if (this._timeouts[key]) {
+			clearTimeout(this._timeouts[key]);
+		}
+
+		var self = this;
+		this._timeouts[key] = setTimeout(function() {
+			
+			delete self._cache[key];
+			delete self._timeouts[key];
+
+		}, _.isNaN(duration) ? 0 : duration);
+	},
+
+	/**
+	 * Clears all expirations
+	 */
+	_clearExpirations: function() {
+		var key;
+		for (key in this._timeouts) {
+			this._clearExpiration(key);
+		}
+	},
+
+	/**
+	 * Clears a specific expiration
+	 * @param  {String} key
+	 */
+	_clearExpiration: function(key) {
+		clearTimeout(this._timeouts[key]);
+		delete this._timeouts[key];
+	},
+	
+	/**
+	 * Gets the value (or entire cache) to
+	 * serialize to JSON
+	 * @param  {String} key [optional]
+	 * @return {Object || Value}
+	 */
+	toJSON: function(key) {
+		var value = (key) ? this.get(key) : this._cache;
+		return value;
+	},
+
+	toString: function(key) {
+		return '['+ Storm.name +' Cache, id: '+ this._id +']';
+	}
+};
+
+/**
+ * Expose a default cache to use in the application
+ */
 Storm.cache = new Cache();

@@ -1,6 +1,4 @@
-//###################################################################################
 // Collection #######################################################################
-//###################################################################################
 
 var Collection = Storm.Collection = (function(Model) {
 	
@@ -15,7 +13,7 @@ var Collection = Storm.Collection = (function(Model) {
 		this.add(data.models, { isSilent: true }, data);
 	};
 
-	_extend(Collection.prototype, Events.core.prototype, {
+	_.extend(Collection.prototype, Events.core.prototype, {
 		constructor: Collection,
 		
 		Model: Model,
@@ -61,7 +59,7 @@ var Collection = Storm.Collection = (function(Model) {
 			return -1;
 		},
 
-		/* Mass Set ************************************************************************/
+		// Mass Set ------------------------------------------
 		// To go with "get" below
 		set: function(attr, value, models) {
 			models = models || this._models;
@@ -72,7 +70,7 @@ var Collection = Storm.Collection = (function(Model) {
 			}
 		},
 
-		/* Add *****************************************************************************/
+		// Add ------------------------------------------
 		add: function(models, options, data) {
 			models = _.isArray(models) ? models.slice() : [models];
 			options = options || {};
@@ -152,7 +150,7 @@ var Collection = Storm.Collection = (function(Model) {
 			return model;
 		},
 
-		/* Remove *****************************************************************************/
+		// Remove ------------------------------------------
 		remove: function(models, options) {
 			models = _.isArray(models) ? models.slice() : [models];
 			options = options || {};
@@ -187,7 +185,7 @@ var Collection = Storm.Collection = (function(Model) {
 			return this._models.slice(begin, end);
 		},
 
-		/* Sort *****************************************************************************/
+		// Sort ------------------------------------------
 		// Force the collection to re-sort itself. You don't need to call this under
 		// normal circumstances, as the set will maintain sort order as items
 		// are added.
@@ -209,7 +207,7 @@ var Collection = Storm.Collection = (function(Model) {
 			return this;
 		},
 
-		/* Get *****************************************************************************/
+		// Get ------------------------------------------
 		get: function(model) {
 			return this._models[this.indexOf(model)];
 		},
@@ -236,7 +234,7 @@ var Collection = Storm.Collection = (function(Model) {
 			return null;
 		},
 
-		/* Reset | Clone ***************************************************************************/
+		// Reset | Clone ------------------------------------------
 		reset: function(opts) {
 			opts = opts || {};
 			this._models.length = 0;
@@ -249,7 +247,7 @@ var Collection = Storm.Collection = (function(Model) {
 			return new this.constructor({ model: this.model, models: this._models });
 		},
 
-		/* Data Retrieval ******************************************************************/
+		// Data Retrieval ------------------------------------------
 		retrieve: function() { // To match model.retrieve()
 			return _.map(this._models, function(model) {
 				return model.retrieve();
@@ -261,7 +259,7 @@ var Collection = Storm.Collection = (function(Model) {
 		},
 
 		toString: function() {
-			return '['+ STORM.name +' Collection]';
+			return '['+ Storm.name +' Collection]';
 		}
 	});
 

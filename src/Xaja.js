@@ -330,3 +330,5 @@ var Xaja = (function(root) {
 	};
 	
 }(this));
+
+Storm.ajax = Xaja;

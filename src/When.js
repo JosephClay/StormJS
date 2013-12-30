@@ -1,6 +1,4 @@
-//###################################################################################
 // When #############################################################################
-//###################################################################################
 
 var When = Storm.when = (function(Promise) {
 
@@ -23,8 +21,8 @@ var When = Storm.when = (function(Promise) {
 		},
 
 		_subscribe: function() {
-			var check = this._checkStatus.bind(this),
-				fireProgress = this._fireProgress.bind(this),
+			var check = _.bind(this._checkStatus, this),
+				fireProgress = _.bind(this._fireProgress, this),
 				events = this._events,
 				idx = events.length;
 			while (idx--) {

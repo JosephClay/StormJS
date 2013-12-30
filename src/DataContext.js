@@ -1,6 +1,4 @@
-//###################################################################################
 // Data Context #####################################################################
-//###################################################################################
 
 var DataContext = Storm.DataContext = (function(AjaxCall) {
 
@@ -8,7 +6,7 @@ var DataContext = Storm.DataContext = (function(AjaxCall) {
 		this._id = _uniqId('DataContext');
 	};
 
-	/* Setup (global) ************************************************/
+	// Setup (global) ------------------------------------------
 	DataContext.globalCallTemplate = {};
 
 	DataContext.settings = (function() {
@@ -39,6 +37,13 @@ var DataContext = Storm.DataContext = (function(AjaxCall) {
 	DataContext.prototype = {
 		constructor: DataContext,
 		
+		/**
+		 * AjaxCall, the constructor of the AjaxCall
+		 * to use when configuring a new call object
+		 * @type {AjaxCall}
+		 */
+		AjaxCall: AjaxCall,
+
 		defaults: {},
 
 		/**
@@ -53,7 +58,7 @@ var DataContext = Storm.DataContext = (function(AjaxCall) {
 		 */
 		callTemplate: {},
 
-		/* Settings ************************************************/
+		// Settings ------------------------------------------
 		getSetting: function() { 
 			return DataContext.getSetting.apply(arguments);
 		},
@@ -61,7 +66,7 @@ var DataContext = Storm.DataContext = (function(AjaxCall) {
 			return DataContext.removeSetting.apply(arguments);
 		},
 
-		/* Extend Options ************************************************/
+		// Extend Options ------------------------------------------
 		/**
 		 * Add more options to this data context
 		 * @param  {Object} options
@@ -82,7 +87,7 @@ var DataContext = Storm.DataContext = (function(AjaxCall) {
 			return this;
 		},
 
-		/* Create Call ************************************************/
+		// Create Call ------------------------------------------
 		/**
 		 * Creates and returns a new AjaxCall
 		 * @param  {Object}      callData   A base call object
@@ -90,11 +95,11 @@ var DataContext = Storm.DataContext = (function(AjaxCall) {
 		 * @return {AjaxCall}
 		 */
 		createCall: function(callData, extensionData) {
-			return new AjaxCall(callData, extensionData, this.options);
+			return new this.AjaxCall(callData, extensionData, this.options);
 		},
 
 		toString: function() {
-			return '['+ STORM.name +' DataContext]';
+			return '['+ Storm.name +' DataContext]';
 		}
 	};
 

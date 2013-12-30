@@ -1,103 +1,91 @@
-//###################################################################################
 // Request ##########################################################################
-//###################################################################################
 
-var Request = Storm.request = (function() {
+/**
+ * Stores in-progress AjaxCalls by id
+ * @type {Object}
+ */
+var _requestsRecords = {};
 
-	var _categories = {},
-		_totalQueued = 0;
+/**
+ * Private AjaxCall tracker. Only gets called from AjaxCall
+ * when the state of the call changes
+ * @private
+ */
+var Request = {
 
-	var Request = function() {
-		Events.core.call(this);
+	/**
+	 * Called when an AjaxCall is sent, notifies Storm.request
+	 * Records the call in the records
+	 * @param  {AjaxCall} call
+	 */
+	send: function(call) {
+		// this call is already being tracked, stop
+		if (_requestsRecords[call.getId()]) { return; }
+		_requestsRecords[call.getId()] = call;
 		
-		// Abort is a special little case
-		// cause it's called from the outside
-		// on a call
-		var self = this;
-		this.on('abort', function(e, req, status, err, call) {
-			self.erase(call);
-		});
-	};
+		Storm.request.trigger('send', call);
+	},
 
-	_extend(Request.prototype, Events.core.prototype, {
-		constructor: Request,
+	/**
+	 * Called when an AjaxCall is done, notifies Storm.request
+	 * @param  {AjaxCall}   call
+	 */
+	done: function(call) {
+		Storm.request.trigger('done', call);
+	},
 
-		record: function(call) {
-			var config = call.getConfiguration(),
-				category = _categories[config.category] || (_categories[config.category] = {});
-			
-			// this call is already being tracked
-			if (category[call.getId()]) { return this; }
+	/**
+	 * Called when an AjaxCall fails, notifies Storm.request
+	 * @param  {AjaxCall}   call
+	 */
+	fail: function(call) {
+		Storm.request.trigger('fail', call);
+	},
 
-			category[call.getId()] = call;
-			_totalQueued++;
-			
-			this.trigger('record', call);
+	/**
+	 * Called when an AjaxCall is aborted, notifies Storm.request
+	 * @param  {AjaxCall}   call
+	 */
+	abort: function(call) {
+		Storm.request.trigger('abort', call);
+	},
 
-			return this;
-		},
+	/**
+	 * Called when an AjaxCall is done/aborted/failed, notifies Storm.request
+	 * Removes the call from the records
+	 * @param  {AjaxCall}   call
+	 */
+	always: function(call) {
+		// This call is not being tracked, stop
+		if (!_requestsRecords[call.getId()]) { return; }
+		delete _requestsRecords[call.getId()];
+		
+		Storm.request.trigger('always', call);
+	}
+};
 
-		erase: function(call) {
-			var cat = call.getConfiguration().category,
-				id = call.getId();
+/**
+ * Ajax tracking mechanism. Operates via events
+ * passing the AjaxCalls that trigger the events.
+ *
+ * Possible events are: 'send', done', 'fail', 'abort', 'always'
+ */
+Storm.request = Events.core.construct();
+_.extend(Storm.request, {
+	
+	/**
+	 * Get the requests in-progress
+	 * @return {Object}
+	 */
+	getQueue: function() {
+		return _requestsRecords;
+	},
 
-			if (_categories[cat] && _categories[cat][id]) {
-				delete _categories[cat][id];
-				_totalQueued--;
-				
-				this.trigger('erase', call);
-			}
-			
-
-			return this;
-		},
-
-		getTotalQueued: function() {
-			return _totalQueued;
-		},
-
-		/* Add ****************************************/
-		addCategories: function(name) {
-			if (_.isString(name)) {
-				this.addCategory(name);
-				return this;
-			}
-
-			var categories = name;
-			_.each(categories, function(cat) {
-				this.addCategory(name);
-			});
-
-			return this;
-		},
-
-		addCategory: function(name) {
-			if (STORM.category[name] !== undefined) {
-				return console.error(STORM.name +': Cannot add category, "'+ name + '" already exists: ', STORM.category[name]);
-			}
-
-			// _.size() on Storm.category ensures a unique
-			// value for this category (in case we need
-			// to reverse-look-up)
-			STORM.category[name] = _.size(STORM.category);
-			
-			return this;
-		},
-
-		getCategories: function() {
-			return _categories;
-		},
-
-		getCategory: function(cat) {
-			return _categories[cat];
-
-		},
-
-		toString: function() {
-			return '['+ STORM.name +' Request]';
-		}
-	});
-
-	return new Request();
-
-}());
+	/**
+	 * Get the total number of requests in-progress
+	 * @return {Number}
+	 */
+	getTotal: function() {
+		return _.size(_requestsRecords);
+	}	
+});

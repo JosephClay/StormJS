@@ -1,6 +1,4 @@
-//###################################################################################
 // Animate ##########################################################################
-//###################################################################################
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
@@ -70,7 +68,7 @@ Storm.animate = (function() {
 		 * @return {String}   id
 		 */
 		hook: function(func) {
-			if (!_.isFunction(func)) { return console.error(STORM.name +': Parameter must be a function: ', func); }
+			if (!_.isFunction(func)) { return console.error(Storm.name +': Parameter must be a function: ', func); }
 			var id = _uniqId('Animate');
 			_hooks[id] = _loop.length;
 			_loop.push(func);

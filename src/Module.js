@@ -1,6 +1,4 @@
-//###################################################################################
 // Module ###########################################################################
-//###################################################################################
 
 var Module = Storm.Module = (function() {
 
@@ -9,11 +7,11 @@ var Module = Storm.Module = (function() {
 		this._id = _uniqId('Module');
 	};
 
-	_extend(Module.prototype, Events.core.prototype, {
+	_.extend(Module.prototype, Events.core.prototype, {
 		constructor: Module,
 
 		toString: function() {
-			return '['+ STORM.name +' Module]';
+			return '['+ Storm.name +' Module]';
 		}
 	});
 

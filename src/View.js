@@ -1,39 +1,35 @@
-//###################################################################################
 // View #############################################################################
-//###################################################################################
 
-var View = Storm.View = (function() {
+/**
+ * A view at its most basic. Sets up a couple
+ * defaults for cloning and commonly used methods
+ * @param {Object} opts [optional]
+ */
+var View = Storm.View = function(opts) {
+	Events.core.call(this);
 
-	var View = function(opts) {
-		Events.core.call(this);
+	this.options = opts || {};
+	this._id = _uniqId('View');
+	this.elem = this.options.elem || null;
+	this.template = this.template || this.options.template || '';
+};
 
-		opts = opts || {};
-		this._id = _uniqId('View');
-		this.elem = opts.elem || null;
-		this.template = this.template || opts.template || '';
-	};
+_.extend(View.prototype, Events.core.prototype, {
+	constructor: View,
 
-	_extend(View.prototype, Events.core.prototype, {
-		constructor: View,
+	clone: function() {
+		return new this.constructor(this.options);
+	},
 
-		render: function() {},
+	render: function() {
+		return Storm.$();
+	},
 
-		getElem: function() {
-			return this.elem || (this.elem = this.render());
-		},
-		
-		// Remove this view by taking the element out of the DOM, and removing any
-		// applicable Storm.Events listeners.
-		remove: function() {
-			if (this.elem) { this.elem.remove(); }
-			return this;
-		},
+	getElem: function() {
+		return this.elem || (this.elem = this.render());
+	},
 
-		toString: function() {
-			return '['+ STORM.name +' View]';
-		}
-	});
-
-	return View;
-
-}());
+	toString: function() {
+		return '['+ Storm.name +' View, id: '+ this._id +']';
+	}
+});

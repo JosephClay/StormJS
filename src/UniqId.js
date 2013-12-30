@@ -1,6 +1,4 @@
-//###################################################################################
 // Unique Id ########################################################################
-//###################################################################################
 
 	/**
 	 * Generate a unique id
@@ -18,6 +16,11 @@ var _uniqId = Storm.uniqId = (function() {
 		};
 		
 	}()),
+	/**
+	 * Generates a unqiue id string - prefixed with the scope
+	 * @param  {String} scope
+	 * @return {String} id
+	 */
 	_uniqIdStr = Storm.uniqIdStr = function(scope) {	
 		return (scope || 'id') + '' + _uniqId(scope);
 	};

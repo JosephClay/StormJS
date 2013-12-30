@@ -1,16 +1,34 @@
- ☐ AjaxCall
- ☐ Model
- ☐ Request
+ ☐ Collection
+ ☐ DataContext
+ ☐ Events
+ ☐ Helpers
+ ☐ Mixin
+ ☐ Module
+ ☐ NoConflict
+ ☐ Outro
+ ☐ Promise
+ ☐ Storage
+ ☐ Template
+ ☐ When
 
    ---- ✄ -----------------------
-   ☐ ++ to +=
-   ☐ Change *** to ---
    ☐ Optimization
    ☐ Documentation
    ☐ Add filterBy to Collection
+   ☐ Normalize settings vs options
+   ☐ Return ids in toString methods where possible
+   ☐ Normalize documention with returning this
+   ☐ Search for "key value" and replace with "key-value"
+   ☐ @private
 
 ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 Archive:
+ ✔ Make section titles smaller @done (13-12-29 13:53)
+ ✔ Request @done (13-12-29 12:50)
+ ✔ Model @done (13-12-29 12:07)
+ ✔ Exchange .bind usages for _.bind @done (13-12-28 23:13)
+ ✔ Change *** to --- @done (13-12-28 23:09)
+ ✔ AjaxCall @done (13-12-28 22:52)
  ✔ toString should be formatted '[foo]' @done (13-12-26 21:42)
  ✔ Break apart outro @done (13-12-25 14:08)
  ✔ Try to remove unnecessary .binds() for speed @done (13-12-25 14:06)

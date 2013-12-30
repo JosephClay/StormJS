@@ -1,6 +1,4 @@
-//###################################################################################
 // Extend ###########################################################################
-//###################################################################################
 
 /**
  * Prototypical class extension
@@ -22,7 +20,7 @@ var Extend = Storm.Extend = function(constructor, extension) {
 		};
 
 	// Add properties to the object
-	_extend(fn, this);
+	_.extend(fn, this);
 
 	// Duplicate the prototype
 	var NoOp = function() {};
@@ -30,7 +28,7 @@ var Extend = Storm.Extend = function(constructor, extension) {
 	fn.prototype = new NoOp();
 
 	// Merge the prototypes
-	_extend(fn.prototype, this.prototype, extension);
+	_.extend(fn.prototype, this.prototype, extension);
 	fn.prototype.constructor = constructor || fn;
 
 	return fn;

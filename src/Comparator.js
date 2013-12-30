@@ -1,106 +1,166 @@
-//###################################################################################
 // Comparator #######################################################################
-//###################################################################################
+
+	/**
+	 * Stores sort types to use to compare models
+	 * Default is alphabetical (0)
+	 * @type {Object}
+	 * @default alphabetical
+	 */
+var _SORT = {
+		alphabetical: 0,
+		numeric: 1,
+		date: 2
+	},
+	
+	/**
+	 * Reverse look-up for _SORT
+	 * @type {Object}
+	 */
+	_SORT_NAMES = _.invert(_SORT),
+	
+	/**
+	 * Add a sort type to the _SORT object
+	 * @param {String} type
+	 */
+	_addSort = function(type) {
+		// The type has already been defined
+		if (type in _SORT) { return; }
+
+		// Using _.size ensures a unique id
+		// for the type passed
+		_SORT[type] = _.size(_SORT);
+	};
 
 /**
  * Used by the Collection to sort Models. Having
  * a separate object used by the model normalizes
  * sorting and allows optimization by caching values
- * (especially when dealing with string comparions)
+ * @param {String} key the key on the model used for comparison
+ * @param {Storm.Comparator.SORT} type [optional]
  */
-var Comparator = Storm.Comparator = (function() {
+var Comparator = Storm.Comparator = function(key, type) {
+	this._key = key;
+	this._type = type || _SORT.alphabetical;
+	this._store = {};
+};
+
+_.extend(Comparator, {
+
+	/**
+	 * Default string to use if no value is present to
+	 * compare against.
+	 * @type {String}
+	 */
+	HOISTING_STR: '___',
 	
-	var _SORT = {
-			alphabetical: 0,
-			numeric: 1,
-			date: 2
-		};
-
-	var Comparator = function(key, type) {
-		this._key = key;
-		this._type = type || _SORT.alphabetical;
-		this._store = {};
-	};
-
-	Comparator.HOISTING_STR = '___';
-	Comparator.SORT = _SORT;
-
-	Comparator.prototype = {
-		constructor: Comparator,
-		
-		/**
-		 * Bind to the key on the model that the comparator
-		 * watches. If the key changes, invalidate the sort
-		 * value so that it's recalculated
-		 * @param  {Storm.Model} model
-		 */
-		bind: function(model) {
-			var self = this;
-			model.on(this._key + '.change', function() {
-				self.invalidateSortValue(model);
-			});
-		},
-
-		/**
-		 * Invalidates the sort value of a model
-		 * by deleting it from the store
-		 * @param  {Storm.Model} model
-		 * @return {this}
-		 */
-		invalidateSortValue: function(model) {
-			delete this.store[model.getId()];
-			return this;
-		},
-
-		/**
-		 * Get the value to sort by
-		 * @param  {Storm.model}  model
-		 * @return {value}
-		 */
-		getSortValue: function(model) {
-			var id = model.getId(),
-				value;
-			if (this._store[id]) { return this._store[id]; }
-
-			if (this._type === _SORT.date) { // Date
-
-				value = this.dateValue(model);
-
-			} else if (this._type === _SORT.numeric) { // Number
-
-				value = this.numericValue(model);
-
-			} else { // String by default
-
-				value = this.alphabeticalValue(model);
-
+	/**
+	 * Expose _SORT as its values are needed
+	 * in order to setup specific Comparators
+	 * @type {Object}
+	 */
+	SORT: _SORT,
+	
+	/**
+	 * Add a sort type to the Comparator
+	 * as a global option
+	 * @param {String || Array} type
+	 */
+	addSort: function(type) {
+		// If is an array, add multiple types
+		if (_.isArray(type)) {
+			var idx = 0, length = type.length;
+			for (; idx < length; idx++) {
+				_addSort(type[idx]);
 			}
-
-			this._store[id] = value;
-			return value;
-		},
-
-		alphabeticalValue: function(model) {
-			var value = model.get(this._key) || '';
-			value = (value ? value.toLocaleLowerCase() : Comparator.HOISTING_STR);
-			return value;
-		},
-		numericValue: function(model) {
-			var value = model.get(this._key) || 0;
-			value = +value;
-			return value;
-		},
-		dateValue: function(model) {
-			var value = model.get(this._key) || new Date();
-			value = _.isDate(value) ? value : new Date(value);
-			return value;
-		},
-
-		toString: function() {
-			return '['+ STORM.name +' Comparator]';
+		} else {
+			_addSort(type);
 		}
-	};
 
-	return Comparator;
+		// Refresh the sort names after addition
+		_SORT_NAMES = _.invert(_SORT);
+	}
+});
 
-}());
+Comparator.prototype = {
+	constructor: Comparator,
+	
+	/**
+	 * Bind to the key on the model that the comparator
+	 * watches. If the key changes, invalidate the sort
+	 * value so that it's recalculated
+	 * @param  {Storm.Model} model
+	 */
+	bind: function(model) {
+		model.on('change:' + this._key, _.bind(this.invalidateSortValue, this, model));
+	},
+
+	/**
+	 * Invalidates the sort value of a model
+	 * by deleting it from the store
+	 * @param  {Storm.Model} model
+	 * @return {this}
+	 */
+	invalidateSortValue: function(model) {
+		delete this.store[model.getId()];
+		return this;
+	},
+
+	/**
+	 * Get the value to sort by
+	 * @param  {Storm.model}  model
+	 * @return {Value}
+	 */
+	getSortValue: function(model) {
+		var id = model.getId();
+		if (this._store[id]) { return this._store[id]; }
+
+		if (!this[_SORT_NAMES[this._type]]) { return console.error(Storm.name + ': Comparator does not have a method for the sort type assigned', this._type, _SORT_NAMES{this._type]); }
+		var value = this[_SORT_NAMES[this._type]].call(this, model);
+		
+		this._store[id] = value;
+		return value;
+	},
+
+	/**
+	 * Default alphabetical sort.
+	 * This method gets the value from the model
+	 * and ensures a string return value
+	 * @param  {Model}  model
+	 * @return {String} value
+	 */
+	alphabetical: function(model) {
+		var value = model.get(this._key);
+		value = _.exists(value) ? (value + '').toLocaleLowerCase() : Comparator.HOISTING_STR;
+		return value;
+	},
+	
+	/**
+	 * Default numeric sort.
+	 * This method gets the value from the model
+	 * and ensures a number return value
+	 * @param  {Model}  model
+	 * @return {Number} value
+	 */
+	numeric: function(model) {
+		var value = model.get(this._key) || 0;
+		value = +value;
+		return value;
+	},
+
+	/**
+	 * Default date sort.
+	 * This method gets the value from the model
+	 * and ensures a date return value
+	 * @param  {Model}  model
+	 * @return {Date}   value
+	 */
+	date: function(model) {
+		var value = model.get(this._key) || new Date();
+		value = _.isDate(value) ? value : new Date(value);
+		return value;
+	},
+
+	toString: function() {
+		return '['+ Storm.name +' Comparator, id: '+ this._id +']';
+	}
+};

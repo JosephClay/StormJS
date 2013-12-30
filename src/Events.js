@@ -1,6 +1,4 @@
-//###################################################################################
 // Events ###########################################################################
-//###################################################################################
 
 /*! Signal.js - v0.0.2 - 2013-11-23
  * https://github.com/JosephClay/Signal
@@ -11,7 +9,7 @@ var Events = Storm.Events = (function() {
 	var _NAME_REGEX = /\w([^:\.])*/g,
 		_NAME = 'signal',
 		_splicer = ([]).splice,
-		_extend = function() {
+		_.extend = function() {
 			var args = arguments,
 				base = args[0],
 				idx = 1, length = args.length,
@@ -79,10 +77,10 @@ var Events = Storm.Events = (function() {
 			}
 		},
 
-		/* Disable | Enable *************************************/
+		// Disable | Enable ------------------------------------------
 		disable: function(handle) {
 			this._inactive[handle] = this._inactive[handle] || {};
-			this._inactive[handle] = _extend({}, this._active[handle]);
+			this._inactive[handle] = _.extend({}, this._active[handle]);
 			delete this._active[handle];
 
 			return this;
@@ -90,13 +88,13 @@ var Events = Storm.Events = (function() {
 
 		enable: function(handle) {
 			this._active[handle] = this._active[handle] || {};
-			this._active[handle] = _extend({}, this._inactive[handle]);
+			this._active[handle] = _.extend({}, this._inactive[handle]);
 			delete this._inactive[handle];
 
 			return this;
 		},
 
-		/* On | Off ************************************************/
+		// On | Off ------------------------------------------
 		on: function(eventname, callback) {
 			var eventConfig, location,
 				cacheConfig = this._cache[eventname];
@@ -147,7 +145,7 @@ var Events = Storm.Events = (function() {
 			});
 		},
 
-		/* Trigger ************************************************/
+		// Trigger ------------------------------------------
 		trigger: function() {
 			var args = arguments,
 				eventname = _splicer.call(args, 0, 1)[0],
@@ -174,7 +172,7 @@ var Events = Storm.Events = (function() {
 			return this;
 		},
 
-		/* ListenTo | StopListening ********************************/
+		// ListenTo | StopListening ------------------------------------------
 		listenTo: function(obj, eventname, callback) {
 			obj.on(eventname, callback);
 			return this;
@@ -184,7 +182,7 @@ var Events = Storm.Events = (function() {
 			return this;
 		},
 
-		/* Private *************************************************/
+		// Private ------------------------------------------
 		_uniqueSubId: function() {
 			return 's' + this._subid++;
 		},
@@ -268,7 +266,7 @@ var Events = Storm.Events = (function() {
 		},
 
 		toString: function() {
-			return '['+ STORM.name +' Events]';
+			return '['+ Storm.name +' Events]';
 		}
 	};
 
@@ -287,4 +285,4 @@ var Events = Storm.Events = (function() {
 
 }());
 
-_extend(Storm, Events.core.construct());
+_.extend(Storm, Events.core.construct());

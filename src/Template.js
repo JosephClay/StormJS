@@ -1,6 +1,4 @@
-//###################################################################################
 // Tempalate ########################################################################
-//###################################################################################
 
 Storm.template = (function() {
 	
@@ -8,7 +6,7 @@ Storm.template = (function() {
 		_compiledTemplates = {},
 		_engine;
 
-	/* Register *****************************************************/
+	// Register -----------------------------------------------------
 	var _register = function(name, tpl) {
 		// If an object, multiple items are being registered.
 		if (!_.isString(name)) {
@@ -23,7 +21,7 @@ Storm.template = (function() {
 		// id string, go get the html for the template
 		if (name[0] === '#') {
 			var element = document.getElementById(name.substring(1, name.length));
-			if (!element) { return console.error(STORM.name +': Cannot find reference to "'+ name +'" in DOM'); }
+			if (!element) { return console.error(Storm.name +': Cannot find reference to "'+ name +'" in DOM'); }
 			tpl = element.innerHTML;
 		}
 
@@ -35,16 +33,16 @@ Storm.template = (function() {
 		if (_.isFunction(tpl)) { tpl = tpl.call(); }
 		if (_.isString(tpl)) { return tpl.trim(); }
 		if (_.isArray(tpl)) { return tpl.join('\n').trim(); }
-		console.error(STORM.name +': Template (or the return value) was of unknown type');
+		console.error(Storm.name +': Template (or the return value) was of unknown type');
 	};
 
-	/* Retrieve | Remove *****************************************************/
+	// Retrieve | Remove -----------------------------------------------------
 	var _retrieve = function(name) {
 		// If there's a compiled template, return that one
 		var compTpl = _compiledTemplates[name];
 		if (compTpl) { return compTpl; }
 
-		if (!_engine) { console.error(STORM.name +': No template engine has been registered'); }
+		if (!_engine) { console.error(Storm.name +': No template engine has been registered'); }
 		return (_compiledTemplates[name] = _engine.compile(_templates[name]));
 	};
 
@@ -53,7 +51,7 @@ Storm.template = (function() {
 		delete _compiledTemplates[name];
 	};
 
-	/* Render **************************************************/
+	// Render --------------------------------------------------
 	var _render = function(name, data) {
 		var tpl = _retrieve(name);
 		return tpl(data || {});
@@ -71,7 +69,7 @@ Storm.template = (function() {
 			return value;
 		},
 		toString: function(key) {
-			return '['+ STORM.name +' template]';
+			return '['+ Storm.name +' template]';
 		}
 	};
 }());
