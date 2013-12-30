@@ -2,18 +2,32 @@
 
 /**
  * An in-memory key-value store
+ * @class Cache
  */
 var Cache = Storm.Cache = function() {
+	/**
+	 * @type {Id}
+	 * @private
+	 */
 	this._id = _uniqId('Cache');
 	
-	// Holds the private cache
+	/**
+	 * Holds the private cache
+	 * @type {Object}
+	 * @private
+	 */
 	this._cache = {};
 
-	// Holds timeouts used to expire the cache
+	/**
+	 * Holds timeouts used to expire the cache
+	 * @type {Object}
+	 * @private
+	 */
 	this._timeouts = {};
 };
 
 Cache.prototype = {
+	/** @constructor */
 	constructor: Cache,
 
 	/**
@@ -96,6 +110,7 @@ Cache.prototype = {
 	 * @param  {String} key
 	 * @param  {Value} data
 	 * @param  {Object} opts [optional]
+	 * @private
 	 */
 	_store: function(key, data, opts) {
 		// Expiration
@@ -117,6 +132,7 @@ Cache.prototype = {
 	 * timeout
 	 * @param {String} key
 	 * @param {Number} duration
+	 * @private
 	 */
 	_setExpiration: function(key, duration) {
 		if (this._timeouts[key]) {
@@ -134,6 +150,7 @@ Cache.prototype = {
 
 	/**
 	 * Clears all expirations
+	 * @private
 	 */
 	_clearExpirations: function() {
 		var key;
@@ -145,6 +162,7 @@ Cache.prototype = {
 	/**
 	 * Clears a specific expiration
 	 * @param  {String} key
+	 * @private
 	 */
 	_clearExpiration: function(key) {
 		clearTimeout(this._timeouts[key]);
@@ -162,8 +180,15 @@ Cache.prototype = {
 		return value;
 	},
 
+	/**
+	 * Debug string
+	 * @return {String}
+	 */
 	toString: function(key) {
-		return '['+ Storm.name +' Cache, id: '+ this._id +']';
+		return _toString('Cache', {
+			id: this._id,
+			size: _.size(this._cache)
+		});
 	}
 };
 

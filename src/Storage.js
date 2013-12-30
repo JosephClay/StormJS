@@ -1,180 +1,289 @@
 // Storage ##########################################################################
 
-// Based off of Remy's polyfill: https://gist.github.com/remy/350433
-var Storage = Storm.Storage = (function() {
+	/**
+	 * The storage type: local or session
+	 * @type {Object}
+	 */
+var _STORAGE_TYPE = {
+		cookie: 0,
+		local: 1,
+		session: 2
+	},
+	_STORAGE_TYPE_NAME = _.invert(_STORAGE_TYPE);
 
-	var _TYPE = {
-			local: 1,
-			session: 2
-		},
-		_TYPE_NAME = _.invert(_TYPE);
+/**
+ * Based off of Remy's polyfill: https://gist.github.com/remy/350433
+ * 
+ * Adapted to use the same Storage object for both
+ * local and session storage (for simplicity)
+ * @class Storage
+ * @param {TYPE} type
+ * @param {Object} opts [optional]
+ */
+var Storage = Storm.Storage = function(type, opts) {
+	opts = opts || {};
 
-	var Storage = function(type) {
-		this.type = type || _TYPE.local;
-		this.name = _TYPE_NAME[this.type];
-		this.storage = root[this.name + 'Storage'];
-		this.hasStorage = _exists(this.storage);
-		this.data = this._getData();
-		this.length = (this.hasStorage) ? this.storage.length : _.size(this.data);
-	};
+	/**
+	 * The type of storage
+	 * @default STORAGE_TYPE.cookie
+	 * @type {STORAGE_TYPE}
+	 */
+	this.type = type || _STORAGE_TYPE.cookie;
 
-	Storage.TYPE = _TYPE;
+	/**
+	 * The name of the store.
+	 * @type {String}
+	 */
+	this.name = opts.name || _STORAGE_TYPE_NAME[this.type];
+	
+	/**
+	 * The type of storage we're using
+	 * @type {String} localStorage || sessionStorage
+	 */
+	this.storage = root[this.name + 'Storage'];
+	
+	/**
+	 * Whether we have access to native local/session storage
+	 * @type {Boolean}
+	 */
+	this.hasStorage = _exists(this.storage);
+	
+	/**
+	 * The data stored
+	 * @type {Object}
+	 */
+	this.data = this._getData();
 
-	Storage.prototype = {
-		constructor: Storage,
-		
-		clear: function() {
-			this.data = {};
-			this.length = 0;
+	/**
+	 * The storage length
+	 * @type {Number}
+	 */
+	this.length = (this.hasStorage) ? this.storage.length : _.size(this.data);
+};
 
-			if (this.hasStorage) {
-				this.storage.clear();
-				return this;
-			}
+Storage.TYPE = _STORAGE_TYPE;
 
-			this._clearData();
+Storage.prototype = {
+	/** @constructor */
+	constructor: Storage,
+	
+	/**
+	 * Clear all data from storage
+	 * @return {Storage}
+	 */
+	clear: function() {
+		this.data = {};
+		this.length = 0;
+
+		if (this.hasStorage) {
+			this.storage.clear();
 			return this;
-		},
-
-		key: function(idx) {
-			if (this.hasStorage) {
-				return this.storage.key(idx);
-			}
-
-			// not perfect, but works
-			var key, index = 0;
-			for (key in this.data) {
-				if (index === idx)  {
-					return k;
-				} else {
-					index++;
-				}
-			}
-			return null;
-		},
-
-		getItem: function(key) {
-			if (this.hasStorage) {
-				var storedValue = this.storage.getItem(key);
-				if (!_exists(storedValue)) { return storedValue; }
-				return JSON.parse(storedValue);
-			}
-
-			return this.data[key];
-		},
-		get: function(key) {
-			return this.getItem(key);
-		},
-
-		setItem: function(key, value) {
-			// Multiple items are being set
-			if (!_.isString(key)) {
-				var k;
-				for (k in key) {
-					this.setItem(k, key[k]);
-				}
-				return;
-			}
-
-			if (this.hasStorage) {
-				var storage = this.storage.setItem(key, JSON.stringify(value));
-				this.length = this.storage.length;
-				return storage;
-			}
-
-			this.data[key] = value;
-			this.length++;
-			this._setData();
-		},
-		store: function(key, value) {
-			this.setItem(key, value);
-		},
-		set: function(key, value) {
-			this.setItem(key, value);
-		},
-
-		removeItem: function(key) {
-			if (this.hasStorage) {
-				var storage = this.storage.removeItem(key);
-				this.length = this.storage.length;
-				return storage;
-			}
-
-			delete this.data[key];
-			this.length--;
-			this._setData();
-		},
-		remove: function(key) {
-			this.removeItem(key);
-			return this;
-		},
-
-		// Private Methods ---------------------------------------------
-		// Cookies
-		_createCookie: function(value) {
-			var days = (this.type === Storage.TYPE.session) ? 0 : 365,
-				date = new Date(),
-				expires;
-
-			if (days > 0) {
-				date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-				expires = date.toGMTString();
-			} else {
-				expires = '0';
-			}
-
-			document.cookie = _stringFormat('{name}={value}; expires={expiration}; path=/', {
-				name: this.name,
-				value: value,
-				expiration: expires
-			});
-		},
-
-		_readCookie: function() {
-			var nameEq = this.name + '=',
-				ca = document.cookie.split(';'),
-				idx = 0, length = ca.length, c;
-
-			for (; idx < length; idx++) {
-				c = ca[idx];
-				while (c.charAt(0) === ' ') {
-					c = c.substring(1, c.length);
-				}
-
-				if (c.indexOf(nameEq) === 0) {
-					return c.substring(nameEq.length, c.length);
-				}
-			}
-			return null;
-		},
-
-		// Data: Get | Set | Clear
-		_setData: function() {
-			var data = JSON.stringify(this.data);
-			this._createCookie(data, 365);
-		},
-
-		_clearData: function() {
-			this._createCookie('', 365);
-		},
-
-		_getData: function() {
-			var data = (this.hasStorage) ? null : this._readCookie();
-			return (data) ? JSON.parse(data) : {};
-		},
-
-		toJSON: function(key) {
-			var value = (key) ? this.get(key) : this._getData();
-			return value;
-		},
-		toString: function(key) {
-			return '['+ Storm.name +' Storage]';
 		}
-	};
 
-	return Storage;
+		this._clearCookieData();
+		return this;
+	},
 
-}());
+	/**
+	 * Get a key at the specified index
+	 * @param  {Number} idx
+	 * @return {String} key
+	 */
+	key: function(idx) {
+		if (this.hasStorage) {
+			return this.storage.key(idx);
+		}
 
+		// not perfect, but works
+		var key, index = 0;
+		for (key in this.data) {
+			if (index === idx)  {
+				return k;
+			} else {
+				index++;
+			}
+		}
+		return null;
+	},
+
+	/**
+	 * Retrieve item from data
+	 * @param  {String || Array} key
+	 * @return {Value}
+	 */
+	getItem: function(key) {
+		// Array is passed, get all values under
+		// the keys
+		if (_.isArray) {
+			var idx = key.length;
+			while (idx--) {
+				key[idx] = this.getItem(key[idx]);
+			}
+			return key;
+		}
+
+		if (this.hasStorage) {
+			var storedValue = this.storage.getItem(key);
+			if (!_exists(storedValue)) { return storedValue; }
+			return JSON.parse(storedValue);
+		}
+
+		return this.data[key];
+	},
+	/** Proxy for getItem */
+	get: function() { return this.getItem.apply(this, arguments); },
+
+	/**
+	 * Adds to data
+	 * @param {String || Object} key
+	 * @param {Value} value
+	 */
+	setItem: function(key, value) {
+		// Not a string, must be an object,
+		// multiple items are being set
+		if (!_.isString(key)) {
+			var k;
+			for (k in key) {
+				this.setItem(k, key[k]);
+			}
+			return;
+		}
+
+		if (this.hasStorage) {
+			var storage = this.storage.setItem(key, JSON.stringify(value));
+			this.length = this.storage.length;
+			return storage;
+		}
+
+		this.data[key] = value;
+		this.length++;
+		this._setCookieData();
+	},
+	/** Proxy for setItem */
+	store: function() { this.setItem.apply(this, arguments); },
+	/** Proxy for setItem */
+	set: function() { this.setItem.apply(this, arguments); },
+
+	removeItem: function(key) {
+		if (this.hasStorage) {
+			var storage = this.storage.removeItem(key);
+			this.length = this.storage.length;
+			return storage;
+		}
+
+		delete this.data[key];
+		this.length--;
+		this._setCookieData();
+	},
+	remove: function(key) {
+		this.removeItem(key);
+		return this;
+	},
+
+	/**
+	 * Create a cookie of the data
+	 * @private
+	 */
+	_createCookie: function(value) {
+		var days = (this.type === Storage.TYPE.session) ? 0 : 365,
+			date = new Date(),
+			expires;
+
+		if (days > 0) {
+			date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+			expires = date.toGMTString();
+		} else {
+			expires = '0';
+		}
+
+		document.cookie = _stringFormat('{name}={value}; expires={expiration}; path=/', {
+			name: this.name,
+			value: value,
+			expiration: expires
+		});
+	},
+
+	/**
+	 * Return data from the cookie
+	 * @return {Value}
+	 * @private
+	 */
+	_readCookie: function() {
+		var nameEq = this.name + '=',
+			ca = document.cookie.split(';'),
+			idx = 0, length = ca.length, c;
+
+		for (; idx < length; idx++) {
+			c = ca[idx];
+			while (c.charAt(0) === ' ') {
+				c = c.substring(1, c.length);
+			}
+
+			if (c.indexOf(nameEq) === 0) {
+				return c.substring(nameEq.length, c.length);
+			}
+		}
+		return null;
+	},
+
+	/**
+	 * Serializes the data in storage to a JSON
+	 * string and stores it in a cookie
+	 * @private
+	 */
+	_setCookieData: function() {
+		var data = JSON.stringify(this.data);
+		this._createCookie(data, 365);
+	},
+
+	/**
+	 * Clear the cooke
+	 */
+	_clearCookieData: function() {
+		this._createCookie('', 365);
+	},
+
+	/**
+	 * Get all data in storage
+	 * @return {Object}
+	 * @private
+	 */
+	_getData: function() {
+		var data = (this.hasStorage) ? null : this._readCookie();
+		return (data) ? JSON.parse(data) : {};
+	},
+
+	/**
+	 * Return storage values for JSON serialization
+	 * @param  {String} key [optional] return a specific value
+	 * @return {Value}
+	 */
+	toJSON: function(key) {
+		var value = (key) ? this.get(key) : this._getData();
+		return value;
+	},
+
+	/**
+	 * Debug string
+	 * @return {String}
+	 */
+	toString: function(key) {
+		return _toString('Storage', {
+			type: _STORAGE_TYPE_NAME[this.type],
+			length: this.length
+		});
+	}
+};
+
+
+/**
+ * Expose a store for local storage
+ * @type {Storage}
+ */
 Storm.store = new Storage(Storage.TYPE.local);
+
+/**
+ * Expose an instace of storage for the session
+ * @type {Storage}
+ */
 Storm.session = new Storage(Storage.TYPE.session);

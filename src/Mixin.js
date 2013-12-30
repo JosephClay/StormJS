@@ -1,5 +1,14 @@
 // Mixin ############################################################################
 
+/**
+ * Mix a key-value into Storm, protecting Storm from
+ * having a pre-existing key overwritten. Of course,
+ * items can be directly assigned to Storm via Storm.foo = foo;
+ * but in this framework, I'm considering it a bad practice
+ * @param  {String} name
+ * @param  {Value} prop
+ * @private
+ */
 var _mixin = function(name, prop) {
 	if (Storm[name] !== undefined) { return console.error(Storm.name +': Cannot mixin, '+ name +' already exists: ', Storm[name]); }
 	Storm[name] = prop;

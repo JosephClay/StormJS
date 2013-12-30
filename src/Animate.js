@@ -43,11 +43,40 @@
  * https://github.com/sole/tween.js/
  */
 Storm.animate = (function() {
-	var _hooks = {}, // Stores the index of loop functions
-		_loop = [], // Stores function calls
+		/**
+		 * Stores the index of loop functions
+		 * @type {Object}
+		 * @private
+		 */
+	var _hooks = {},
+		/**
+		 * Stores function calls
+		 * @type {Array}
+		 * @private
+		 */
+		_loop = [],
+		/**
+		 * Reference to requestAnimationFrame
+		 * @type {requestAnimationFrame}
+		 */
 		_raf = root.requestAnimationFrame,
+		/**
+		 * The id of this animation until another
+		 * is called
+		 * @type {Id}
+		 * @private
+		 */
 		_id = null,
+		/**
+		 * Whether the _loop is running
+		 * @type {Boolean}
+		 * @private
+		 */
 		_isRunning = true;
+		/**
+		 * Runs the functions in the _loop
+		 * @private
+		 */
 		_animate = function() {
 			var idx = 0,
 				length = _loop.length;
@@ -78,7 +107,7 @@ Storm.animate = (function() {
 		/**
 		 * Remove a function from requestAnimationFrame
 		 * @param  {String} id Function id
-		 * @return {this}
+		 * @return {Animate}
 		 */
 		unhook: function(id) {
 			_loop.splice(_hooks[id], 1);
@@ -88,7 +117,7 @@ Storm.animate = (function() {
 
 		/**
 		 * Check if animate is running
-		 * @return {this}
+		 * @return {Animate}
 		 */
 		isRunning: function() {
 			return this._isRunning;
@@ -96,7 +125,7 @@ Storm.animate = (function() {
 
 		/**
 		 * Start requestAnimationFrame calling hooked functions
-		 * @return {this}
+		 * @return {Animate}
 		 */
 		start: function() {
 			if (_isRunning) { return; }
@@ -108,7 +137,7 @@ Storm.animate = (function() {
 
 		/**
 		 * Stop requestAnimationFrame from calling hooked functions
-		 * @return {this}
+		 * @return {Animate}
 		 */
 		stop: function() {
 			if (!_isRunning) { return; }

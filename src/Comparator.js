@@ -29,19 +29,37 @@ var _SORT = {
 		// Using _.size ensures a unique id
 		// for the type passed
 		_SORT[type] = _.size(_SORT);
-	};
+	},
+
+	/**
+	 * Caching of the sort value by model id
+	 * @type {Object}
+	 */
+	_store = {};
 
 /**
  * Used by the Collection to sort Models. Having
  * a separate object used by the model normalizes
  * sorting and allows optimization by caching values
+ * @class Comparator
  * @param {String} key the key on the model used for comparison
  * @param {Storm.Comparator.SORT} type [optional]
  */
 var Comparator = Storm.Comparator = function(key, type) {
+	/**
+	 * The model key to use to sort
+	 * @type {String}
+	 * @private
+	 */
 	this._key = key;
+
+	/**
+	 * The type of sorting we'll be doing
+	 * @default SORT.alphabetical
+	 * @type {SORT} type
+	 * @private
+	 */
 	this._type = type || _SORT.alphabetical;
-	this._store = {};
 };
 
 _.extend(Comparator, {
@@ -82,6 +100,7 @@ _.extend(Comparator, {
 });
 
 Comparator.prototype = {
+	/** @constructor */
 	constructor: Comparator,
 	
 	/**
@@ -98,7 +117,7 @@ Comparator.prototype = {
 	 * Invalidates the sort value of a model
 	 * by deleting it from the store
 	 * @param  {Storm.Model} model
-	 * @return {this}
+	 * @return {Comparator}
 	 */
 	invalidateSortValue: function(model) {
 		delete this.store[model.getId()];
@@ -112,12 +131,12 @@ Comparator.prototype = {
 	 */
 	getSortValue: function(model) {
 		var id = model.getId();
-		if (this._store[id]) { return this._store[id]; }
+		if (_store[id]) { return _store[id]; }
 
 		if (!this[_SORT_NAMES[this._type]]) { return console.error(Storm.name + ': Comparator does not have a method for the sort type assigned', this._type, _SORT_NAMES{this._type]); }
 		var value = this[_SORT_NAMES[this._type]].call(this, model);
 		
-		this._store[id] = value;
+		_store[id] = value;
 		return value;
 	},
 
@@ -160,7 +179,15 @@ Comparator.prototype = {
 		return value;
 	},
 
+	/**
+	 * Debug string
+	 * @return {String}
+	 */
 	toString: function() {
-		return '['+ Storm.name +' Comparator, id: '+ this._id +']';
+		return _toString('Comparator', {
+			id: this._id,
+			key: this._key,
+			type: _SORT_NAMES[this._type]
+		});
 	}
 };

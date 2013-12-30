@@ -24,15 +24,25 @@ var _CLASSIFICATION = {
  * A wrapper for an ajax "call" configuration (referred to as a call
  * within AjaxCall). This object can ajax, abort and be passed
  * around the application.
- * 
+ *
+ * @class AjaxCall
  * @param {Object} callObj
- * @param {Object} extensionObj
- * @param {Object} options
+ * @param {Object} opts
+ * @param {Object} callTemplate
  */
-var AjaxCall = Storm.AjaxCall = function(callObj, extensionObj, options) {
+var AjaxCall = Storm.AjaxCall = function(callObj, opts, callTemplate) {
+	/**
+	 * @type {Id}
+	 * @private
+	 */
 	this._id = _uniqId('AjaxCall');
-	this._call = this.configure(callObj, extensionObj, options);
-	this.data = null;
+
+	/**
+	 * The call object that will be sent to Storm.ajax
+	 * @type {Object}
+	 * @private
+	 */
+	this._call = this._configure(callObj, opts, callTemplate);
 };
 
 _.extend(AjaxCall, {
@@ -50,15 +60,19 @@ _.extend(AjaxCall, {
 				_addClassification(type[idx]);
 			}
 		} else {
-			_addClassification(type[idx]);				
+			_addClassification(type[idx]);
 		}
 	}
 });
 
-
 AjaxCall.prototype = {
+	/** @constructor */
 	constructor: AjaxCall,
 
+	/**
+	 * Defaults
+	 * @type {Object}
+	 */
 	defaults: {
 		name: '',
 		type: 'GET',
@@ -75,21 +89,31 @@ AjaxCall.prototype = {
 
 	/**
 	 * Configure the call object so that it's ready to ajax
-	 * @param  {Object} providedCall Call object
-	 * @param  {Object} extension    Addition (manual) configurations for the url
-	 * @param  {Object} opts         Options from the calling context to merge into the url
+	 * @param  {Object} providedCall call object
+	 * @param  {Object} opts      configurations for the url
 	 * @return {Object} call
+	 * @private
 	 */
-	configure: function(providedCall, extension, opts) {
-		// TODO: Fix
-		var call = _.extend({}, this.defaults, DataContext.callTemplate, providedCall);
+	_configure: function(providedCall, opts, callTemplate) {
+		var call = _.extend({}, this.defaults, callTemplate, providedCall);
 
-		var url = call.url;
-		url = this._urlMerger(url, _.extend({}, DataContext.settings, opts, extension));
-		call.url = url;
-		call._id = this._id;
+		call.url = _stringFormat(call.url, opts);
 
 		return call;
+	},
+
+	/**
+	 * Get or set the data on the call. Passing a parameter
+	 * will set the data where-as no parameters will return
+	 * the data on the call
+	 * @param  {Value || undefined} data
+	 * @return {Value || AjaxCall}
+	 */
+	data: function(data) {
+		if (!arguments.length) { return this._call.data; }
+		
+		this._call.data = data;
+		return this;
 	},
 
 	/**
@@ -128,7 +152,6 @@ AjaxCall.prototype = {
 		return (type === this._call.classification);
 	},
 
-	// Get | Set --------------------------------------------
 	/**
 	 * Gets a property on the call configuration
 	 * @param  {String} key    the key to get from the configuration
@@ -142,14 +165,13 @@ AjaxCall.prototype = {
 	 * Sets a property on the call configuration
 	 * @param  {String} key    the key to replace in the configuration
 	 * @param  {Value}  value  the value to apply
-	 * @return {this}
+	 * @return {AjaxCall}
 	 */
 	set: function(key, value) {
 		this.call[key] = value;
 		return this;
 	},
 
-	// Send ------------------------------------------------
 	/**
 	 * Uses Storm.ajax to ajax the stored call object
 	 * @param  {Storm.Promise} promise optional
@@ -163,7 +185,7 @@ AjaxCall.prototype = {
 			type: call.type,
 			url: call.url,
 			contentType: call.content,
-			data: call.data || this.data,
+			data: call.data,
 			cache: call.cache,
 			success: function(data) {
 				if (promise) { promise.resolve(data); }
@@ -227,7 +249,14 @@ AjaxCall.prototype = {
 		return this;
 	},
 
+	/**
+	 * Debug string
+	 * @return {String}
+	 */
 	toString: function() {
-		return '['+ Storm.name +' AjaxCall, id: '+ this._id +']';
+		return _toString('AjaxCall', {
+			id: this._id,
+			call: JSON.stringify(this._call)
+		});
 	}
 };

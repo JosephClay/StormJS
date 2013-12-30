@@ -4,43 +4,66 @@
  * The base data object for the application. Stores
  * and protects a piece of data and gives an interface
  * to follow and manipulate the data. Works in conjunction
- * with Storm.Collection to organize data into sets 
+ * with a Collection to organize data into sets 
  * 
- * @class Storm.Model
+ * @class Model
  * @param {Object} data
- * @param {Object} options
+ * @param {Object} opts
  */
-var Model = Storm.Model = function(data, options) {
+var Model = Storm.Model = function(data, opts) {
 	Events.core.call(this);
 
+	/**
+	 * @type {Id}
+	 * @private
+	 */
 	this._id = _uniqId('Model');
 
-	// Hold on to the passed options both for
-	// reference inside the model and for cloning
-	this.options = options;
+	/**
+	 * Hold on to the passed options both for
+	 * reference inside the model and for cloning
+	 * @type {Object}
+	 */
+	this.options = opts;
 
-	// getters (recorded by key as a function)
+	/**
+	 * getters (recorded by key as a function)
+	 * @type {Object}
+	 */
 	this._getters = {};
 	
-	// setters (recorded by key as a function)
+	/**
+	 * setters (recorded by key as a function)
+	 * @type {Object}
+	 */
 	this._setters = {};
 
 	// Merge the data and the defaults
 	data = _.extend({}, this.defaults, data);
 	
-	// Protect the data, __ === secret... gentleman's agreement
+	/**
+	 * Protect the data, __ === secret... gentleman's agreement
+	 * @type {Object}
+	 */
 	this.__data = this._duplicate(data);
 	
-	// Create duplicate of the original data to
-	// compare against for checks and allow restoration.
-	// Make sure these are protected as well
+	/**
+	 * Create duplicate of the original data to
+	 * compare against for checks and allow restoration.
+	 * Make sure these are protected as well
+	 * @type {Object}
+	 */
 	this.__originalData = this.__previousData = this._duplicate(data);
 
-	// If there's a @type {Storm.Comparator}, then bind it to this model
+	/**
+	 * If there's a Comparator, then bind it to this model
+	 * @type {Comparator}
+	 */
 	if (this.comparator) { this.comparator.bind(this); }
 };
 
 _.extend(Model.prototype, Events.core.prototype, {
+	/** @constructor */
 	constructor: Model,
 	
 	/**
@@ -66,12 +89,11 @@ _.extend(Model.prototype, Events.core.prototype, {
 	defaults: {},
 
 	/**
-	 * Returns the private id for this model
-	 * @return {Number}
+	 * Get the private id of the Model
+	 * @return {Number} id
 	 */
 	getId: function() { return this._id; },
 
-	// Restore ------------------------------------------
 	/**
 	 * Restores the data of the model back to the
 	 * original value
@@ -96,7 +118,6 @@ _.extend(Model.prototype, Events.core.prototype, {
 		return this;
 	},
 
-	// Getter | Setter ------------------------------------------
 	/**
 	 * Adds a getter for the property
 	 * @param  {String}   prop
@@ -123,7 +144,6 @@ _.extend(Model.prototype, Events.core.prototype, {
 		return this;
 	},
 
-	// Get | Set ------------------------------------------
 	/**
 	 * Get a value from the Model, passing it through the getter
 	 * method if one exists. An array can be passed to get multiple
@@ -164,7 +184,7 @@ _.extend(Model.prototype, Events.core.prototype, {
 
 	/**
 	 * Sets the value of a property in the Model. Values can be set
-	 * in key value pairs in an object, or as string + value as
+	 * in key-value pairs in an object, or as string + value as
 	 * separate parameters
 	 * @param {String || Object} prop
 	 * @param {Data} data
@@ -203,12 +223,11 @@ _.extend(Model.prototype, Events.core.prototype, {
 		this._change(prop, data, opts);
 	},
 	
-	// Add | Remove ------------------------------------------
 	/**
 	 * Adds properties/values to the model data. Only works to add
 	 * additional data to the model data, it will not modify any
 	 * pre-existing data. An object can be passed to set multiple
-	 * key values or a string and value as separate parameters
+	 * key-values or a string and value as separate parameters
 	 * @param {String || Object} prop
 	 * @param {Value} data
 	 * @param {Object} opts [optional]
@@ -216,7 +235,7 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 */
 	add: function(prop, data, opts) {
 		// If the prop is not a string (is an object)
-		// then add multiple key values in one pass
+		// then add multiple key-values in one pass
 		if (!_.isString(prop)) {
 			var key;
 			for (key in prop) {
@@ -250,7 +269,6 @@ _.extend(Model.prototype, Events.core.prototype, {
 		this._remove(prop, opts);
 	},
 
-	// Previous ------------------------------------------
 	/**
 	 * Returns the previous value for the property
 	 * @param  {String} prop
@@ -260,7 +278,6 @@ _.extend(Model.prototype, Events.core.prototype, {
 		return this.__previousData[prop];
 	},
 
-	// Has | Has Changed ------------------------------------------
 	/**
 	 * Checks if the model data has the provided property
 	 * @param  {String}  prop
@@ -289,7 +306,6 @@ _.extend(Model.prototype, Events.core.prototype, {
 		return false;
 	},
 
-	// Clone ------------------------------------------
 	/**
 	 * Returns a clone of the model
 	 * @return {Model}
@@ -310,6 +326,7 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 * 
 	 * @param  {Value} data
 	 * @return {Value}
+	 * @private
 	 */
 	_duplicate: function(data) {
 		// Keep null/undefined from being passed to JSON
@@ -319,7 +336,6 @@ _.extend(Model.prototype, Events.core.prototype, {
 		return this.supportComplexDataTypes ? _.clone(data) : JSON.parse(JSON.stringify(data));
 	},
 
-	// Data Retrieval ------------------------------------------
 	/**
 	 * Retrieve the model data
 	 * @return {Object}
@@ -328,7 +344,6 @@ _.extend(Model.prototype, Events.core.prototype, {
 		return this.__data;
 	},
 
-	// Add | Remove | Change ------------------------------------------
 	/**
 	 * Duplicates the current model data and assignes it
 	 * to previous data
@@ -396,7 +411,6 @@ _.extend(Model.prototype, Events.core.prototype, {
 		this.trigger('model:change', prop, data);
 	},
 
-	// Comparator ------------------------------------------
 	/**
 	 * Compares this model to another. Used by Collection for
 	 * sorting. Checks for Storm.Comparator to use natively but
@@ -410,12 +424,12 @@ _.extend(Model.prototype, Events.core.prototype, {
 								.localeCompare(this.comparator.getSortValue(comparisonModel));
 	},
 
-	// Validate ------------------------------------------
 	/**
 	 * Validates the model when a value is changed via
 	 * .set(). Looks for a .validate() method on the model.
 	 * @return {Boolean}
 	 * @default true
+	 * @private
 	 */
 	_validate: function() {
 		if (!this.validate) { return true; }
@@ -432,17 +446,23 @@ _.extend(Model.prototype, Events.core.prototype, {
 		return this.__data;
 	},
 
+	/**
+	 * Debug string
+	 * @return {String}
+	 */
 	toString: function() {
-		return '['+ Storm.name +' Model, id: '+ this._id +']';
+		return _toString('Model', {
+			id: this._id
+		});
 	}
 });
 
 // Underscore methods that we want to implement on the Model.
 _.each([
 	'each',
+	'isEqual',
+	'isEmpty',
 	'size',
-	'toArray',
-	'pluck',
 	'keys',
 	'values',
 	'pairs',
