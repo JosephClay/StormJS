@@ -4,7 +4,7 @@
  * The name of this class
  * @type {String}
  */
-var _VIEW = 'View',
+var _VIEW = 'View';
 
 /**
  * A view at its most basic. Sets up a couple
