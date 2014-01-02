@@ -13,8 +13,8 @@ var previousStorm = root.Storm,
 	Storm = root.Storm = {
 		name: 'StormJS',
 		VERSION: '0.0.1',
-		ajax: root.$ || { ajax: function() { console.error(Storm.name + ': Storm.ajax NYI'); } },
-		$: root.$ || function() { console.error(Storm.name + ': Storm.$ NYI'); }
+		ajax: root.$ || { ajax: function() { console.error(_errorMessage('Storm.ajax', 'NYI')); } },
+		$: root.$ || function() { console.error(_errorMessage('Storm.$', 'NYI')); }
 	};
 
 //----
@@ -93,6 +93,21 @@ var _toString = function(name, props) {
 	});
 };
 
+/**
+ * Normalize how Storm logs an error message for debugging
+ * @param  {String} name  required
+ * @param  {String} message required
+ * @return {String}
+ * @private
+ */
+var _errorMessage = function(name, message) {
+	return _stringFormat('{storm}: {name}, {message}', {
+		storm: Storm.name,
+		name: name,
+		message: message
+	});
+};
+
 //----
 
 // Mixin ############################################################################
@@ -107,7 +122,7 @@ var _toString = function(name, props) {
  * @private
  */
 var _mixin = function(name, prop) {
-	if (Storm[name] !== undefined) { return console.error(Storm.name +': Cannot mixin, '+ name +' already exists: ', Storm[name]); }
+	if (Storm[name] !== undefined) { return console.error(_errorMessage('mixin', 'Cannot mixin. "'+ name +'" already exists: '), name, Storm[name], prop); }
 	Storm[name] = prop;
 };
 
@@ -224,11 +239,17 @@ _.extend(Storm, Events.core.construct());
 // Promise ##########################################################################
 
 	/**
+	 * The name of the class
+	 * @type {String}
+	 * @private
+	 */
+var _PROMISE = 'Promise',
+	/**
 	 * Status values, determines
 	 * what the promise's status is
 	 * @type {Object}
 	 */
-var _PROMISE_STATUS = {
+	_PROMISE_STATUS = {
 		idle:       0,
 		progressed: 1,
 		failed:     2,
@@ -254,6 +275,12 @@ var _PROMISE_STATUS = {
  * @class Promise
  */
 var Promise = Storm.Promise = function() {
+	/**
+	 * @type {Id}
+	 * @private
+	 */
+	this._id = _uniqId(_PROMISE);
+
 	/**
 	 * Registered functions organized by _PROMISE_CALL
 	 * @type {Object}
@@ -453,7 +480,8 @@ Promise.prototype = {
 	 * @return {String}
 	 */
 	toString: function() {
-		return _toString('Promise', {
+		return _toString(_PROMISE, {
+			id: this._id,
 			status: _.invert(_PROMISE_STATUS)[this._status],
 			done: this._getCalls(_PROMISE_CALL.done).length,
 			fail: this._getCalls(_PROMISE_CALL.fail).length,
@@ -639,12 +667,19 @@ var When = Storm.when = (function(Promise) {
  * https://github.com/sole/tween.js/
  */
 Storm.animate = (function() {
+	
+		/**
+		 * The name of the class
+		 * @type {String}
+		 * @private
+		 */
+	var _ANIMATE = 'Animate',
 		/**
 		 * Stores the index of loop functions
 		 * @type {Object}
 		 * @private
 		 */
-	var _hooks = {},
+		_hooks = {},
 		/**
 		 * Stores function calls
 		 * @type {Array}
@@ -693,8 +728,8 @@ Storm.animate = (function() {
 		 * @return {String}   id
 		 */
 		hook: function(func) {
-			if (!_.isFunction(func)) { return console.error(Storm.name +': Parameter must be a function: ', func); }
-			var id = _uniqId('Animate');
+			if (!_.isFunction(func)) { return console.error(_errorMessage(_ANIMATE, 'Parameter must be a function'), func); }
+			var id = _uniqId(_ANIMATE);
 			_hooks[id] = _loop.length;
 			_loop.push(func);
 			return id;
@@ -749,69 +784,71 @@ Storm.animate = (function() {
 
 // Request ##########################################################################
 
-/**
- * Stores in-progress AjaxCalls by id
- * @type {Object}
- */
-var _requestsRecords = {};
-
-/**
- * Private AjaxCall tracker. Only gets called from AjaxCall
- * when the state of the call changes
- * @private
- */
-var Request = {
+var _REQUEST = 'request',
 
 	/**
-	 * Called when an AjaxCall is sent, notifies Storm.request
-	 * Records the call in the records
-	 * @param  {AjaxCall} call
+	 * Stores in-progress AjaxCalls by id
+	 * @type {Object}
 	 */
-	send: function(call) {
-		// this call is already being tracked, stop
-		if (_requestsRecords[call.getId()]) { return; }
-		_requestsRecords[call.getId()] = call;
-		
-		Storm.request.trigger('send', call);
-	},
+	_requestsRecords = {},
 
 	/**
-	 * Called when an AjaxCall is done, notifies Storm.request
-	 * @param  {AjaxCall}   call
+	 * Private AjaxCall tracker. Only gets called from AjaxCall
+	 * when the state of the call changes
+	 * @private
 	 */
-	done: function(call) {
-		Storm.request.trigger('done', call);
-	},
+	Request = {
 
-	/**
-	 * Called when an AjaxCall fails, notifies Storm.request
-	 * @param  {AjaxCall}   call
-	 */
-	fail: function(call) {
-		Storm.request.trigger('fail', call);
-	},
+		/**
+		 * Called when an AjaxCall is sent, notifies Storm.request
+		 * Records the call in the records
+		 * @param  {AjaxCall} call
+		 */
+		send: function(call) {
+			// this call is already being tracked, stop
+			if (_requestsRecords[call.getId()]) { return; }
+			_requestsRecords[call.getId()] = call;
+			
+			Storm.request.trigger('send', call);
+		},
 
-	/**
-	 * Called when an AjaxCall is aborted, notifies Storm.request
-	 * @param  {AjaxCall}   call
-	 */
-	abort: function(call) {
-		Storm.request.trigger('abort', call);
-	},
+		/**
+		 * Called when an AjaxCall is done, notifies Storm.request
+		 * @param  {AjaxCall}   call
+		 */
+		done: function(call) {
+			Storm.request.trigger('done', call);
+		},
 
-	/**
-	 * Called when an AjaxCall is done/aborted/failed, notifies Storm.request
-	 * Removes the call from the records
-	 * @param  {AjaxCall}   call
-	 */
-	always: function(call) {
-		// This call is not being tracked, stop
-		if (!_requestsRecords[call.getId()]) { return; }
-		delete _requestsRecords[call.getId()];
-		
-		Storm.request.trigger('always', call);
-	}
-};
+		/**
+		 * Called when an AjaxCall fails, notifies Storm.request
+		 * @param  {AjaxCall}   call
+		 */
+		fail: function(call) {
+			Storm.request.trigger('fail', call);
+		},
+
+		/**
+		 * Called when an AjaxCall is aborted, notifies Storm.request
+		 * @param  {AjaxCall}   call
+		 */
+		abort: function(call) {
+			Storm.request.trigger('abort', call);
+		},
+
+		/**
+		 * Called when an AjaxCall is done/aborted/failed, notifies Storm.request
+		 * Removes the call from the records
+		 * @param  {AjaxCall}   call
+		 */
+		always: function(call) {
+			// This call is not being tracked, stop
+			if (!_requestsRecords[call.getId()]) { return; }
+			delete _requestsRecords[call.getId()];
+			
+			Storm.request.trigger('always', call);
+		}
+	};
 
 /**
  * Ajax tracking mechanism. Operates via events
@@ -836,6 +873,14 @@ _.extend(Storm.request, {
 	 */
 	getTotal: function() {
 		return _.size(_requestsRecords);
+	},
+
+	/**
+	 * Debug string
+	 * @return {String}
+	 */
+	toString: function() {
+		return _toString(_REQUEST);
 	}	
 });
 
@@ -843,14 +888,20 @@ _.extend(Storm.request, {
 
 // Ajax Call ########################################################################
 
-/**
- * Available classifications for a call to reside in.
- * Gives flexibility to a call to be in a classification
- * that gives it meaning to the application and not the
- * server 
- * @type {Object[Number]}
- */
-var _CLASSIFICATION = {
+	/**
+	 * The name of the class
+	 * @type {String}
+	 * @private
+	 */
+var _AJAX_CALL = 'AjaxCall',
+	/**
+	 * Available classifications for a call to reside in.
+	 * Gives flexibility to a call to be in a classification
+	 * that gives it meaning to the application and not the
+	 * server 
+	 * @type {Object[Number]}
+	 */
+	_CLASSIFICATION = {
 		nonblocking: 0,
 		blocking: 1
 	};
@@ -878,7 +929,7 @@ var AjaxCall = Storm.AjaxCall = function(callObj, opts, callTemplate) {
 	 * @type {Id}
 	 * @private
 	 */
-	this._id = _uniqId('AjaxCall');
+	this._id = _uniqId(_AJAX_CALL);
 
 	/**
 	 * The call object that will be sent to Storm.ajax
@@ -1097,7 +1148,7 @@ AjaxCall.prototype = {
 	 * @return {String}
 	 */
 	toString: function() {
-		return _toString('AjaxCall', {
+		return _toString(_AJAX_CALL, {
 			id: this._id,
 			call: JSON.stringify(this._call)
 		});
@@ -1107,6 +1158,13 @@ AjaxCall.prototype = {
 //----
 
 // Data Context #####################################################################
+
+/**
+ * The name of the class
+ * @type {String}
+ * @private
+ */
+var _DATA_CONTEXT = 'DataContext';
 
 /**
  * Used to construct AjaxCalls to communicate with the server.
@@ -1119,7 +1177,7 @@ var DataContext = Storm.DataContext = function() {
 	 * @type {Id}
 	 * @private
 	 */
-	this._id = _uniqId('DataContext');
+	this._id = _uniqId(_DATA_CONTEXT);
 };
 
 /**
@@ -1216,7 +1274,7 @@ DataContext.prototype = {
 	 * @return {String}
 	 */
 	toString: function() {
-		return _toString('DataContext', {
+		return _toString(_DATA_CONTEXT, {
 			id: this._id
 		});
 	}
@@ -1243,11 +1301,16 @@ DataContext.prototype = {
 Storm.template = (function() {
 	
 		/**
+		 * The name of this class
+		 * @type {String}
+		 */
+	var _TEMPLATE = 'template',
+		/**
 		 * Template strings registered by an id string
 		 * @type {Object}
 		 * @private
 		 */
-	var _templates = {},
+		_templates = {},
 		/**
 		 * Compiled templates registered by an id string
 		 * @type {Object}
@@ -1284,7 +1347,7 @@ Storm.template = (function() {
 		// id string, go get the html for the template
 		if (name[0] === '#') {
 			var element = document.getElementById(name.substring(1, name.length));
-			if (!element) { return console.error(Storm.name +': Cannot find reference to "'+ name +'" in DOM'); }
+			if (!element) { return console.error(_errorMessage(_TEMPLATE, 'Cannot find reference to "'+ name +'" in DOM'), name, tpl); }
 			tpl = element.innerHTML;
 		}
 
@@ -1305,7 +1368,7 @@ Storm.template = (function() {
 		if (_.isFunction(tpl)) { tpl = tpl.call(); }
 		if (_.isString(tpl)) { return tpl.trim(); }
 		if (_.isArray(tpl)) { return tpl.join('\n').trim(); }
-		console.error(Storm.name +': Template (or the return value) was of unknown type');
+		console.error(_errorMessage(_TEMPLATE, 'Template (or the return value) was of unknown type'), tpl);
 		return '';
 	};
 
@@ -1320,7 +1383,7 @@ Storm.template = (function() {
 		var compTpl = _compiledTemplates[name];
 		if (compTpl) { return compTpl; }
 
-		if (!_engine) { console.error(Storm.name +': No template engine is available'); }
+		if (!_engine) { console.error(_errorMessage(_TEMPLATE, 'No template engine is available'), _engine); }
 		return (_compiledTemplates[name] = _engine.compile(_templates[name]));
 	};
 
@@ -1374,7 +1437,7 @@ Storm.template = (function() {
 		 * @return {String}
 		 */		
 		toString: function(key) {
-			return _toString('template', {
+			return _toString(_TEMPLATE, {
 				size: _.size(_templates)
 			});
 		}
@@ -1384,6 +1447,12 @@ Storm.template = (function() {
 //----
 
 // View #############################################################################
+
+/**
+ * The name of this class
+ * @type {String}
+ */
+var _VIEW = 'View';
 
 /**
  * A view at its most basic. Sets up a couple
@@ -1398,7 +1467,7 @@ var View = Storm.View = function(opts) {
 	 * @type {Id}
 	 * @private
 	 */
-	this._id = _uniqId('View');
+	this._id = _uniqId(_VIEW);
 	
 	/** @type {Object} */
 	this.options = opts || {};
@@ -1413,7 +1482,7 @@ var View = Storm.View = function(opts) {
 _.extend(View.prototype, Events.core.prototype, {
 	/** @constructor */
 	constructor: View,
-	
+
 	/**
 	 * Returns a clone of the view
 	 * @return {View}
@@ -1441,7 +1510,7 @@ _.extend(View.prototype, Events.core.prototype, {
 	 * @return {String}
 	 */
 	toString: function() {
-		return _toString('View', {
+		return _toString(_VIEW, {
 			id: this._id
 		});
 	}
@@ -1450,6 +1519,13 @@ _.extend(View.prototype, Events.core.prototype, {
 //----
 
 // Model ############################################################################
+
+/**
+ * The name of the class
+ * @type {String}
+ * @private
+ */
+var _MODEL = 'Model';
 
 /**
  * The base data object for the application. Stores
@@ -1468,7 +1544,7 @@ var Model = Storm.Model = function(data, opts) {
 	 * @type {Id}
 	 * @private
 	 */
-	this._id = _uniqId('Model');
+	this._id = _uniqId(_MODEL);
 
 	/**
 	 * Hold on to the passed options both for
@@ -1576,8 +1652,8 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 * @return {Model}
 	 */
 	getter: function(prop, func) {
-		if (!_.isFunction(func)) { return console.error(Storm.name + ': Getter must be a function.'); }
-		if (this._getters[prop]) { return console.error(Storm.name + ': Getter is already defined', prop, func); }
+		if (!_.isFunction(func)) { return console.error(_errorMessage(_MODEL, 'Getter must be a function.', prop, func)); }
+		if (this._getters[prop]) { return console.error(_errorMessage(_MODEL, 'Getter is already defined', prop, func)); }
 		this._getters[prop] = func;
 		return this;
 	},
@@ -1589,8 +1665,8 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 * @return {Model}
 	 */
 	setter: function(prop, func) {
-		if (!_.isFunction(func)) { return console.error(Storm.name + ': Setter must be a function', prop, func); }
-		if (this._setters[prop]) { return console.error(Storm.name + ': Setter is already defined', prop, func); }
+		if (!_.isFunction(func)) { return console.error(_errorMessage(_MODEL, 'Setter must be a function', prop, func)); }
+		if (this._setters[prop]) { return console.error(_errorMessage(_MODEL, 'Setter is already defined', prop, func)); }
 		this._setters[prop] = func;
 		return this;
 	},
@@ -1902,7 +1978,7 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 * @return {String}
 	 */
 	toString: function() {
-		return _toString('Model', {
+		return _toString(_MODEL, {
 			id: this._id
 		});
 	}
@@ -1939,12 +2015,18 @@ _.each([
 // Comparator #######################################################################
 
 	/**
+	 * The name of the class
+	 * @type {String}
+	 * @private
+	 */
+var _COMPARATOR = 'Comparator',
+	/**
 	 * Stores sort types to use to compare models
 	 * Default is alphabetical (0)
 	 * @type {Object}
 	 * @default alphabetical
 	 */
-var _SORT = {
+	_SORT = {
 		alphabetical: 0,
 		numeric: 1,
 		date: 2
@@ -1984,6 +2066,12 @@ var _SORT = {
  * @param {Storm.Comparator.SORT} type [optional]
  */
 var Comparator = Storm.Comparator = function(key, type) {
+	/**
+	 * @type {Id}
+	 * @private
+	 */
+	this._id = _uniqId(_COMPARATOR);
+
 	/**
 	 * The model key to use to sort
 	 * @type {String}
@@ -2071,7 +2159,7 @@ Comparator.prototype = {
 		var id = model.getId();
 		if (_store[id]) { return _store[id]; }
 
-		if (!this[_SORT_NAMES[this._type]]) { return console.error(Storm.name + ': Comparator does not have a method for the sort type assigned', this._type, _SORT_NAMES[this._type]); }
+		if (!this[_SORT_NAMES[this._type]]) { return console.error(_errorMessage('Comparator', 'No method for the sort type assigned'), this._type, _SORT_NAMES[this._type]); }
 		var value = this[_SORT_NAMES[this._type]].call(this, model);
 		
 		_store[id] = value;
@@ -2122,7 +2210,7 @@ Comparator.prototype = {
 	 * @return {String}
 	 */
 	toString: function() {
-		return _toString('Comparator', {
+		return _toString(_COMPARATOR, {
 			id: this._id,
 			key: this._key,
 			type: _SORT_NAMES[this._type]
@@ -2133,6 +2221,12 @@ Comparator.prototype = {
 //----
 
 // Collection #######################################################################
+
+/**
+ * The name of the class
+ * @type {String}
+ */
+var _COLLECTION = 'Collection';
 
 /**
  * A collection of Models
@@ -2147,7 +2241,7 @@ var Collection = Storm.Collection = function(data) {
 	 * @type {Id}
 	 * @private
 	 */
-	this._id = _uniqId('Collection');
+	this._id = _uniqId(_COLLECTION);
 	
 	/**
 	 * Storage for the models
@@ -2162,7 +2256,7 @@ var Collection = Storm.Collection = function(data) {
 _.extend(Collection.prototype, Events.core.prototype, {
 	/** @constructor */
 	constructor: Collection,
-	
+
 	/** @type {Model} */
 	Model: Model,
 
@@ -2539,7 +2633,7 @@ _.extend(Collection.prototype, Events.core.prototype, {
 	 * @return {String}
 	 */
 	toString: function() {
-		return _toString('Collection', {
+		return _toString(_COLLECTION, {
 			id: this._id,
 			length: this.length()
 		});
@@ -2622,6 +2716,13 @@ _.each([
 // Module ###########################################################################
 
 /**
+ * The name of the class
+ * @type {String}
+ * @private
+ */
+var _MODULE = 'Module';
+
+/**
  * A reusable module equipped with events
  * @class Module
  */
@@ -2632,19 +2733,19 @@ var Module = Storm.Module = function() {
 	 * @type {Id}
 	 * @private
 	 */
-	this._id = _uniqId('Module');
+	this._id = _uniqId(_MODULE);
 };
 
 _.extend(Module.prototype, Events.core.prototype, {
 	/** @constructor */
 	constructor: Module,
-
+	
 	/**
 	 * Debug string
 	 * @return {String}
 	 */
 	toString: function() {
-		return _toString('Module', {
+		return _toString(_MODULE, {
 			id: this._id
 		});
 	}
@@ -2654,6 +2755,13 @@ _.extend(Module.prototype, Events.core.prototype, {
 //----
 
 // Cache ############################################################################
+	
+/**
+ * The name of the class
+ * @type {String}
+ * @private
+ */
+var _CACHE = 'Cache';
 
 /**
  * An in-memory key-value store
@@ -2664,7 +2772,7 @@ var Cache = Storm.Cache = function() {
 	 * @type {Id}
 	 * @private
 	 */
-	this._id = _uniqId('Cache');
+	this._id = _uniqId(_CACHE);
 	
 	/**
 	 * Holds the private cache
@@ -2840,7 +2948,7 @@ Cache.prototype = {
 	 * @return {String}
 	 */
 	toString: function(key) {
-		return _toString('Cache', {
+		return _toString(_CACHE, {
 			id: this._id,
 			size: _.size(this._cache)
 		});
@@ -2857,15 +2965,19 @@ Storm.cache = new Cache();
 // Storage ##########################################################################
 
 	/**
+	 * The name of this class
+	 * @type {String}
+	 */
+var _STORAGE = 'Storage',
+	/**
 	 * The storage type: local or session
 	 * @type {Object}
 	 */
-var _STORAGE_TYPE = {
+	_STORAGE_TYPE = {
 		cookie: 0,
-		local: 1,
-		session: 2
-	},
-	_STORAGE_TYPE_NAME = _.invert(_STORAGE_TYPE);
+		localStorage: 1,
+		sessionStorage: 2
+	};
 
 /**
  * Based off of Remy's polyfill: https://gist.github.com/remy/350433
@@ -2880,23 +2992,31 @@ var Storage = Storm.Storage = function(type, opts) {
 	opts = opts || {};
 
 	/**
+	 * @type {Id}
+	 * @private
+	 */
+	this._id = _uniqId(_STORAGE);
+
+	/**
 	 * The type of storage
 	 * @default STORAGE_TYPE.cookie
 	 * @type {STORAGE_TYPE}
 	 */
 	this.type = type || _STORAGE_TYPE.cookie;
 
+	var storageTypeName = _.invert(_STORAGE_TYPE);
+
 	/**
 	 * The name of the store.
 	 * @type {String}
 	 */
-	this.name = opts.name || _STORAGE_TYPE_NAME[this.type];
+	this.name = opts.name || storageTypeName[this.type];
 	
 	/**
 	 * The type of storage we're using
 	 * @type {String} localStorage || sessionStorage
 	 */
-	this.storage = root[this.name + 'Storage'];
+	this.storage = root[storageTypeName[this.type]];
 	
 	/**
 	 * Whether we have access to native local/session storage
@@ -3124,8 +3244,8 @@ Storage.prototype = {
 	 * @return {String}
 	 */
 	toString: function(key) {
-		return _toString('Storage', {
-			type: _STORAGE_TYPE_NAME[this.type],
+		return _toString(_STORAGE, {
+			type: _.invert(_STORAGE_TYPE)[this.type],
 			length: this.length
 		});
 	}
@@ -3136,13 +3256,13 @@ Storage.prototype = {
  * Expose a store for local storage
  * @type {Storage}
  */
-Storm.store = new Storage(Storage.TYPE.local);
+Storm.store = new Storage(_STORAGE_TYPE.localStorage);
 
 /**
  * Expose an instace of storage for the session
  * @type {Storage}
  */
-Storm.session = new Storage(Storage.TYPE.session);
+Storm.session = new Storage(_STORAGE_TYPE.sessionStorage);
 
 //----
 
