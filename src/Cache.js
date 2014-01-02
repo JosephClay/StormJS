@@ -1,4 +1,11 @@
 // Cache ############################################################################
+	
+/**
+ * The name of the class
+ * @type {String}
+ * @private
+ */
+var _CACHE = 'Cache';
 
 /**
  * An in-memory key-value store
@@ -9,7 +16,7 @@ var Cache = Storm.Cache = function() {
 	 * @type {Id}
 	 * @private
 	 */
-	this._id = _uniqId('Cache');
+	this._id = _uniqId(_CACHE);
 	
 	/**
 	 * Holds the private cache
@@ -185,7 +192,7 @@ Cache.prototype = {
 	 * @return {String}
 	 */
 	toString: function(key) {
-		return _toString('Cache', {
+		return _toString(_CACHE, {
 			id: this._id,
 			size: _.size(this._cache)
 		});

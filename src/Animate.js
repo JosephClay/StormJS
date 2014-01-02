@@ -43,12 +43,19 @@
  * https://github.com/sole/tween.js/
  */
 Storm.animate = (function() {
+	
+		/**
+		 * The name of the class
+		 * @type {String}
+		 * @private
+		 */
+	var _ANIMATE = 'Animate',
 		/**
 		 * Stores the index of loop functions
 		 * @type {Object}
 		 * @private
 		 */
-	var _hooks = {},
+		_hooks = {},
 		/**
 		 * Stores function calls
 		 * @type {Array}
@@ -97,8 +104,8 @@ Storm.animate = (function() {
 		 * @return {String}   id
 		 */
 		hook: function(func) {
-			if (!_.isFunction(func)) { return console.error(_errorMessage('Animate', 'Parameter must be a function'), func); }
-			var id = _uniqId('Animate');
+			if (!_.isFunction(func)) { return console.error(_errorMessage(_ANIMATE, 'Parameter must be a function'), func); }
+			var id = _uniqId(_ANIMATE);
 			_hooks[id] = _loop.length;
 			_loop.push(func);
 			return id;

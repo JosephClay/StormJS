@@ -1,6 +1,13 @@
 // Data Context #####################################################################
 
 /**
+ * The name of the class
+ * @type {String}
+ * @private
+ */
+var _DATA_CONTEXT = 'DataContext';
+
+/**
  * Used to construct AjaxCalls to communicate with the server.
  * Intended to be a central location for configuration data
  * to get and send data about a specific model/collection type
@@ -11,7 +18,7 @@ var DataContext = Storm.DataContext = function() {
 	 * @type {Id}
 	 * @private
 	 */
-	this._id = _uniqId('DataContext');
+	this._id = _uniqId(_DATA_CONTEXT);
 };
 
 /**
@@ -108,7 +115,7 @@ DataContext.prototype = {
 	 * @return {String}
 	 */
 	toString: function() {
-		return _toString('DataContext', {
+		return _toString(_DATA_CONTEXT, {
 			id: this._id
 		});
 	}

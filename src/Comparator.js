@@ -1,12 +1,18 @@
 // Comparator #######################################################################
 
 	/**
+	 * The name of the class
+	 * @type {String}
+	 * @private
+	 */
+var _COMPARATOR = 'Comparator',
+	/**
 	 * Stores sort types to use to compare models
 	 * Default is alphabetical (0)
 	 * @type {Object}
 	 * @default alphabetical
 	 */
-var _SORT = {
+	_SORT = {
 		alphabetical: 0,
 		numeric: 1,
 		date: 2
@@ -46,6 +52,12 @@ var _SORT = {
  * @param {Storm.Comparator.SORT} type [optional]
  */
 var Comparator = Storm.Comparator = function(key, type) {
+	/**
+	 * @type {Id}
+	 * @private
+	 */
+	this._id = _uniqId(_COMPARATOR);
+
 	/**
 	 * The model key to use to sort
 	 * @type {String}
@@ -184,7 +196,7 @@ Comparator.prototype = {
 	 * @return {String}
 	 */
 	toString: function() {
-		return _toString('Comparator', {
+		return _toString(_COMPARATOR, {
 			id: this._id,
 			key: this._key,
 			type: _SORT_NAMES[this._type]

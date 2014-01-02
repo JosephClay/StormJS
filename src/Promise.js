@@ -1,11 +1,17 @@
 // Promise ##########################################################################
 
 	/**
+	 * The name of the class
+	 * @type {String}
+	 * @private
+	 */
+var _PROMISE = 'Promise',
+	/**
 	 * Status values, determines
 	 * what the promise's status is
 	 * @type {Object}
 	 */
-var _PROMISE_STATUS = {
+	_PROMISE_STATUS = {
 		idle:       0,
 		progressed: 1,
 		failed:     2,
@@ -31,6 +37,12 @@ var _PROMISE_STATUS = {
  * @class Promise
  */
 var Promise = Storm.Promise = function() {
+	/**
+	 * @type {Id}
+	 * @private
+	 */
+	this._id = _uniqId(_PROMISE);
+
 	/**
 	 * Registered functions organized by _PROMISE_CALL
 	 * @type {Object}
@@ -230,7 +242,8 @@ Promise.prototype = {
 	 * @return {String}
 	 */
 	toString: function() {
-		return _toString('Promise', {
+		return _toString(_PROMISE, {
+			id: this._id,
 			status: _.invert(_PROMISE_STATUS)[this._status],
 			done: this._getCalls(_PROMISE_CALL.done).length,
 			fail: this._getCalls(_PROMISE_CALL.fail).length,

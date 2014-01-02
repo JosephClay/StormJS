@@ -1,6 +1,13 @@
 // Model ############################################################################
 
 /**
+ * The name of the class
+ * @type {String}
+ * @private
+ */
+var _MODEL = 'Model';
+
+/**
  * The base data object for the application. Stores
  * and protects a piece of data and gives an interface
  * to follow and manipulate the data. Works in conjunction
@@ -17,7 +24,7 @@ var Model = Storm.Model = function(data, opts) {
 	 * @type {Id}
 	 * @private
 	 */
-	this._id = _uniqId('Model');
+	this._id = _uniqId(_MODEL);
 
 	/**
 	 * Hold on to the passed options both for
@@ -125,8 +132,8 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 * @return {Model}
 	 */
 	getter: function(prop, func) {
-		if (!_.isFunction(func)) { return console.error(_errorMessage('Model', 'Getter must be a function.', prop, func); }
-		if (this._getters[prop]) { return console.error(_errorMessage('Model', 'Getter is already defined', prop, func); }
+		if (!_.isFunction(func)) { return console.error(_errorMessage(_MODEL, 'Getter must be a function.', prop, func); }
+		if (this._getters[prop]) { return console.error(_errorMessage(_MODEL, 'Getter is already defined', prop, func); }
 		this._getters[prop] = func;
 		return this;
 	},
@@ -138,8 +145,8 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 * @return {Model}
 	 */
 	setter: function(prop, func) {
-		if (!_.isFunction(func)) { return console.error(_errorMessage('Model', 'Setter must be a function', prop, func); }
-		if (this._setters[prop]) { return console.error(_errorMessage('Model', 'Setter is already defined', prop, func); }
+		if (!_.isFunction(func)) { return console.error(_errorMessage(_MODEL, 'Setter must be a function', prop, func); }
+		if (this._setters[prop]) { return console.error(_errorMessage(_MODEL, 'Setter is already defined', prop, func); }
 		this._setters[prop] = func;
 		return this;
 	},
@@ -451,7 +458,7 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 * @return {String}
 	 */
 	toString: function() {
-		return _toString('Model', {
+		return _toString(_MODEL, {
 			id: this._id
 		});
 	}

@@ -1,6 +1,12 @@
 // Collection #######################################################################
 
 /**
+ * The name of the class
+ * @type {String}
+ */
+var _COLLECTION = 'Collection';
+
+/**
  * A collection of Models
  * @param {Object} data [optional]
  * @class Collection
@@ -13,7 +19,7 @@ var Collection = Storm.Collection = function(data) {
 	 * @type {Id}
 	 * @private
 	 */
-	this._id = _uniqId('Collection');
+	this._id = _uniqId(_COLLECTION);
 	
 	/**
 	 * Storage for the models
@@ -28,7 +34,7 @@ var Collection = Storm.Collection = function(data) {
 _.extend(Collection.prototype, Events.core.prototype, {
 	/** @constructor */
 	constructor: Collection,
-	
+
 	/** @type {Model} */
 	Model: Model,
 
@@ -405,7 +411,7 @@ _.extend(Collection.prototype, Events.core.prototype, {
 	 * @return {String}
 	 */
 	toString: function() {
-		return _toString('Collection', {
+		return _toString(_COLLECTION, {
 			id: this._id,
 			length: this.length()
 		});

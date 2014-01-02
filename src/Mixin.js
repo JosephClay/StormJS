@@ -10,7 +10,7 @@
  * @private
  */
 var _mixin = function(name, prop) {
-	if (Storm[name] !== undefined) { return console.error(_errorMessage('Mixin', 'Cannot mixin. "'+ name +'" already exists: '), Storm[name]); }
+	if (Storm[name] !== undefined) { return console.error(_errorMessage('mixin', 'Cannot mixin. "'+ name +'" already exists: '), name, Storm[name], prop); }
 	Storm[name] = prop;
 };
 

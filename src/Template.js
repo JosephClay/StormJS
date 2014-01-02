@@ -16,11 +16,16 @@
 Storm.template = (function() {
 	
 		/**
+		 * The name of this class
+		 * @type {String}
+		 */
+	var _TEMPLATE = 'template',
+		/**
 		 * Template strings registered by an id string
 		 * @type {Object}
 		 * @private
 		 */
-	var _templates = {},
+		_templates = {},
 		/**
 		 * Compiled templates registered by an id string
 		 * @type {Object}
@@ -57,7 +62,7 @@ Storm.template = (function() {
 		// id string, go get the html for the template
 		if (name[0] === '#') {
 			var element = document.getElementById(name.substring(1, name.length));
-			if (!element) { return console.error(_errorMessage('template', 'Cannot find reference to "'+ name +'" in DOM'), name, tpl); }
+			if (!element) { return console.error(_errorMessage(_TEMPLATE, 'Cannot find reference to "'+ name +'" in DOM'), name, tpl); }
 			tpl = element.innerHTML;
 		}
 
@@ -78,7 +83,7 @@ Storm.template = (function() {
 		if (_.isFunction(tpl)) { tpl = tpl.call(); }
 		if (_.isString(tpl)) { return tpl.trim(); }
 		if (_.isArray(tpl)) { return tpl.join('\n').trim(); }
-		console.error(_errorMessage('template', 'Template (or the return value) was of unknown type'), tpl);
+		console.error(_errorMessage(_TEMPLATE, 'Template (or the return value) was of unknown type'), tpl);
 		return '';
 	};
 
@@ -93,7 +98,7 @@ Storm.template = (function() {
 		var compTpl = _compiledTemplates[name];
 		if (compTpl) { return compTpl; }
 
-		if (!_engine) { console.error(_errorMessage('template', 'No template engine is available'), _engine); }
+		if (!_engine) { console.error(_errorMessage(_TEMPLATE, 'No template engine is available'), _engine); }
 		return (_compiledTemplates[name] = _engine.compile(_templates[name]));
 	};
 
@@ -147,7 +152,7 @@ Storm.template = (function() {
 		 * @return {String}
 		 */		
 		toString: function(key) {
-			return _toString('template', {
+			return _toString(_TEMPLATE, {
 				size: _.size(_templates)
 			});
 		}

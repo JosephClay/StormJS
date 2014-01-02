@@ -1,13 +1,19 @@
 // Ajax Call ########################################################################
 
-/**
- * Available classifications for a call to reside in.
- * Gives flexibility to a call to be in a classification
- * that gives it meaning to the application and not the
- * server 
- * @type {Object[Number]}
- */
-var _CLASSIFICATION = {
+	/**
+	 * The name of the class
+	 * @type {String}
+	 * @private
+	 */
+var _AJAX_CALL = 'AjaxCall',
+	/**
+	 * Available classifications for a call to reside in.
+	 * Gives flexibility to a call to be in a classification
+	 * that gives it meaning to the application and not the
+	 * server 
+	 * @type {Object[Number]}
+	 */
+	_CLASSIFICATION = {
 		nonblocking: 0,
 		blocking: 1
 	};
@@ -35,7 +41,7 @@ var AjaxCall = Storm.AjaxCall = function(callObj, opts, callTemplate) {
 	 * @type {Id}
 	 * @private
 	 */
-	this._id = _uniqId('AjaxCall');
+	this._id = _uniqId(_AJAX_CALL);
 
 	/**
 	 * The call object that will be sent to Storm.ajax
@@ -254,7 +260,7 @@ AjaxCall.prototype = {
 	 * @return {String}
 	 */
 	toString: function() {
-		return _toString('AjaxCall', {
+		return _toString(_AJAX_CALL, {
 			id: this._id,
 			call: JSON.stringify(this._call)
 		});
