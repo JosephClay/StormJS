@@ -133,7 +133,7 @@ Comparator.prototype = {
 		var id = model.getId();
 		if (_store[id]) { return _store[id]; }
 
-		if (!this[_SORT_NAMES[this._type]]) { return console.error(Storm.name + ': Comparator does not have a method for the sort type assigned', this._type, _SORT_NAMES[this._type]); }
+		if (!this[_SORT_NAMES[this._type]]) { return console.error(_errorMessage('Comparator', 'No method for the sort type assigned'), this._type, _SORT_NAMES[this._type]); }
 		var value = this[_SORT_NAMES[this._type]].call(this, model);
 		
 		_store[id] = value;

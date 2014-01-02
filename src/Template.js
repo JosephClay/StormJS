@@ -57,7 +57,7 @@ Storm.template = (function() {
 		// id string, go get the html for the template
 		if (name[0] === '#') {
 			var element = document.getElementById(name.substring(1, name.length));
-			if (!element) { return console.error(Storm.name +': Cannot find reference to "'+ name +'" in DOM'); }
+			if (!element) { return console.error(_errorMessage('template', 'Cannot find reference to "'+ name +'" in DOM'), name, tpl); }
 			tpl = element.innerHTML;
 		}
 
@@ -78,7 +78,7 @@ Storm.template = (function() {
 		if (_.isFunction(tpl)) { tpl = tpl.call(); }
 		if (_.isString(tpl)) { return tpl.trim(); }
 		if (_.isArray(tpl)) { return tpl.join('\n').trim(); }
-		console.error(Storm.name +': Template (or the return value) was of unknown type');
+		console.error(_errorMessage('template', 'Template (or the return value) was of unknown type'), tpl);
 		return '';
 	};
 
@@ -93,7 +93,7 @@ Storm.template = (function() {
 		var compTpl = _compiledTemplates[name];
 		if (compTpl) { return compTpl; }
 
-		if (!_engine) { console.error(Storm.name +': No template engine is available'); }
+		if (!_engine) { console.error(_errorMessage('template', 'No template engine is available'), _engine); }
 		return (_compiledTemplates[name] = _engine.compile(_templates[name]));
 	};
 

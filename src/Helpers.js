@@ -71,3 +71,18 @@ var _toString = function(name, props) {
 		props: hasProps ? props : ''
 	});
 };
+
+/**
+ * Normalize how Storm logs an error message for debugging
+ * @param  {String} name  required
+ * @param  {String} message required
+ * @return {String}
+ * @private
+ */
+var _errorMessage = function(name, message) {
+	return _stringFormat('{storm}: {name}, {message}', {
+		storm: Storm.name,
+		name: name,
+		message: message
+	});
+};

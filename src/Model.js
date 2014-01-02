@@ -125,8 +125,8 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 * @return {Model}
 	 */
 	getter: function(prop, func) {
-		if (!_.isFunction(func)) { return console.error(Storm.name + ': Getter must be a function.'); }
-		if (this._getters[prop]) { return console.error(Storm.name + ': Getter is already defined', prop, func); }
+		if (!_.isFunction(func)) { return console.error(_errorMessage('Model', 'Getter must be a function.', prop, func); }
+		if (this._getters[prop]) { return console.error(_errorMessage('Model', 'Getter is already defined', prop, func); }
 		this._getters[prop] = func;
 		return this;
 	},
@@ -138,8 +138,8 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 * @return {Model}
 	 */
 	setter: function(prop, func) {
-		if (!_.isFunction(func)) { return console.error(Storm.name + ': Setter must be a function', prop, func); }
-		if (this._setters[prop]) { return console.error(Storm.name + ': Setter is already defined', prop, func); }
+		if (!_.isFunction(func)) { return console.error(_errorMessage('Model', 'Setter must be a function', prop, func); }
+		if (this._setters[prop]) { return console.error(_errorMessage('Model', 'Setter is already defined', prop, func); }
 		this._setters[prop] = func;
 		return this;
 	},
