@@ -46,14 +46,18 @@ Storm.template = (function() {
 	 * Register a template
 	 * @param  {String} name id
 	 * @param  {String || Function || Array} tpl
+	 * @param  {Object} opts [optional]
 	 * @return {Storm.template}
 	 */
-	var _register = function(name, tpl) {
-		// If an object, multiple items are being registered.
+	var _register = function(name, tpl, opts) {
+		opts = opts || {};
+
+		// If an object, multiple items are being registered
+		// and tpl is actually opts
 		if (!_.isString(name)) {
 			var key, obj = name;
 			for (key in obj) {
-				_register(key, obj[key]);
+				_register(key, obj[key], tpl);
 			}
 			return this;
 		}
@@ -64,6 +68,13 @@ Storm.template = (function() {
 			var element = document.getElementById(name.substring(1, name.length));
 			if (!element) { return console.error(_errorMessage(_TEMPLATE, 'Cannot find reference to "'+ name +'" in DOM'), name, tpl); }
 			tpl = element.innerHTML;
+		}
+
+		// If the tpl is a compiled template @type {Function},
+		// then register it to _compiledTemplates
+		if (opts.isCompiled) {
+			_compiledTemplates[name] = tpl;
+			return this;
 		}
 
 		_templates[name] = _coerceTemplateToString(tpl);
