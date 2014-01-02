@@ -49,7 +49,7 @@ Storm.animate = (function() {
 		 * @type {String}
 		 * @private
 		 */
-	var _ANIMATE = 'Animate',
+	var _ANIMATE = 'animate',
 		/**
 		 * Stores the index of loop functions
 		 * @type {Object}
