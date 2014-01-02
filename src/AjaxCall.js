@@ -60,7 +60,7 @@ _.extend(AjaxCall, {
 				_addClassification(type[idx]);
 			}
 		} else {
-			_addClassification(type[idx]);
+			_addClassification(type);
 		}
 	}
 });

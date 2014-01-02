@@ -57,7 +57,7 @@ var _toString = function(name, props) {
 	var hasProps = _exists(props);
 
 	if (hasProps) {	
-		var arr = [];
+		var key, arr = [];
 		for (key in obj) {
 			arr.push(key + ': '+ obj[key]);
 		}

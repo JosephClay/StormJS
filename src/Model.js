@@ -260,7 +260,7 @@ _.extend(Model.prototype, Events.core.prototype, {
 	remove: function(prop, opts) {
 		if (_.isArray(prop)) {
 			var idx = prop.length;
-			while (idx-- {
+			while (idx--) {
 				this._remove(prop[idx], opts);
 			}
 			return this;
