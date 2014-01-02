@@ -1,15 +1,19 @@
 // Storage ##########################################################################
 
 	/**
+	 * The name of this class
+	 * @type {String}
+	 */
+var _STORAGE = 'Storage',
+	/**
 	 * The storage type: local or session
 	 * @type {Object}
 	 */
-var _STORAGE_TYPE = {
+	_STORAGE_TYPE = {
 		cookie: 0,
-		local: 1,
-		session: 2
-	},
-	_STORAGE_TYPE_NAME = _.invert(_STORAGE_TYPE);
+		localStorage: 1,
+		sessionStorage: 2
+	};
 
 /**
  * Based off of Remy's polyfill: https://gist.github.com/remy/350433
@@ -24,23 +28,31 @@ var Storage = Storm.Storage = function(type, opts) {
 	opts = opts || {};
 
 	/**
+	 * @type {Id}
+	 * @private
+	 */
+	this._id = _uniqId(_STORAGE);
+
+	/**
 	 * The type of storage
 	 * @default STORAGE_TYPE.cookie
 	 * @type {STORAGE_TYPE}
 	 */
 	this.type = type || _STORAGE_TYPE.cookie;
 
+	var storageTypeName = _.invert(_STORAGE_TYPE);
+
 	/**
 	 * The name of the store.
 	 * @type {String}
 	 */
-	this.name = opts.name || _STORAGE_TYPE_NAME[this.type];
+	this.name = opts.name || storageTypeName[this.type];
 	
 	/**
 	 * The type of storage we're using
 	 * @type {String} localStorage || sessionStorage
 	 */
-	this.storage = root[this.name + 'Storage'];
+	this.storage = root[storageTypeName[this.type]];
 	
 	/**
 	 * Whether we have access to native local/session storage
@@ -268,8 +280,8 @@ Storage.prototype = {
 	 * @return {String}
 	 */
 	toString: function(key) {
-		return _toString('Storage', {
-			type: _STORAGE_TYPE_NAME[this.type],
+		return _toString(_STORAGE, {
+			type: _.invert(_STORAGE_TYPE)[this.type],
 			length: this.length
 		});
 	}
@@ -280,10 +292,10 @@ Storage.prototype = {
  * Expose a store for local storage
  * @type {Storage}
  */
-Storm.store = new Storage(Storage.TYPE.local);
+Storm.store = new Storage(_STORAGE_TYPE.localStorage);
 
 /**
  * Expose an instace of storage for the session
  * @type {Storage}
  */
-Storm.session = new Storage(Storage.TYPE.session);
+Storm.session = new Storage(_STORAGE_TYPE.sessionStorage);
