@@ -15,6 +15,8 @@ var _VIEW = 'View';
 var View = Storm.View = function(opts) {
 	Events.core.call(this);
 
+	opts = opts || {};
+
 	/**
 	 * @type {Id}
 	 * @private
