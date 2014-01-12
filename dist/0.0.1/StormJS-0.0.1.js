@@ -1,4 +1,4 @@
-/*! StormJS - v0.0.1 - 2014-01-01
+/*! StormJS - v0.0.1 - 2014-01-12
  * https://github.com/dci-artform/StormJS
  * Copyright (c) 2012-2014 Joe Clay; Licensed  */
 (function(root, _, Signal, undefined) {
@@ -728,6 +728,14 @@ Storm.animate = (function() {
 		 * @return {String}   id
 		 */
 		hook: function(func) {
+			if (_.isArray(func)) {
+				var idx = 0, length = func.length;
+				for (; idx < length; idx++) {
+					func[idx] = this.hook(func[idx]);
+				}
+				return func;
+			}
+			
 			if (!_.isFunction(func)) { return console.error(_errorMessage(_ANIMATE, 'Parameter must be a function'), func); }
 			var id = _uniqId(_ANIMATE);
 			_hooks[id] = _loop.length;
@@ -2752,6 +2760,10 @@ var Module = Storm.Module = function() {
 _.extend(Module.prototype, Events.core.prototype, {
 	/** @constructor */
 	constructor: Module,
+
+	getId: function() {
+		return this._id;
+	},
 	
 	/**
 	 * Debug string
