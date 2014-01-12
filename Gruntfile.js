@@ -21,7 +21,7 @@ module.exports = function(grunt) {
 		'src/Promise.js',
 		'src/When.js',
 		
-		'src/Animate.js',
+		'src/Tick.js',
 		
 		'src/Request.js',
 		'src/AjaxCall.js',
