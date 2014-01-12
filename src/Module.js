@@ -24,6 +24,10 @@ var Module = Storm.Module = function() {
 _.extend(Module.prototype, Events.core.prototype, {
 	/** @constructor */
 	constructor: Module,
+
+	getId: function() {
+		return this._id;
+	},
 	
 	/**
 	 * Debug string
