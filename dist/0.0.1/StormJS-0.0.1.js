@@ -622,7 +622,7 @@ var When = Storm.when = (function(Promise) {
 
 //----
 
-// Animate ##########################################################################
+// Tick ##########################################################################
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
@@ -652,6 +652,13 @@ var When = Storm.when = (function(Promise) {
 	}
 }());
 
+// Date.now polyfill
+if (!Date.now) {
+	Date.now = function () {
+		return new Date().valueOf();
+	};
+}
+
 /**
  * Hook into requestAnimationFrame through Storm. Keeps
  * a single raf so that there aren't multiple calls or miss-calls
@@ -666,20 +673,25 @@ var When = Storm.when = (function(Promise) {
  * Also automatically calls TWEEN if it's present
  * https://github.com/sole/tween.js/
  */
-Storm.animate = (function() {
+Storm.tick = (function() {
 	
 		/**
 		 * The name of the class
 		 * @type {String}
 		 * @private
 		 */
-	var _ANIMATE = 'animate',
+	var _TICK = 'tick',
 		/**
 		 * Stores the index of loop functions
 		 * @type {Object}
 		 * @private
 		 */
 		_hooks = {},
+		/**
+		 * Our event object (for reuse)
+		 * @type {Object}
+		 */
+		_e = {},
 		/**
 		 * Stores function calls
 		 * @type {Array}
@@ -703,23 +715,26 @@ Storm.animate = (function() {
 		 * @type {Boolean}
 		 * @private
 		 */
-		_isRunning = true;
+		_isRunning = true,
 		/**
 		 * Runs the functions in the _loop
 		 * @private
 		 */
-		_animate = function() {
+		_tick = function() {
 			var idx = 0,
 				length = _loop.length;
+
+			_e.now = Date.now();
+
 			while (idx < length) {
-				_loop[idx]();
+				_loop[idx](_e);
 				idx += 1;
 			}
 
-			_id = root.requestAnimationFrame(_animate);
+			_id = root.requestAnimationFrame(_tick);
 		};
 
-	_animate(); // Auto-start
+	_tick(); // Auto-start
 
 	return {
 		/**
@@ -735,9 +750,9 @@ Storm.animate = (function() {
 				}
 				return func;
 			}
-			
-			if (!_.isFunction(func)) { return console.error(_errorMessage(_ANIMATE, 'Parameter must be a function'), func); }
-			var id = _uniqId(_ANIMATE);
+
+			if (!_.isFunction(func)) { return console.error(_errorMessage(_TICK, 'Parameter must be a function'), func); }
+			var id = _uniqId(_TICK);
 			_hooks[id] = _loop.length;
 			_loop.push(func);
 			return id;
@@ -746,7 +761,7 @@ Storm.animate = (function() {
 		/**
 		 * Remove a function from requestAnimationFrame
 		 * @param  {String} id Function id
-		 * @return {Animate}
+		 * @return {Tick}
 		 */
 		unhook: function(id) {
 			_loop.splice(_hooks[id], 1);
@@ -756,7 +771,7 @@ Storm.animate = (function() {
 
 		/**
 		 * Check if animate is running
-		 * @return {Animate}
+		 * @return {Tick}
 		 */
 		isRunning: function() {
 			return this._isRunning;
@@ -764,19 +779,19 @@ Storm.animate = (function() {
 
 		/**
 		 * Start requestAnimationFrame calling hooked functions
-		 * @return {Animate}
+		 * @return {Tick}
 		 */
 		start: function() {
 			if (_isRunning) { return; }
 			_isRunning = true;
 
-			_animate();
+			_tick();
 			return this;
 		},
 
 		/**
 		 * Stop requestAnimationFrame from calling hooked functions
-		 * @return {Animate}
+		 * @return {Tick}
 		 */
 		stop: function() {
 			if (!_isRunning) { return; }
