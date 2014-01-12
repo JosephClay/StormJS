@@ -126,7 +126,7 @@ Storage.prototype = {
 	getItem: function(key) {
 		// Array is passed, get all values under
 		// the keys
-		if (_.isArray) {
+		if (_.isArray(key)) {
 			var idx = key.length;
 			while (idx--) {
 				key[idx] = this.getItem(key[idx]);
