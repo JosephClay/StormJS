@@ -1,4 +1,4 @@
-/*! StormJS - v0.0.1 - 2014-01-12
+/*! StormJS - v0.0.1 - 2014-01-18
  * https://github.com/dci-artform/StormJS
  * Copyright (c) 2012-2014 Joe Clay; Licensed  */
 (function(root, _, Signal, undefined) {
@@ -144,6 +144,15 @@ Storm.mixin = function(name, prop) {
 	}
 };
 
+
+//----
+
+var memo = Storm.memo = function(getter) {
+	var secret;
+	return function() {
+		return secret || (secret = getter.call());
+	};
+};
 
 //----
 
@@ -454,7 +463,7 @@ Promise.prototype = {
 	 * @private
 	 */
 	_getCalls: function(type) {
-		return this._calls[_PROMISE_CALL_NAME[callType]] || (this._calls[_PROMISE_CALL_NAME[callType]] = []);
+		return this._calls[_PROMISE_CALL_NAME[type]] || (this._calls[_PROMISE_CALL_NAME[type]] = []);
 	},
 
 	/**
@@ -1096,9 +1105,9 @@ AjaxCall.prototype = {
 	 */
 	send: function(promise) {
 		var self = this,
-			call = this.call;
+			call = this._call;
 
-		var request = this.request = STORM.ajax.ajax({
+		var request = this.request = Storm.ajax.ajax({
 			type: call.type,
 			url: call.url,
 			contentType: call.content,
@@ -1123,7 +1132,7 @@ AjaxCall.prototype = {
 				Request.fail(self);
 			},
 			complete: function() {
-				if (promise) { promise.resolve(data); }
+				if (promise) { promise.resolve(); }
 				self.complete.apply(self, arguments);
 				Request.always(self);
 			}
@@ -1968,7 +1977,7 @@ _.extend(Model.prototype, Events.core.prototype, {
 
 		// Fire off change events
 		if (_.isEqual(this.__previousData[prop], this.__data[prop])) { return; } // The data didn't actually change
-		if (!this._validate()) { return this.__data = this._duplicate(this.__previousData); } // If invalid, revert changes
+		if (!this._validate()) { return (this.__data = this._duplicate(this.__previousData)); } // If invalid, revert changes
 		if (opts && opts.isSilent) { return; } // Check if silent
 		this.trigger('change:' + prop, data);
 		this.trigger('model:change', prop, data);
@@ -3130,7 +3139,7 @@ Storage.prototype = {
 	getItem: function(key) {
 		// Array is passed, get all values under
 		// the keys
-		if (_.isArray) {
+		if (_.isArray(key)) {
 			var idx = key.length;
 			while (idx--) {
 				key[idx] = this.getItem(key[idx]);
