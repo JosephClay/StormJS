@@ -185,9 +185,9 @@ AjaxCall.prototype = {
 	 */
 	send: function(promise) {
 		var self = this,
-			call = this.call;
+			call = this._call;
 
-		var request = this.request = STORM.ajax.ajax({
+		var request = this.request = Storm.ajax.ajax({
 			type: call.type,
 			url: call.url,
 			contentType: call.content,
@@ -212,7 +212,7 @@ AjaxCall.prototype = {
 				Request.fail(self);
 			},
 			complete: function() {
-				if (promise) { promise.resolve(data); }
+				if (promise) { promise.resolve(); }
 				self.complete.apply(self, arguments);
 				Request.always(self);
 			}
