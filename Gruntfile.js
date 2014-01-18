@@ -14,6 +14,7 @@ module.exports = function(grunt) {
 		'src/Storm.js',
 		'src/Helpers.js',
 		'src/Mixin.js',
+		'src/Memo.js',
 		'src/UniqId.js',
 		'src/Extend.js',
 		
