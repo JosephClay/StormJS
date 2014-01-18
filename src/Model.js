@@ -412,7 +412,7 @@ _.extend(Model.prototype, Events.core.prototype, {
 
 		// Fire off change events
 		if (_.isEqual(this.__previousData[prop], this.__data[prop])) { return; } // The data didn't actually change
-		if (!this._validate()) { return this.__data = this._duplicate(this.__previousData); } // If invalid, revert changes
+		if (!this._validate()) { return (this.__data = this._duplicate(this.__previousData)); } // If invalid, revert changes
 		if (opts && opts.isSilent) { return; } // Check if silent
 		this.trigger('change:' + prop, data);
 		this.trigger('model:change', prop, data);
