@@ -216,7 +216,7 @@ Promise.prototype = {
 	 * @private
 	 */
 	_getCalls: function(type) {
-		return this._calls[_PROMISE_CALL_NAME[callType]] || (this._calls[_PROMISE_CALL_NAME[callType]] = []);
+		return this._calls[_PROMISE_CALL_NAME[type]] || (this._calls[_PROMISE_CALL_NAME[type]] = []);
 	},
 
 	/**
