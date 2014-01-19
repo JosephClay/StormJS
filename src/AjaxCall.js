@@ -212,7 +212,6 @@ AjaxCall.prototype = {
 				Request.fail(self);
 			},
 			complete: function() {
-				if (promise) { promise.resolve(); }
 				self.complete.apply(self, arguments);
 				Request.always(self);
 			}
