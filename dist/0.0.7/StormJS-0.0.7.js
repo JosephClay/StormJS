@@ -1,4 +1,4 @@
-/*! StormJS - v0.0.1 - 2014-01-22
+/*! StormJS - v0.0.7 - 2014-01-22
  * https://github.com/JosephClay/StormJS
  * Copyright (c) 2012-2014 Joe Clay; Licensed  */
 (function(root, _, Signal, undefined) {
