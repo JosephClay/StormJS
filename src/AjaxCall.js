@@ -198,6 +198,9 @@ AjaxCall.prototype = {
 				self.success.apply(self, arguments);
 				Request.done(self);
 			},
+			progress: function() {
+				if (promise) { promise.notify(); }
+			},
 			error: function(req, status, err) {
 				if (promise) { promise.reject(req); }
 
