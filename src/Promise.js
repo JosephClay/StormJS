@@ -128,6 +128,9 @@ Promise.prototype = {
 	 * @return {Promise}
 	 */
 	reject: function() {
+		// If we've already called failed or done, go no further
+		if (this._status === _PROMISE_STATUS.failed || this._status === _PROMISE_STATUS.done) { return; }
+
 		this._status = _PROMISE_STATUS.failed;
 
 		// Never run the pipe on fail. Simply fail.
@@ -145,6 +148,9 @@ Promise.prototype = {
 	 * @return {Promise}
 	 */
 	resolve: function() {
+		// If we've already called failed or done, go no further
+		if (this._status === _PROMISE_STATUS.failed || this._status === _PROMISE_STATUS.done) { return; }
+
 		this._status = _PROMISE_STATUS.done;
 
 		var args = this._runPipe(arguments);
