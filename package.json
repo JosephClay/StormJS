@@ -3,14 +3,14 @@
 	"title": "StormJS",
 	"description": "Client-side MVC framework inspired by Backbone",
 	"version": "0.0.1",
-	"homepage": "https://github.com/dci-artform/StormJS",
+	"homepage": "https://github.com/JosephClay/StormJS",
 	"author": {
 		"name": "Joe Clay",
-		"email": "clay@dcim.com"
+		"email": "testingriven@gmail.com"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/dci-artform/StormJS.git"
+		"url": "https://github.com/JosephClay/StormJS.git"
 	},
 	"devDependencies": {
 		"grunt": "~0.4.1",
