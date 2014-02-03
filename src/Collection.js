@@ -175,7 +175,7 @@ _.extend(Collection.prototype, Events.core.prototype, {
 			if (_exists(at)) {
 				this._models.splice(([at, 0]).concat(add));
 			} else {
-				this._models.push(add);
+				this._models = this._models.concat(add);
 			}
 
 			this.sort(opts);
