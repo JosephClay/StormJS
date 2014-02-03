@@ -22,7 +22,7 @@ var _mixin = function(name, prop) {
 Storm.mixin = function(name, prop) {
 	// Mix single
 	if (_.isString(name)) {
-		_mixin(name, prop);
+		return _mixin(name, prop);
 	}
 
 	// Mix multiple
