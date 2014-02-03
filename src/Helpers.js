@@ -13,7 +13,7 @@ console.error = console.error || console.log;
  */
 var _slice = (function(ARRAY) {
 	return function(arr) {
-		ARRAY.slice.call(arr);
+		return ARRAY.slice.call(arr);
 	};
 }([]));
 
