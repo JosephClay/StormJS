@@ -334,7 +334,22 @@ _.extend(Collection.prototype, Events.core.prototype, {
 	 */
 	findWhere: function(values) {
 		return this.where(values, true);
-    },
+	},
+
+	findById: function(id) {
+		id = !(id > -1) ? parseInt(id, 10) : id; // make sure id is a number
+
+		var models = this.getModels(),
+			idx = models.length,
+			model;
+		while (idx--) {
+			model = models[idx];
+			if (model && model.getId() === id) {
+				return model;
+			}
+		}
+		return null;
+	},
 	
 	/**
 	 * Get all model values of the provided key
