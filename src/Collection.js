@@ -365,7 +365,7 @@ _.extend(Collection.prototype, Events.core.prototype, {
 	 * @param  {Number} id
 	 * @return {Model}
 	 */
-	getModelById: function(id) {
+	getById: function(id) {
 		if (!_exists(id)) { return null; }
 
 		var models = this._models,
@@ -377,8 +377,8 @@ _.extend(Collection.prototype, Events.core.prototype, {
 		}
 		return null;
 	},
-	/** Proxy for getModelById */
-	get: function() { return this.getModelById.apply(this, arguments); },
+	/** Proxy for getById */
+	get: function() { return this.getById.apply(this, arguments); },
 
 	/**
 	 * Drops all models from the collection
