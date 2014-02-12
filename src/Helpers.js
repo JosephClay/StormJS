@@ -35,7 +35,7 @@ var _exists = function(value) {
  */
 var _stringFormat = (function() {
 
-	var _REGEX = new RegExp('{([^}])+}', 'g');
+	var _REGEX = new RegExp('{(.+)}', 'g');
 
 	return function(str, fill) {
 		return str.replace(_REGEX, function(capture, value) {
