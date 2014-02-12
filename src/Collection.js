@@ -336,6 +336,11 @@ _.extend(Collection.prototype, Events.core.prototype, {
 		return this.where(values, true);
 	},
 
+	/**
+	 * Find a model by id
+	 * @param  {Number} id model _id
+	 * @return {Model}
+	 */
 	findById: function(id) {
 		id = !(id > -1) ? parseInt(id, 10) : id; // make sure id is a number
 
