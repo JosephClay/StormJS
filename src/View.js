@@ -2,15 +2,17 @@
 
 /**
  * The name of this class
+ * @const
  * @type {String}
+ * @private
  */
 var _VIEW = 'View';
 
 /**
  * A view at its most basic. Sets up a couple
  * defaults for cloning and commonly used methods
- * @class View
- * @param {Object} opts [optional]
+ * @class Storm.View
+ * @param {Object} [opts]
  */
 var View = Storm.View = function(opts) {
 	Events.core.call(this);
@@ -22,10 +24,10 @@ var View = Storm.View = function(opts) {
 	 * @private
 	 */
 	this._id = _uniqId(_VIEW);
-	
+
 	/** @type {Object} */
 	this.options = opts || {};
-	
+
 	/** @type {Element} */
 	this.elem = opts.elem || null;
 
@@ -39,7 +41,7 @@ _.extend(View.prototype, Events.core.prototype, {
 
 	/**
 	 * Returns a clone of the view
-	 * @return {View}
+	 * @return {Storm.View}
 	 */
 	clone: function() {
 		return new this.constructor(this.options);

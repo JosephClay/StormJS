@@ -2,14 +2,16 @@
 
 /**
  * The name of the class
+ * @const
  * @type {String}
+ * @private
  */
 var _COLLECTION = 'Collection';
 
 /**
  * A collection of Models
- * @param {Object} data [optional]
- * @class Collection
+ * @param {Object} [data]
+ * @class Storm.Collection
  */
 var Collection = Storm.Collection = function(data) {
 	Events.core.call(this);
@@ -20,10 +22,10 @@ var Collection = Storm.Collection = function(data) {
 	 * @private
 	 */
 	this._id = _uniqId(_COLLECTION);
-	
+
 	/**
 	 * Storage for the models
-	 * @type {Array[Model]}
+	 * @type {Array.<Model>}
 	 * @private
 	 */
 	this._models = [];
@@ -35,12 +37,12 @@ _.extend(Collection.prototype, Events.core.prototype, {
 	/** @constructor */
 	constructor: Collection,
 
-	/** @type {Model} */
+	/** @type {Storm.Model} */
 	Model: Model,
 
 	/**
 	 * Get the private id of the Collection
-	 * @return {Number} id
+	 * @return {Id} id
 	 */
 	getId: function() {
 		return this._id;
@@ -49,9 +51,9 @@ _.extend(Collection.prototype, Events.core.prototype, {
 	/**
 	 * Create a new model
 	 * @param  {Object} model the model data
-	 * @param  {Object} opts [optional]
+	 * @param  {Object} [opts]
 	 * @param  {Object} data additional data to pass to the new models
-	 * @return {Model}
+	 * @return {Storm.Model}
 	 */
 	newModel: function(model, opts, data) {
 		return new this.Model(model, opts, data);
@@ -59,7 +61,7 @@ _.extend(Collection.prototype, Events.core.prototype, {
 
 	/**
 	 * Get all models
-	 * @return {Array}
+	 * @return {Array.<Model>}
 	 */
 	getModels: function() {
 		return this._models;
@@ -68,8 +70,8 @@ _.extend(Collection.prototype, Events.core.prototype, {
 	/**
 	 * Get a model by key-value
 	 * @param  {String} key
-	 * @param  {Value} value
-	 * @return {Model}
+	 * @param  {*} value
+	 * @return {Storm.Model}
 	 */
 	getBy: function(key, value) {
 		var models = this._models,
@@ -94,7 +96,7 @@ _.extend(Collection.prototype, Events.core.prototype, {
 	/**
 	 * Retrieve a model at the provided index
 	 * @param  {Number} idx
-	 * @return {Model}
+	 * @return {Storm.Model}
 	 */
 	at: function(idx) {
 		return this._models[idx];
@@ -102,7 +104,7 @@ _.extend(Collection.prototype, Events.core.prototype, {
 
 	/**
 	 * Get the index of a model
-	 * @param  {Model} model
+	 * @param  {Storm.Model} model
 	 * @return {Number} index
 	 */
 	indexOf: function(model) {
@@ -119,8 +121,8 @@ _.extend(Collection.prototype, Events.core.prototype, {
 	 * Add models to the collection, creating new models
 	 * if the model is not an instance of Storm.Model,
 	 * sorting the models and firing events
-	 * @param {Array[Model]} models
-	 * @param {Object} opts [optional]
+	 * @param {Array.<Model>} models
+	 * @param {Object} [opts]
 	 * @param {Object} data additional data to pass to the new models
 	 */
 	add: function(models, data, opts) {
@@ -198,8 +200,9 @@ _.extend(Collection.prototype, Events.core.prototype, {
 
 	/**
 	 * As you would expect
-	 * @param  {Object} opts will be passed to remove 
-	 * @return {Model} the removed model
+	 * @param  {Storm.Model} model
+	 * @param  {Object} opts will be passed to remove
+	 * @return {Storm.Model} the removed model
 	 */
 	push: function(model, opts) {
 		opts = _.extend({ at: this._models.length }, opts);
@@ -209,8 +212,9 @@ _.extend(Collection.prototype, Events.core.prototype, {
 
 	/**
 	 * As you would expect
-	 * @param  {Object} opts will be passed to remove 
-	 * @return {Model} the removed model
+	 * @param  {Storm.Model} model
+	 * @param  {Object} opts will be passed to remove
+	 * @return {Storm.Model} the removed model
 	 */
 	unshift: function(model, opts) {
 		opts = _.extend({ at: 0 }, opts);
@@ -220,16 +224,15 @@ _.extend(Collection.prototype, Events.core.prototype, {
 
 	/**
 	 * Remove a model from the collection
-	 * @param  {Model || Array[Model]} models
-	 * @param  {Object} opts   [optional]
-	 * @return {Collection}
+	 * @param  {Model|Model[]} models
+	 * @param  {Object} [opts]
+	 * @return {Storm.Collection}
 	 */
 	remove: function(models, opts) {
 		models = _.isArray(models) ? models.slice() : [models];
 		opts = opts || {};
 
-		var idx = 0, length = models.length,
-			index, model;
+		var idx = 0, length = models.length, model;
 		for (; idx < length; idx++) {
 			model = this.get(models[idx]);
 			if (!model) { continue; }
@@ -247,8 +250,8 @@ _.extend(Collection.prototype, Events.core.prototype, {
 
 	/**
 	 * As you would expect
-	 * @param  {Object} opts will be passed to remove 
-	 * @return {Model} the removed model
+	 * @param  {Object} opts will be passed to remove
+	 * @return {Storm.Model} the removed model
 	 */
 	shift: function(opts) {
 		var model = this.at(0);
@@ -258,8 +261,8 @@ _.extend(Collection.prototype, Events.core.prototype, {
 
 	/**
 	 * As you would expect
-	 * @param  {Object} opts will be passed to remove 
-	 * @return {Model} the removed model
+	 * @param  {Object} opts will be passed to remove
+	 * @return {Storm.Model} the removed model
 	 */
 	pop: function(opts) {
 		var model = this.at(this.length - 1);
@@ -271,7 +274,7 @@ _.extend(Collection.prototype, Events.core.prototype, {
 	 * As you would expect
 	 * @param  {Number} begin
 	 * @param  {Number} end
-	 * @return {Array}
+	 * @return {Array.<Storm.Model>}
 	 */
 	slice: function(begin, end) {
 		return this._models.slice(begin, end);
@@ -281,8 +284,8 @@ _.extend(Collection.prototype, Events.core.prototype, {
 	 * Force the collection to re-sort itself. You don't need to call this under
 	 * normal circumstances, as the collection will maintain sort order as items
 	 * are added.
-	 * @param  {Objet} opts [optional]
-	 * @return {Collection}
+	 * @param  {Object} [opts]
+	 * @return {Storm.Collection}
 	 */
 	sort: function(opts) {
 		opts = opts || {};
@@ -296,7 +299,7 @@ _.extend(Collection.prototype, Events.core.prototype, {
 		this._models.sort(function(a, b) {
 			return a.compareTo(b);
 		});
-		
+
 		if (!opts.silent) {
 			var self = this;
 			this.each(function(model, idx) {
@@ -310,9 +313,9 @@ _.extend(Collection.prototype, Events.core.prototype, {
 
 	/**
 	 * Get models matching the key-values passed
-	 * @param  {Object} values
-	 * @param  {Boolean} first [optional] return first found
-	 * @return {Model || Array}
+	 * @param  {Object} values Hash containing key-value pairs
+	 * @param  {Boolean} [first] return first found
+	 * @return {Model|Array.<Model>}
 	 */
 	where: function(values, first) {
 		if (_.isEmpty(values)) { return first ? undefined : []; }
@@ -330,7 +333,7 @@ _.extend(Collection.prototype, Events.core.prototype, {
 	/**
 	 * Proxy for where(values, true)
 	 * @param  {Object} values
-	 * @return {Model}
+	 * @return {Storm.Model}
 	 */
 	findWhere: function(values) {
 		return this.where(values, true);
@@ -338,8 +341,8 @@ _.extend(Collection.prototype, Events.core.prototype, {
 
 	/**
 	 * Find a model by id
-	 * @param  {Number} id model _id
-	 * @return {Model}
+	 * @param  {Id} id model _id
+	 * @return {Storm.Model}
 	 */
 	findById: function(id) {
 		id = !(id > -1) ? parseInt(id, 10) : id; // make sure id is a number
@@ -355,11 +358,11 @@ _.extend(Collection.prototype, Events.core.prototype, {
 		}
 		return null;
 	},
-	
+
 	/**
 	 * Get all model values of the provided key
 	 * @param  {String} key
-	 * @return {Array[Value]}
+	 * @return {Array.<*>}
 	 */
 	pluck: function(key) {
 		return _.invoke(this._models, 'get', key);
@@ -367,8 +370,8 @@ _.extend(Collection.prototype, Events.core.prototype, {
 
 	/**
 	 * Gets a model by its id
-	 * @param  {Number} id
-	 * @return {Model}
+	 * @param  {Id} id
+	 * @return {Storm.Model}
 	 */
 	getById: function(id) {
 		if (!_exists(id)) { return null; }
@@ -382,13 +385,16 @@ _.extend(Collection.prototype, Events.core.prototype, {
 		}
 		return null;
 	},
-	/** Proxy for getById */
+	/**
+	 * Proxy for getById
+	 * @alias {#getById}
+	 */
 	get: function() { return this.getById.apply(this, arguments); },
 
 	/**
 	 * Drops all models from the collection
-	 * @param  {Object} opts [optional]
-	 * @return {Collection}
+	 * @param  {Object} [opts]
+	 * @return {Storm.Collection}
 	 */
 	reset: function(opts) {
 		opts = opts || {};
@@ -398,10 +404,10 @@ _.extend(Collection.prototype, Events.core.prototype, {
 		}
 		return this;
 	},
-	
+
 	/**
 	 * Returns a clone of the collection
-	 * @return {Model}
+	 * @return {Storm.Model}
 	 */
 	clone: function() {
 		return new this.constructor({ model: this.model, models: this._models });
@@ -410,7 +416,7 @@ _.extend(Collection.prototype, Events.core.prototype, {
 	/**
 	 * Similar to Model.retrieve, returns all model data
 	 * in the collection
-	 * @return {Array[Object]}
+	 * @return {Array.<Object>}
 	 */
 	retrieve: function() { // To match model.retrieve()
 		return _.map(this._models, function(model) {
@@ -420,7 +426,7 @@ _.extend(Collection.prototype, Events.core.prototype, {
 
 	/**
 	 * Return the data to serialize to JSON
-	 * @return {Array[Object]}
+	 * @return {Array.<Object>}
 	 */
 	toJSON: function() {
 		return this.retrieve();

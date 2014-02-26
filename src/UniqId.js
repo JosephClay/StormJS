@@ -1,13 +1,17 @@
 // Unique Id ########################################################################
 
+/**
+ * @typedef {Number} Id
+ */
+
 	/**
 	 * Generate a unique id
-	 * @param  {String}         prefix [optional] Defines a scope for the identifiers
-	 * @return {Number||String} id
+	 * @param  {String}         [prefix] Defines a scope for the identifiers
+	 * @return {Number|String} id
 	 * @private
 	 */
 var _uniqId = Storm.uniqId = (function() {
-		
+
 		var _scopedIdentifiers = {};
 
 		return function(scope) {
@@ -15,7 +19,7 @@ var _uniqId = Storm.uniqId = (function() {
 			var inc = (_scopedIdentifiers[scope] || 0) + 1;
 			return (_scopedIdentifiers[scope] = inc);
 		};
-		
+
 	}()),
 	/**
 	 * Generates a unqiue id string - prefixed with the scope
@@ -23,6 +27,6 @@ var _uniqId = Storm.uniqId = (function() {
 	 * @return {String} id
 	 * @private
 	 */
-	_uniqIdStr = Storm.uniqIdStr = function(scope) {	
+	_uniqIdStr = Storm.uniqIdStr = function(scope) {
 		return (scope || 'id') + '' + _uniqId(scope);
 	};

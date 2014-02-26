@@ -1,4 +1,4 @@
-// Tempalate ########################################################################
+// Template ########################################################################
 
 /**
  * Centralized template registration for
@@ -14,10 +14,12 @@
  * Mustache, Handlebars, Underscore etc...
  */
 Storm.template = (function() {
-	
+
 		/**
 		 * The name of this class
+		 * @const
 		 * @type {String}
+		 * @private
 		 */
 	var _TEMPLATE = 'template',
 		/**
@@ -45,8 +47,8 @@ Storm.template = (function() {
 	/**
 	 * Register a template
 	 * @param  {String} name id
-	 * @param  {String || Function || Array} tpl
-	 * @param  {Object} opts [optional]
+	 * @param  {String|Function|Array} tpl
+	 * @param  {Object} [opts]
 	 * @return {Storm.template}
 	 */
 	var _register = function(name, tpl, opts) {
@@ -86,7 +88,7 @@ Storm.template = (function() {
 	 * passed, it's executed and coercion continues. If an array
 	 * is passed, it is joined. All strings are trimmed to prevent
 	 * any problems with the templating engine
-	 * @param  {String || Function || Array} tpl
+	 * @param  {String|Function|Array} tpl
 	 * @return {String}
 	 * @private
 	 */
@@ -126,7 +128,7 @@ Storm.template = (function() {
 	/**
 	 * Render a registered template
 	 * @param  {String} name id of the template
-	 * @param  {Object} data [optional] passed to the template engine as a parameter
+	 * @param  {Object} [data] passed to the template engine as a parameter
 	 * @return {String} rendered template
 	 */
 	var _render = function(name, data) {
@@ -138,11 +140,11 @@ Storm.template = (function() {
 		add: _register,
 		remove: _remove,
 		render: _render,
-		
+
 		/**
 		 * Sets the client-side templating engine
 		 * for Storm.template to use.
-		 * @param {TemplatingEngine} engine
+		 * @param {Object} engine
 		 */
 		setEngine: function(engine) {
 			_engine = engine;
@@ -150,8 +152,8 @@ Storm.template = (function() {
 
 		/**
 		 * Return the registered template strings
-		 * @param  {String} key [optional] a specific template
-		 * @return {String || Object}
+		 * @param  {String} [key] a specific template
+		 * @return {String|Object}
 		 */
 		toJSON: function(key) {
 			var value = (key) ? _templates[key] : _templates;
@@ -161,7 +163,7 @@ Storm.template = (function() {
 		/**
 		 * Debug string
 		 * @return {String}
-		 */		
+		 */
 		toString: function(key) {
 			return _toString(_TEMPLATE, {
 				size: _.size(_templates)

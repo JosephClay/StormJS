@@ -1,10 +1,16 @@
 // Request ##########################################################################
 
+/**
+ * @const
+ * @type {string}
+ * @private
+ */
 var _REQUEST = 'request',
 
 	/**
 	 * Stores in-progress AjaxCalls by id
 	 * @type {Object}
+	 * @private
 	 */
 	_requestsRecords = {},
 
@@ -18,19 +24,19 @@ var _REQUEST = 'request',
 		/**
 		 * Called when an AjaxCall is sent, notifies Storm.request
 		 * Records the call in the records
-		 * @param  {AjaxCall} call
+		 * @param  {Storm.AjaxCall} call
 		 */
 		send: function(call) {
 			// this call is already being tracked, stop
 			if (_requestsRecords[call.getId()]) { return; }
 			_requestsRecords[call.getId()] = call;
-			
+
 			Storm.request.trigger('send', call);
 		},
 
 		/**
 		 * Called when an AjaxCall is done, notifies Storm.request
-		 * @param  {AjaxCall}   call
+		 * @param  {Storm.AjaxCall}   call
 		 */
 		done: function(call) {
 			Storm.request.trigger('done', call);
@@ -38,7 +44,7 @@ var _REQUEST = 'request',
 
 		/**
 		 * Called when an AjaxCall fails, notifies Storm.request
-		 * @param  {AjaxCall}   call
+		 * @param  {Storm.AjaxCall}   call
 		 */
 		fail: function(call) {
 			Storm.request.trigger('fail', call);
@@ -46,7 +52,7 @@ var _REQUEST = 'request',
 
 		/**
 		 * Called when an AjaxCall is aborted, notifies Storm.request
-		 * @param  {AjaxCall}   call
+		 * @param  {Storm.AjaxCall}   call
 		 */
 		abort: function(call) {
 			Storm.request.trigger('abort', call);
@@ -55,13 +61,13 @@ var _REQUEST = 'request',
 		/**
 		 * Called when an AjaxCall is done/aborted/failed, notifies Storm.request
 		 * Removes the call from the records
-		 * @param  {AjaxCall}   call
+		 * @param  {Storm.AjaxCall}   call
 		 */
 		always: function(call) {
 			// This call is not being tracked, stop
 			if (!_requestsRecords[call.getId()]) { return; }
 			delete _requestsRecords[call.getId()];
-			
+
 			Storm.request.trigger('always', call);
 		}
 	};
@@ -74,7 +80,7 @@ var _REQUEST = 'request',
  */
 Storm.request = Events.core.construct();
 _.extend(Storm.request, {
-	
+
 	/**
 	 * Get the requests in-progress
 	 * @return {Object}
@@ -97,5 +103,5 @@ _.extend(Storm.request, {
 	 */
 	toString: function() {
 		return _toString(_REQUEST);
-	}	
+	}
 });

@@ -18,8 +18,8 @@ var _slice = (function(ARRAY) {
 }([]));
 
 /**
- * Existance check
- * @param  {Value} value
+ * Existence check
+ * @param  {*} value
  * @return {Boolean}
  * @private
  */
@@ -48,22 +48,22 @@ var _stringFormat = (function() {
 /**
  * Normalize how Storm returns strings of its
  * objects for debugging
- * @param  {String} name  required
- * @param  {Object} props [optional]
+ * @param  {String} name
+ * @param  {Object} [props]
  * @return {String}
  * @private
  */
 var _toString = function(name, props) {
 	var hasProps = _exists(props);
 
-	if (hasProps) {	
+	if (hasProps) {
 		var key, arr = [];
-		for (key in obj) {
-			arr.push(key + ': '+ obj[key]);
+		for (key in props) {
+			arr.push(key + ': '+ props[key]);
 		}
 		props = arr.join(', ');
 	}
-	
+
 	return _stringFormat('[{storm}: {name}{spacer}{props}]', {
 		storm: Storm.name,
 		name: name,
@@ -74,8 +74,8 @@ var _toString = function(name, props) {
 
 /**
  * Normalize how Storm logs an error message for debugging
- * @param  {String} name  required
- * @param  {String} message required
+ * @param  {String} name
+ * @param  {String} message
  * @return {String}
  * @private
  */

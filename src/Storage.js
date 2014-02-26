@@ -2,12 +2,16 @@
 
 	/**
 	 * The name of this class
+	 * @const
 	 * @type {String}
+	 * @private
 	 */
 var _STORAGE = 'Storage',
 	/**
 	 * The storage type: local or session
-	 * @type {Object}
+	 * @readonly
+	 * @enum {Number}
+	 * @private
 	 */
 	_STORAGE_TYPE = {
 		cookie: 0,
@@ -17,12 +21,12 @@ var _STORAGE = 'Storage',
 
 /**
  * Based off of Remy's polyfill: https://gist.github.com/remy/350433
- * 
+ *
  * Adapted to use the same Storage object for both
  * local and session storage (for simplicity)
- * @class Storage
- * @param {TYPE} type
- * @param {Object} opts [optional]
+ * @class Storm.Storage
+ * @param {Storm.Storage.TYPE} type
+ * @param {Object} [opts]
  */
 var Storage = Storm.Storage = function(type, opts) {
 	opts = opts || {};
@@ -36,7 +40,7 @@ var Storage = Storm.Storage = function(type, opts) {
 	/**
 	 * The type of storage
 	 * @default STORAGE_TYPE.cookie
-	 * @type {STORAGE_TYPE}
+	 * @type {Storm.Storage.TYPE}
 	 */
 	this.type = type || _STORAGE_TYPE.cookie;
 
@@ -47,19 +51,19 @@ var Storage = Storm.Storage = function(type, opts) {
 	 * @type {String}
 	 */
 	this.name = opts.name || storageTypeName[this.type];
-	
+
 	/**
 	 * The type of storage we're using
 	 * @type {String} localStorage || sessionStorage
 	 */
 	this.storage = root[storageTypeName[this.type]];
-	
+
 	/**
 	 * Whether we have access to native local/session storage
 	 * @type {Boolean}
 	 */
 	this.hasStorage = _exists(this.storage);
-	
+
 	/**
 	 * The data stored
 	 * @type {Object}
@@ -73,15 +77,20 @@ var Storage = Storm.Storage = function(type, opts) {
 	this.length = (this.hasStorage) ? this.storage.length : _.size(this.data);
 };
 
+/**
+ * The storage type: local or session
+ * @readonly
+ * @enum {Number}
+ */
 Storage.TYPE = _STORAGE_TYPE;
 
 Storage.prototype = {
 	/** @constructor */
 	constructor: Storage,
-	
+
 	/**
 	 * Clear all data from storage
-	 * @return {Storage}
+	 * @return {Storm.Storage}
 	 */
 	clear: function() {
 		this.data = {};
@@ -120,8 +129,8 @@ Storage.prototype = {
 
 	/**
 	 * Retrieve item from data
-	 * @param  {String || Array} key
-	 * @return {Value}
+	 * @param  {String|Array.<String>} key
+	 * @return {*}
 	 */
 	getItem: function(key) {
 		// Array is passed, get all values under
@@ -142,13 +151,16 @@ Storage.prototype = {
 
 		return this.data[key];
 	},
-	/** Proxy for getItem */
+	/**
+	 * Proxy for getItem
+	 * @alias {#getItem}
+	 */
 	get: function() { return this.getItem.apply(this, arguments); },
 
 	/**
 	 * Adds to data
-	 * @param {String || Object} key
-	 * @param {Value} value
+	 * @param {String|Object} key
+	 * @param {*|undefined} value
 	 */
 	setItem: function(key, value) {
 		// Not a string, must be an object,
@@ -171,9 +183,15 @@ Storage.prototype = {
 		this.length++;
 		this._setCookieData();
 	},
-	/** Proxy for setItem */
+	/**
+	 * Proxy for setItem
+	 * @alias {#setItem}
+	 */
 	store: function() { this.setItem.apply(this, arguments); },
-	/** Proxy for setItem */
+	/**
+	 * Proxy for setItem
+	 * @alias {#setItem}
+	 */
 	set: function() { this.setItem.apply(this, arguments); },
 
 	removeItem: function(key) {
@@ -217,7 +235,7 @@ Storage.prototype = {
 
 	/**
 	 * Return data from the cookie
-	 * @return {Value}
+	 * @return {*}
 	 * @private
 	 */
 	_readCookie: function() {
@@ -267,8 +285,8 @@ Storage.prototype = {
 
 	/**
 	 * Return storage values for JSON serialization
-	 * @param  {String} key [optional] return a specific value
-	 * @return {Value}
+	 * @param  {String} [key] return a specific value
+	 * @return {*}
 	 */
 	toJSON: function(key) {
 		var value = (key) ? this.get(key) : this._getData();
@@ -279,7 +297,7 @@ Storage.prototype = {
 	 * Debug string
 	 * @return {String}
 	 */
-	toString: function(key) {
+	toString: function() {
 		return _toString(_STORAGE, {
 			type: _.invert(_STORAGE_TYPE)[this.type],
 			length: this.length
@@ -290,12 +308,12 @@ Storage.prototype = {
 
 /**
  * Expose a store for local storage
- * @type {Storage}
+ * @type {Storm.Storage}
  */
 Storm.store = new Storage(_STORAGE_TYPE.localStorage);
 
 /**
  * Expose an instace of storage for the session
- * @type {Storage}
+ * @type {Storm.Storage}
  */
 Storm.session = new Storage(_STORAGE_TYPE.sessionStorage);

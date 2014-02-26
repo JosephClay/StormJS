@@ -2,6 +2,7 @@
 
 /**
  * The name of the class
+ * @const
  * @type {String}
  * @private
  */
@@ -9,11 +10,11 @@ var _MODULE = 'Module';
 
 /**
  * A reusable module equipped with events
- * @class Module
+ * @class Storm.Module
  */
 var Module = Storm.Module = function() {
 	Events.core.call(this);
-	
+
 	/**
 	 * @type {Id}
 	 * @private
@@ -28,7 +29,7 @@ _.extend(Module.prototype, Events.core.prototype, {
 	getId: function() {
 		return this._id;
 	},
-	
+
 	/**
 	 * Debug string
 	 * @return {String}

@@ -2,6 +2,7 @@
 
 /**
  * The name of the class
+ * @const
  * @type {String}
  * @private
  */
@@ -11,7 +12,7 @@ var _DATA_CONTEXT = 'DataContext';
  * Used to construct AjaxCalls to communicate with the server.
  * Intended to be a central location for configuration data
  * to get and send data about a specific model/collection type
- * @class DataContext
+ * @class Storm.DataContext
  */
 var DataContext = Storm.DataContext = function() {
 	/**
@@ -54,7 +55,7 @@ DataContext.prototype = {
 	/**
 	 * AjaxCall, the constructor of the AjaxCall
 	 * to use when configuring a new call object
-	 * @type {AjaxCall}
+	 * @type {Storm.AjaxCall}
 	 */
 	AjaxCall: AjaxCall,
 
@@ -65,24 +66,24 @@ DataContext.prototype = {
 	 * @type {Object}
 	 */
 	options: {},
-	
+
 	/**
 	 * Overrides AjaxCall's defaults
 	 * @type {Object}
 	 */
 	callTemplate: {},
 
-	getSetting: function() { 
+	getSetting: function() {
 		return DataContext.getSetting.apply(arguments);
 	},
-	removeSetting: function() { 
+	removeSetting: function() {
 		return DataContext.removeSetting.apply(arguments);
 	},
 
 	/**
 	 * Add more options to this data context
-	 * @param  {Object} options
-	 * @return {DataContext}
+	 * @param  {Object} opts
+	 * @return {Storm.DataContext}
 	 */
 	extendOptions: function(opts) {
 		this.options = _.extend({}, this.defaults, opts);
@@ -92,7 +93,7 @@ DataContext.prototype = {
 	/**
 	 * Remove an option from this data context
 	 * @param  {String} key
-	 * @return {DataContext}
+	 * @return {Storm.DataContext}
 	 */
 	removeOption: function(key) {
 		delete this.options[key];
@@ -103,7 +104,7 @@ DataContext.prototype = {
 	 * Creates and returns a new AjaxCall
 	 * @param  {Object}      call   see AjaxCall.defaults
 	 * @param  {Object}      extensionData  Addition configurations for the url
-	 * @return {AjaxCall}
+	 * @return {Storm.AjaxCall}
 	 */
 	createCall: function(call, extensionData) {
 		var configuration = _.extend({}, DataContext.settings, this.options, extensionData);

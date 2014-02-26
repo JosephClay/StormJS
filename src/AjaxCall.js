@@ -2,6 +2,7 @@
 
 	/**
 	 * The name of the class
+	 * @const
 	 * @type {String}
 	 * @private
 	 */
@@ -10,8 +11,9 @@ var _AJAX_CALL = 'AjaxCall',
 	 * Available classifications for a call to reside in.
 	 * Gives flexibility to a call to be in a classification
 	 * that gives it meaning to the application and not the
-	 * server 
-	 * @type {Object[Number]}
+	 * server
+	 * @readonly
+	 * @enum {Number}
 	 */
 	_CLASSIFICATION = {
 		nonblocking: 0,
@@ -31,7 +33,7 @@ var _AJAX_CALL = 'AjaxCall',
  * within AjaxCall). This object can ajax, abort and be passed
  * around the application.
  *
- * @class AjaxCall
+ * @class Storm.AjaxCall
  * @param {Object} callObj
  * @param {Object} opts
  * @param {Object} callTemplate
@@ -52,12 +54,17 @@ var AjaxCall = Storm.AjaxCall = function(callObj, opts, callTemplate) {
 };
 
 _.extend(AjaxCall, {
+	/**
+	 * @readonly
+	 * @enum {Number}
+	 *
+	 */
 	CLASSIFICATION: _CLASSIFICATION,
 
 	/**
 	 * Add a classification type to the AjaxCall
 	 * as a global option
-	 * @param {String || Array} type
+	 * @param {String|Array.<String>} type
 	 */
 	addClassification: function(type) {
 		if (_.isArray(type)) {
@@ -97,7 +104,7 @@ AjaxCall.prototype = {
 	 * Configure the call object so that it's ready to ajax
 	 * @param  {Object} providedCall call object
 	 * @param  {Object} opts      configurations for the url
-	 * @return {Object} call
+	 * @return {Object} callTemplate
 	 * @private
 	 */
 	_configure: function(providedCall, opts, callTemplate) {
@@ -112,12 +119,12 @@ AjaxCall.prototype = {
 	 * Get or set the data on the call. Passing a parameter
 	 * will set the data where-as no parameters will return
 	 * the data on the call
-	 * @param  {Value || undefined} data
-	 * @return {Value || AjaxCall}
+	 * @param  {*} [data]
+	 * @return {Storm.AjaxCall|*}
 	 */
 	data: function(data) {
 		if (!arguments.length) { return this._call.data; }
-		
+
 		this._call.data = data;
 		return this;
 	},
@@ -132,7 +139,7 @@ AjaxCall.prototype = {
 
 	/**
 	 * Get the private id of the AjaxCall
-	 * @return {Number} id
+	 * @return {Id} id
 	 */
 	getId: function() {
 		return this._id;
@@ -141,7 +148,7 @@ AjaxCall.prototype = {
 	/**
 	 * Determine if the type passed is the same as this
 	 * call's configuration
-	 * @param  {String}  type GET, POST, PUT, DELETE 
+	 * @param  {String}  type GET, POST, PUT, DELETE
 	 * @return {Boolean}
 	 */
 	isType: function(type) {
@@ -151,7 +158,7 @@ AjaxCall.prototype = {
 	/**
 	 * Determine if the classification passed is the same as this
 	 * call's classification
-	 * @param  {Number}  Storm.AjaxCall.CLASSIFICATION
+	 * @param  {Storm.AjaxCall.CLASSIFICATION} type {@link Storm.AjaxCall.CLASSIFICATION}
 	 * @return {Boolean}
 	 */
 	isClassification: function(type) {
@@ -161,17 +168,17 @@ AjaxCall.prototype = {
 	/**
 	 * Gets a property on the call configuration
 	 * @param  {String} key    the key to get from the configuration
-	 * @return {Value}
+	 * @return {*}
 	 */
 	get: function(key) {
 		return this.call[key];
 	},
-	
+
 	/**
 	 * Sets a property on the call configuration
 	 * @param  {String} key    the key to replace in the configuration
-	 * @param  {Value}  value  the value to apply
-	 * @return {AjaxCall}
+	 * @param  {*}  value  the value to apply
+	 * @return {Storm.AjaxCall}
 	 */
 	set: function(key, value) {
 		this.call[key] = value;
@@ -179,8 +186,8 @@ AjaxCall.prototype = {
 	},
 
 	/**
-	 * Uses Storm.ajax to ajax the stored call object
-	 * @param  {Storm.Promise} promise optional
+	 * Uses {@link Storm.ajax} to ajax the stored call object
+	 * @param  {Storm.Promise} [promise]
 	 * @return {Storm.ajax} request
 	 */
 	send: function(promise) {
@@ -229,10 +236,10 @@ AjaxCall.prototype = {
 	/**
 	 * Fired when an xhr request is successful
 	 * Feel free to overwrite
-	 * @param  {Object||String||null} data
+	 * @param  {Object|String|null} data
 	 */
 	success: function(data) {},
-	
+
 	/**
 	 * Fired when an xhr request completes.
 	 * Feel free to overwrite
@@ -247,7 +254,7 @@ AjaxCall.prototype = {
 
 	/**
 	 * Aborts the current request
-	 * @return {AjaxCall}
+	 * @return {Storm.AjaxCall}
 	 */
 	abort: function() {
 		if (this.request) {

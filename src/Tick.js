@@ -42,7 +42,7 @@ if (!Date.now) {
  *
  * var update = function() { raf(update); };
  * raf(update);
- * 
+ *
  * later in the application:
  * raf(update);
  *
@@ -50,9 +50,10 @@ if (!Date.now) {
  * https://github.com/sole/tween.js/
  */
 Storm.tick = (function() {
-	
+
 		/**
 		 * The name of the class
+		 * @const
 		 * @type {String}
 		 * @private
 		 */
@@ -70,7 +71,7 @@ Storm.tick = (function() {
 		_e = {},
 		/**
 		 * Stores function calls
-		 * @type {Array}
+		 * @type {Array.<Function>}
 		 * @private
 		 */
 		_loop = [],
@@ -133,11 +134,11 @@ Storm.tick = (function() {
 			_loop.push(func);
 			return id;
 		},
-		
+
 		/**
 		 * Remove a function from requestAnimationFrame
 		 * @param  {String} id Function id
-		 * @return {Tick}
+		 * @return {Storm.tick}
 		 */
 		unhook: function(id) {
 			_loop.splice(_hooks[id], 1);
@@ -147,7 +148,7 @@ Storm.tick = (function() {
 
 		/**
 		 * Check if animate is running
-		 * @return {Tick}
+		 * @return {Boolean}
 		 */
 		isRunning: function() {
 			return this._isRunning;
@@ -155,10 +156,10 @@ Storm.tick = (function() {
 
 		/**
 		 * Start requestAnimationFrame calling hooked functions
-		 * @return {Tick}
+		 * @return {Storm.tick}
 		 */
 		start: function() {
-			if (_isRunning) { return; }
+			if (_isRunning) { return this; }
 			_isRunning = true;
 
 			_tick();
@@ -167,10 +168,10 @@ Storm.tick = (function() {
 
 		/**
 		 * Stop requestAnimationFrame from calling hooked functions
-		 * @return {Tick}
+		 * @return {Storm.tick}
 		 */
 		stop: function() {
-			if (!_isRunning) { return; }
+			if (!_isRunning) { return this; }
 			_isRunning = false;
 
 			root.cancelAnimationFrame(_id);

@@ -4,6 +4,7 @@
  * When to go with Promise. Used by calling Storm.when() and passing
  * promises to listen to. Storm.when can be chained with multiple calls
  * e.g. Storm.when(p1, p2, p3).then(func).then(func).done(func).always(func);
+ * @type {Storm.Promise}
  */
 var When = Storm.when = (function(Promise) {
 
@@ -15,13 +16,13 @@ var When = Storm.when = (function(Promise) {
 	var When = function() {
 		/**
 		 * Store our promise
-		 * @type {Promise}
+		 * @type {Storm.Promise}
 		 */
 		this._p = null;
 
 		/**
 		 * Store the promises being listened to
-		 * @type {Array[Promise]}
+		 * @type {Array.<Promise>}
 		 */
 		this._events = [];
 	};
@@ -33,7 +34,7 @@ var When = Storm.when = (function(Promise) {
 		/**
 		 * Called by the public Storm.when function to initialize
 		 * the when object
-		 * @return {Promise}
+		 * @return {Storm.Promise}
 		 */
 		init: function() {
 			this._events = _.isArray(arguments[0]) ? arguments[0] : _.toArray(arguments);
@@ -84,10 +85,10 @@ var When = Storm.when = (function(Promise) {
 		/**
 		 * Based on the statuses of our promises, fire the
 		 * appropriate events
-		 * @param  {Number}   total  total number of promises
-		 * @param  {Number}   done   promises in a done state
-		 * @param  {Number}   failed promises in a failed state
-		 * @param  {Array}    args   arguments to pass
+		 * @param  {Number}    total  total number of promises
+		 * @param  {Number}    done   promises in a done state
+		 * @param  {Number}    failed promises in a failed state
+		 * @param  {Arguments} args   arguments to pass
 		 * @private
 		 */
 		_fire: function(total, done, failed, args) {
@@ -95,10 +96,10 @@ var When = Storm.when = (function(Promise) {
 
 			// If everything completed, call done (this will call always)
 			if (done === total) { return promise.resolve.apply(promise, args); }
-			
+
 			// If everything failed, call fail (this will call always)
 			if (failed === total) { return promise.reject.apply(promise, args); }
-		
+
 			// If everything fired, but they're not all one thing, then just call always.
 			// The only way to do that without exposing a public function in Promise is
 			// to use the private _fire event

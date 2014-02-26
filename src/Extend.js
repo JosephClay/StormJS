@@ -3,8 +3,8 @@
 /**
  * Prototypical class extension
  * From: https://github.com/JosephClay/Extend.git
- * @param {Function} constructor   optional
- * @param {Object}   extension     optional
+ * @param {Function} [constructor]
+ * @param {Object}   [extension]
  */
 var Extend = Storm.Extend = function(constructor, extension) {
 	var hasConstructor = (typeof constructor === 'function');

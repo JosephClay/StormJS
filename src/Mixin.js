@@ -6,7 +6,7 @@
  * items can be directly assigned to Storm via Storm.foo = foo;
  * but in this framework, I'm considering it a bad practice
  * @param  {String} name
- * @param  {Value} prop
+ * @param  {*} prop
  * @private
  */
 var _mixin = function(name, prop) {
@@ -16,7 +16,7 @@ var _mixin = function(name, prop) {
 
 /**
  * Protect Storm from mixins that would overwrite pre-existing keys.
- * @param  {String||Object} name Name of the object
+ * @param  {String|Object} name Name of the object
  * @param  {Object}         prop The object to mixin
  */
 Storm.mixin = function(name, prop) {

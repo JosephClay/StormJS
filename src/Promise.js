@@ -2,6 +2,7 @@
 
 	/**
 	 * The name of the class
+	 * @const
 	 * @type {String}
 	 * @private
 	 */
@@ -9,7 +10,8 @@ var _PROMISE = 'Promise',
 	/**
 	 * Status values, determines
 	 * what the promise's status is
-	 * @type {Object}
+	 * @readonly
+	 * @enum {Number}
 	 */
 	_PROMISE_STATUS = {
 		idle:       0,
@@ -20,7 +22,8 @@ var _PROMISE = 'Promise',
 	/**
 	 * Call values, used to determine
 	 * what kind of functions to call
-	 * @type {Object}
+	 * @readonly
+	 * @enum {Number}
 	 */
 	_PROMISE_CALL = {
 		done:     0,
@@ -34,7 +37,7 @@ var _PROMISE = 'Promise',
 /**
  * A lightweight implementation of promises.
  * API based on jQuery.promise: https://api.jquery.com/promise/
- * @class Promise
+ * @class Storm.Promise
  */
 var Promise = Storm.Promise = function() {
 	/**
@@ -46,12 +49,14 @@ var Promise = Storm.Promise = function() {
 	/**
 	 * Registered functions organized by _PROMISE_CALL
 	 * @type {Object}
+	 * @private
 	 */
 	this._calls = {};
 
 	/**
 	 * Current status
 	 * @type {Number}
+	 * @private
 	 */
 	this._status = _PROMISE_STATUS.idle;
 };
@@ -65,41 +70,41 @@ Promise.prototype = {
 
 	/**
 	 * Register a done call that is fired after a Promise is resolved
-	 * @param  {Function}
-	 * @return {Promise}
+	 * @param  {Function} func
+	 * @return {Storm.Promise}
 	 */
 	done: function(func) { return this._pushCall.call(this, _PROMISE_CALL.done, func); },
 	/**
 	 * Register a fail call that is fired after a Promise is rejected
-	 * @param  {Function}
-	 * @return {Promise}
+	 * @param  {Function} func
+	 * @return {Storm.Promise}
 	 */
 	fail: function(func) { return this._pushCall.call(this, _PROMISE_CALL.fail, func); },
 	/**
 	 * Register a call that fires after done or fail
-	 * @param  {Function}
-	 * @return {Promise}
+	 * @param  {Function} func
+	 * @return {Storm.Promise}
 	 */
 	always: function(func) { return this._pushCall.call(this, _PROMISE_CALL.always, func); },
 	/**
 	 * Register a progress call that is fired after a Promise is notified
-	 * @param  {Function}
-	 * @return {Promise}
+	 * @param  {Function} func
+	 * @return {Storm.Promise}
 	 */
 	progress: function(func) { return this._pushCall.call(this, _PROMISE_CALL.progress, func); },
 	/**
 	 * Register a pipe call that is fired before done or fail and whose return value
 	 * is passed to the next pipe/done/fail call
-	 * @param  {Function}
-	 * @return {Promise}
+	 * @param  {Function} func
+	 * @return {Storm.Promise}
 	 */
 	pipe: function(func) { return this._pushCall.call(this, _PROMISE_CALL.pipe, func); },
 
 	/**
 	 * Pushes a function into a call array by type
-	 * @param  {CALL[type]} callType
+	 * @param  {Storm.Promise.CALL} callType
 	 * @param  {Function} func
-	 * @return {Promise}
+	 * @return {Storm.Promise}
 	 * @private
 	 */
 	_pushCall: function(callType, func) {
@@ -110,7 +115,7 @@ Promise.prototype = {
 	/**
 	 * Notify the promise - calls any functions in
 	 * Promise.progress
-	 * @return {Promise}
+	 * @return {Storm.Promise}
 	 */
 	notify: function() {
 		this._status = _PROMISE_STATUS.progressed;
@@ -125,43 +130,45 @@ Promise.prototype = {
 	 * Reject the promise - calls any functions in
 	 * Promise.fail, then calls any functions in
 	 * Promise.always
-	 * @return {Promise}
+	 * @return {Storm.Promise}
 	 */
 	reject: function() {
 		// If we've already called failed or done, go no further
-		if (this._status === _PROMISE_STATUS.failed || this._status === _PROMISE_STATUS.done) { return; }
+		if (this._status === _PROMISE_STATUS.failed || this._status === _PROMISE_STATUS.done) { return this; }
 
 		this._status = _PROMISE_STATUS.failed;
 
 		// Never run the pipe on fail. Simply fail.
 		// Running the pipe after an unexpected failure may lead to
 		// more failures
-		this._fire(_PROMISE_CALL.fail, arguments)._fire(_PROMISE_CALL.always, arguments);
+		this._fire(_PROMISE_CALL.fail, arguments)
+			._fire(_PROMISE_CALL.always, arguments);
 
 		return this;
 	},
-	
+
 	/**
 	 * Resolve the promise - calls any functions in
 	 * Promise.done, then calls any functions in
 	 * Promise.always
-	 * @return {Promise}
+	 * @return {Storm.Promise}
 	 */
 	resolve: function() {
 		// If we've already called failed or done, go no further
-		if (this._status === _PROMISE_STATUS.failed || this._status === _PROMISE_STATUS.done) { return; }
+		if (this._status === _PROMISE_STATUS.failed || this._status === _PROMISE_STATUS.done) { return this; }
 
 		this._status = _PROMISE_STATUS.done;
 
 		var args = this._runPipe(arguments);
-		this._fire(_PROMISE_CALL.done, args)._fire(_PROMISE_CALL.always, args);
+		this._fire(_PROMISE_CALL.done, args)
+			._fire(_PROMISE_CALL.always, args);
 
 		return this;
 	},
 
 	/**
 	 * Determine if the promise is in the status provided
-	 * @param  {String || Number}  STATUS key or STATUS value
+	 * @param  {String|Storm.Promise.STATUS}  status key or STATUS value
 	 * @return {Boolean}
 	 */
 	is: function(status) {
@@ -179,9 +186,9 @@ Promise.prototype = {
 
 	/**
 	 * Fires a _PROMISE_CALL type with the provided arguments
-	 * @param  {CALL[type]} callType
+	 * @param  {Storm.Promise.CALL} callType
 	 * @param  {Array} args
-	 * @return {Promise}
+	 * @return {Storm.Promise}
 	 * @private
 	 */
 	_fire: function(callType, args) {
@@ -215,9 +222,9 @@ Promise.prototype = {
 
 	/**
 	 * Lazy generate arrays based on type to
-	 * avoid creating disposable arrays for 
+	 * avoid creating disposable arrays for
 	 * methods that aren't going to be used/called
-	 * @param  {CALL[type]} type 
+	 * @param  {Storm.Promise.CALL} type
 	 * @return {Array}
 	 * @private
 	 */
@@ -228,8 +235,8 @@ Promise.prototype = {
 	/**
 	 * Allows a promise to be called like a
 	 * Function.call() or Function.apply()
-	 * 
-	 * Very usefull for passing a promise as
+	 *
+	 * Very useful for passing a promise as
 	 * a callback function to 3rd party code
 	 * (as long as the third party code doesn't
 	 * try to invoke the Promise directly)

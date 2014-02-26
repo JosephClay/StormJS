@@ -1,7 +1,8 @@
 // Cache ############################################################################
-	
+
 /**
  * The name of the class
+ * @const
  * @type {String}
  * @private
  */
@@ -9,7 +10,7 @@ var _CACHE = 'Cache';
 
 /**
  * An in-memory key-value store
- * @class Cache
+ * @class Storm.Cache
  */
 var Cache = Storm.Cache = function() {
 	/**
@@ -17,7 +18,7 @@ var Cache = Storm.Cache = function() {
 	 * @private
 	 */
 	this._id = _uniqId(_CACHE);
-	
+
 	/**
 	 * Holds the private cache
 	 * @type {Object}
@@ -39,10 +40,10 @@ Cache.prototype = {
 
 	/**
 	 * Stores data in the cache
-	 * @param  {String || Object} key
-	 * @param  {Value} data
-	 * @param  {Object} opts [optional]
-	 * @return {Cache}
+	 * @param  {String|Object} key
+	 * @param  {*} data
+	 * @param  {Object} [opts]
+	 * @return {Storm.Cache}
 	 */
 	store: function(key, data, opts) {
 		opts = opts || {};
@@ -65,8 +66,8 @@ Cache.prototype = {
 	/**
 	 * Gets an item from cache or an array
 	 * of values
-	 * @param  {String || Array[String]} key
-	 * @return {Value || Array[Values]}
+	 * @param  {String|String[]} key
+	 * @return {*|Array.<*>}
 	 */
 	get: function(key) {
 		if (_.isArray(key)) {
@@ -86,8 +87,8 @@ Cache.prototype = {
 	/**
 	 * Remove an item from cache or multiple
 	 * items if an array is passed
-	 * @param  {String || Array[String]} keys
-	 * @return {Cache}
+	 * @param  {String|String[]} keys
+	 * @return {Storm.Cache}
 	 */
 	remove: function(keys) {
 		keys = _.isArray(keys) ? keys : [keys];
@@ -104,7 +105,7 @@ Cache.prototype = {
 	/**
 	 * Resets the cache, emptying the cache
 	 * and clearing any expirations
-	 * @return {Cache}
+	 * @return {Storm.Cache}
 	 */
 	flush: function() {
 		this._clearExpirations();
@@ -115,8 +116,8 @@ Cache.prototype = {
 	/**
 	 * Stores data in the cache
 	 * @param  {String} key
-	 * @param  {Value} data
-	 * @param  {Object} opts [optional]
+	 * @param  {*} data
+	 * @param  {Object} [opts]
 	 * @private
 	 */
 	_store: function(key, data, opts) {
@@ -148,7 +149,7 @@ Cache.prototype = {
 
 		var self = this;
 		this._timeouts[key] = setTimeout(function() {
-			
+
 			delete self._cache[key];
 			delete self._timeouts[key];
 
@@ -175,12 +176,12 @@ Cache.prototype = {
 		clearTimeout(this._timeouts[key]);
 		delete this._timeouts[key];
 	},
-	
+
 	/**
 	 * Gets the value (or entire cache) to
 	 * serialize to JSON
-	 * @param  {String} key [optional]
-	 * @return {Object || Value}
+	 * @param  {String} [key]
+	 * @return {*}
 	 */
 	toJSON: function(key) {
 		var value = (key) ? this.get(key) : this._cache;
@@ -201,5 +202,6 @@ Cache.prototype = {
 
 /**
  * Expose a default cache to use in the application
+ * @type {Storm.Cache}
  */
 Storm.cache = new Cache();

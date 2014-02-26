@@ -2,6 +2,7 @@
 
 /**
  * The name of the class
+ * @const
  * @type {String}
  * @private
  */
@@ -11,9 +12,9 @@ var _MODEL = 'Model';
  * The base data object for the application. Stores
  * and protects a piece of data and gives an interface
  * to follow and manipulate the data. Works in conjunction
- * with a Collection to organize data into sets 
- * 
- * @class Model
+ * with a Collection to organize data into sets
+ *
+ * @class Storm.Model
  * @param {Object} data
  * @param {Object} opts
  */
@@ -38,7 +39,7 @@ var Model = Storm.Model = function(data, opts) {
 	 * @type {Object}
 	 */
 	this._getters = {};
-	
+
 	/**
 	 * setters (recorded by key as a function)
 	 * @type {Object}
@@ -47,13 +48,13 @@ var Model = Storm.Model = function(data, opts) {
 
 	// Merge the data and the defaults
 	data = _.extend({}, this.defaults, data);
-	
+
 	/**
 	 * Protect the data, __ === secret... gentleman's agreement
 	 * @type {Object}
 	 */
 	this.__data = this._duplicate(data);
-	
+
 	/**
 	 * Create duplicate of the original data to
 	 * compare against for checks and allow restoration.
@@ -64,7 +65,7 @@ var Model = Storm.Model = function(data, opts) {
 
 	/**
 	 * If there's a Comparator, then bind it to this model
-	 * @type {Comparator}
+	 * @type {Storm.Comparator}
 	 */
 	if (this.comparator) { this.comparator.bind(this); }
 };
@@ -72,7 +73,7 @@ var Model = Storm.Model = function(data, opts) {
 _.extend(Model.prototype, Events.core.prototype, {
 	/** @constructor */
 	constructor: Model,
-	
+
 	/**
 	 * If not supporting complex data types (default), the model
 	 * creates a reference-free version of the data to keep the
@@ -105,14 +106,14 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 * Restores the data of the model back to the
 	 * original value
 	 * @param  {Object} opts
-	 * @return {Model}
+	 * @return {Storm.Model}
 	 */
 	restore: function(opts) {
 		// Set the current data back to the original data
 		this.__data = this._duplicate(this.__originalData);
 		// Check if silent
 		if (opts && !opts.isSilent) { return this; }
-		
+
 		// Let every property know that it has
 		// been changed and fire a restore event
 		var prop;
@@ -128,8 +129,8 @@ _.extend(Model.prototype, Events.core.prototype, {
 	/**
 	 * Adds a getter for the property
 	 * @param  {String}   prop
-	 * @param  {Function} func
-	 * @return {Model}
+	 * @param  {Function} func <code>{*} function({*} value)</code>
+	 * @return {Storm.Model}
 	 */
 	getter: function(prop, func) {
 		if (!_.isFunction(func)) { return console.error(_errorMessage(_MODEL, 'Getter must be a function.', prop, func)); }
@@ -141,8 +142,8 @@ _.extend(Model.prototype, Events.core.prototype, {
 	/**
 	 * Adds a setter for the property
 	 * @param  {String}   prop
-	 * @param  {Function} func
-	 * @return {Model}
+	 * @param  {Function} func <code>{*} function({*} value)</code>
+	 * @return {Storm.Model}
 	 */
 	setter: function(prop, func) {
 		if (!_.isFunction(func)) { return console.error(_errorMessage(_MODEL, 'Setter must be a function', prop, func)); }
@@ -155,8 +156,8 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 * Get a value from the Model, passing it through the getter
 	 * method if one exists. An array can be passed to get multiple
 	 * values or a string to get a single value
-	 * @param  {String || Array[String]} prop
-	 * @return {Value || Array[Values]}
+	 * @param  {String|Array.<String>} prop
+	 * @return {*|Array.<*>}
 	 */
 	get: function(prop) {
 		if (_.isArray(prop)) {
@@ -172,11 +173,11 @@ _.extend(Model.prototype, Events.core.prototype, {
 
 		return this._get(prop);
 	},
-	
+
 	/**
 	 * Private version of get. Gets single values
 	 * @param {String} prop
-	 * @return {Data}
+	 * @return {*}
 	 * @private
 	 */
 	_get: function(prop) {
@@ -193,10 +194,10 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 * Sets the value of a property in the Model. Values can be set
 	 * in key-value pairs in an object, or as string + value as
 	 * separate parameters
-	 * @param {String || Object} prop
-	 * @param {Data} data
+	 * @param {String|Object} prop
+	 * @param {*} data
 	 * @param {Object} opts
-	 * @return {Model}
+	 * @return {Storm.Model}
 	 */
 	set: function(prop, data, opts) {
 		// If prop is not a string (is an object), then set
@@ -213,12 +214,12 @@ _.extend(Model.prototype, Events.core.prototype, {
 		this._set(prop, data, opts);
 		return this;
 	},
-	
+
 	/**
 	 * Private version of set. Sets single values
 	 * @param {String} prop
-	 * @param {Value}  data
-	 * @param {Object} opts [optional]
+	 * @param {*}  data
+	 * @param {Object} [opts]
 	 * @private
 	 */
 	_set: function(prop, data, opts) {
@@ -229,16 +230,16 @@ _.extend(Model.prototype, Events.core.prototype, {
 
 		this._change(prop, data, opts);
 	},
-	
+
 	/**
 	 * Adds properties/values to the model data. Only works to add
 	 * additional data to the model data, it will not modify any
 	 * pre-existing data. An object can be passed to set multiple
 	 * key-values or a string and value as separate parameters
-	 * @param {String || Object} prop
-	 * @param {Value} data
-	 * @param {Object} opts [optional]
-	 * @return {Model}
+	 * @param {String|Object} prop
+	 * @param {*} data
+	 * @param {Object} [opts]
+	 * @return {Storm.Model}
 	 */
 	add: function(prop, data, opts) {
 		// If the prop is not a string (is an object)
@@ -260,9 +261,9 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 * data the pre-exists in the data. No remove event will be fired
 	 * if the property has an undefined value. An array can be passed
 	 * to remove multiple properties or a string as a single parameter
-	 * @param {String || Array[String]} prop
-	 * @param {Object} opts [optional]
-	 * @return {Model}
+	 * @param {String|Array.<String>} prop
+	 * @param {Object} [opts]
+	 * @return {Storm.Model}
 	 */
 	remove: function(prop, opts) {
 		if (_.isArray(prop)) {
@@ -279,7 +280,7 @@ _.extend(Model.prototype, Events.core.prototype, {
 	/**
 	 * Returns the previous value for the property
 	 * @param  {String} prop
-	 * @return {Value}
+	 * @return {*}
 	 */
 	previous: function(prop) {
 		return this.__previousData[prop];
@@ -298,7 +299,7 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 * Checks if the model data has changed from the original data.
 	 * If a prop is passed, then it will check if that property's value
 	 * has changed and not the entire model data
-	 * @param  {String}  prop [optional]
+	 * @param  {String}  [prop]
 	 * @return {Boolean}
 	 */
 	hasChanged: function(prop) {
@@ -315,7 +316,7 @@ _.extend(Model.prototype, Events.core.prototype, {
 
 	/**
 	 * Returns a clone of the model
-	 * @return {Model}
+	 * @return {Storm.Model}
 	 */
 	clone: function() {
 		return new this.constructor(this._duplicate(this.__data), this.options);
@@ -330,9 +331,9 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 * method is used, which will not create a reference-free
 	 * version of complex data types, which may lead to pollution
 	 * of the data, but will allow non-primitive values
-	 * 
-	 * @param  {Value} data
-	 * @return {Value}
+	 *
+	 * @param  {*} data
+	 * @return {*}
 	 * @private
 	 */
 	_duplicate: function(data) {
@@ -352,7 +353,7 @@ _.extend(Model.prototype, Events.core.prototype, {
 	},
 
 	/**
-	 * Duplicates the current model data and assignes it
+	 * Duplicates the current model data and assigns it
 	 * to previous data
 	 * @private
 	 */
@@ -364,8 +365,8 @@ _.extend(Model.prototype, Events.core.prototype, {
 	/**
 	 * Adds a new property and data to the model data
 	 * @param {String} prop
-	 * @param {Value} data
-	 * @param {Object} opts [optional]
+	 * @param {*} data
+	 * @param {Object} [opts]
 	 * @private
 	 */
 	_add: function(prop, data, opts) {
@@ -383,7 +384,7 @@ _.extend(Model.prototype, Events.core.prototype, {
 	/**
 	 * Removes a property from the model data
 	 * @param {String} prop
-	 * @param {Object} opts [optional]
+	 * @param {Object} [opts]
 	 * @private
 	 */
 	_remove: function(prop, opts) {
@@ -401,8 +402,8 @@ _.extend(Model.prototype, Events.core.prototype, {
 	/**
 	 * Changes a value on the model data
 	 * @param  {String} prop
-	 * @param  {Value} data
-	 * @param  {Object} opts [optional]
+	 * @param  {*} data
+	 * @param  {Object} [opts]
 	 * @private
 	 */
 	_change: function(prop, data, opts) {
@@ -422,7 +423,7 @@ _.extend(Model.prototype, Events.core.prototype, {
 	 * Compares this model to another. Used by Collection for
 	 * sorting. Checks for Storm.Comparator to use natively but
 	 * can be overwritten
-	 * @param  {Model} comparisonModel
+	 * @param  {Storm.Model} comparisonModel
 	 * @return {Number} sort order (1, 0, -1)
 	 */
 	compareTo: function(comparisonModel) {
