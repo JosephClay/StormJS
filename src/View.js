@@ -40,6 +40,12 @@ _.extend(View.prototype, Events.prototype, {
 	constructor: View,
 
 	/**
+	 * Get the private id of the Model
+	 * @return {Number} id
+	 */
+	getId: function() { return this._id; },
+
+	/**
 	 * Returns a clone of the view
 	 * @return {Storm.View}
 	 */
