@@ -183,7 +183,7 @@ _.extend(Model.prototype, Events.prototype, {
 	_get: function(prop) {
 		// If a getter is set, call the function to get the return value
 		if (this._getters[prop]) {
-			return this._getters[prop].call(null, this.__data[args.prop]);
+			return this._getters[prop].call(null, this.__data[prop]);
 		}
 
 		// Otherwise, return the value

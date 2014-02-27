@@ -56,7 +56,7 @@ var _exists = function(value) {
  */
 var _stringFormat = (function() {
 
-	var _REGEX = new RegExp('{(.+)}', 'g');
+	var _REGEX = new RegExp('{(.+?)}', 'g');
 
 	return function(str, fill) {
 		return str.replace(_REGEX, function(capture, value) {
@@ -1144,43 +1144,40 @@ AjaxCall.prototype = {
 	 */
 	send: function(promise) {
 		var self = this,
-			call = this._call;
+			call = this._call,
+			params = _.extend({}, call, {
+				contentType: call.content,
+				success: function(data) {
+					if (promise) { promise.resolve(data); }
+					self.success.apply(self, arguments);
+					Request.done(self);
+				},
+				progress: function() {
+					if (promise) { promise.notify(); }
+				},
+				error: function(req, status, err) {
+					if (promise) { promise.reject(req); }
 
-		var request = this.request = Storm.ajax.ajax({
-			type: call.type,
-			url: call.url,
-			contentType: call.content,
-			data: call.data,
-			cache: call.cache,
-			success: function(data) {
-				if (promise) { promise.resolve(data); }
-				self.success.apply(self, arguments);
-				Request.done(self);
-			},
-			progress: function() {
-				if (promise) { promise.notify(); }
-			},
-			error: function(req, status, err) {
-				if (promise) { promise.reject(req); }
+					// Abort
+					if (req.status === 0) {
+						Request.abort(req, status, err, self);
+						return;
+					}
 
-				// Abort
-				if (req.status === 0) {
-					Request.abort(req, status, err, self);
-					return;
+					// Fail
+					self.error.apply(self, arguments);
+					Request.fail(self);
+				},
+				complete: function() {
+					self.complete.apply(self, arguments);
+					Request.always(self);
 				}
-
-				// Fail
-				self.error.apply(self, arguments);
-				Request.fail(self);
-			},
-			complete: function() {
-				self.complete.apply(self, arguments);
-				Request.always(self);
-			}
-		});
+			});
 
 		// Record the call
 		Request.send(this);
+
+		var request = this.request = Storm.ajax.ajax(params);
 
 		return request;
 	},
@@ -1577,6 +1574,12 @@ _.extend(View.prototype, Events.prototype, {
 	constructor: View,
 
 	/**
+	 * Get the private id of the Model
+	 * @return {Number} id
+	 */
+	getId: function() { return this._id; },
+
+	/**
 	 * Returns a clone of the view
 	 * @return {Storm.View}
 	 */
@@ -1797,7 +1800,7 @@ _.extend(Model.prototype, Events.prototype, {
 	_get: function(prop) {
 		// If a getter is set, call the function to get the return value
 		if (this._getters[prop]) {
-			return this._getters[prop].call(null, this.__data[args.prop]);
+			return this._getters[prop].call(null, this.__data[prop]);
 		}
 
 		// Otherwise, return the value
@@ -3088,6 +3091,34 @@ Cache.prototype = {
 		});
 	}
 };
+
+// Underscore methods that we want to implement on the Cache.
+_.each([
+	'keys',
+	'values',
+	'pairs',
+	'functions',
+	'pick',
+	'omit',
+	'tap',
+	'has',
+	'isEqual',
+	'isEmpty',
+	'each'
+], function(method) {
+	Cache.prototype[method] = function() {
+		var args = _.toArray(arguments);
+
+		// Add this Model's data as the first
+		// argument
+		args.unshift(this._cache);
+
+		// the method is the underscore methods with
+		// an underscore context and the arguments with
+		// the models first
+		return _[method].apply(_, args);
+	};
+});
 
 /**
  * Expose a default cache to use in the application

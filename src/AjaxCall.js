@@ -222,10 +222,10 @@ AjaxCall.prototype = {
 				}
 			});
 
-		var request = this.request = Storm.ajax.ajax(params);
-
 		// Record the call
 		Request.send(this);
+
+		var request = this.request = Storm.ajax.ajax(params);
 
 		return request;
 	},
