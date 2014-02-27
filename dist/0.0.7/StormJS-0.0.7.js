@@ -241,7 +241,7 @@ var Events = Storm.Events = Signal;
  * into Storm so that Storm can be used as
  * a pub/sub
  */
-_.extend(Storm, Events.core.construct());
+_.extend(Storm, Events.construct());
 
 //----
 
@@ -894,7 +894,7 @@ var _REQUEST = 'request',
  *
  * Possible events are: 'send', done', 'fail', 'abort', 'always'
  */
-Storm.request = Events.core.construct();
+Storm.request = Events.construct();
 _.extend(Storm.request, {
 	
 	/**
@@ -1512,7 +1512,7 @@ var _VIEW = 'View';
  * @param {Object} opts [optional]
  */
 var View = Storm.View = function(opts) {
-	Events.core.call(this);
+	Events.call(this);
 
 	opts = opts || {};
 
@@ -1532,7 +1532,7 @@ var View = Storm.View = function(opts) {
 	this.template = this.template || opts.template || '';
 };
 
-_.extend(View.prototype, Events.core.prototype, {
+_.extend(View.prototype, Events.prototype, {
 	/** @constructor */
 	constructor: View,
 
@@ -1591,7 +1591,7 @@ var _MODEL = 'Model';
  * @param {Object} opts
  */
 var Model = Storm.Model = function(data, opts) {
-	Events.core.call(this);
+	Events.call(this);
 
 	/**
 	 * @type {Id}
@@ -1642,7 +1642,7 @@ var Model = Storm.Model = function(data, opts) {
 	if (this.comparator) { this.comparator.bind(this); }
 };
 
-_.extend(Model.prototype, Events.core.prototype, {
+_.extend(Model.prototype, Events.prototype, {
 	/** @constructor */
 	constructor: Model,
 	
@@ -2287,7 +2287,7 @@ var _COLLECTION = 'Collection';
  * @class Collection
  */
 var Collection = Storm.Collection = function(data) {
-	Events.core.call(this);
+	Events.call(this);
 	data = data || {};
 
 	/**
@@ -2306,7 +2306,7 @@ var Collection = Storm.Collection = function(data) {
 	this.add(data.models, data, { isSilent: true });
 };
 
-_.extend(Collection.prototype, Events.core.prototype, {
+_.extend(Collection.prototype, Events.prototype, {
 	/** @constructor */
 	constructor: Collection,
 
@@ -2780,7 +2780,7 @@ var _MODULE = 'Module';
  * @class Module
  */
 var Module = Storm.Module = function() {
-	Events.core.call(this);
+	Events.call(this);
 	
 	/**
 	 * @type {Id}
@@ -2789,7 +2789,7 @@ var Module = Storm.Module = function() {
 	this._id = _uniqId(_MODULE);
 };
 
-_.extend(Module.prototype, Events.core.prototype, {
+_.extend(Module.prototype, Events.prototype, {
 	/** @constructor */
 	constructor: Module,
 

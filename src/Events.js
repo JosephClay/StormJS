@@ -7,11 +7,11 @@
  * @class  Storm.Events
  * @type {Signal}
  */
-var Events = Storm.Events = Signal;
+var Events = Storm.Events = Signal.core;
 
 /**
  * Instantiate and merge a new Event system
  * into Storm so that Storm can be used as
  * a pub/sub
  */
-_.extend(Storm, Events.core.construct());
+_.extend(Storm, Events.construct());

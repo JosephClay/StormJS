@@ -13,7 +13,7 @@ var _MODULE = 'Module';
  * @class Storm.Module
  */
 var Module = Storm.Module = function() {
-	Events.core.call(this);
+	Events.call(this);
 
 	/**
 	 * @type {Id}
@@ -22,7 +22,7 @@ var Module = Storm.Module = function() {
 	this._id = _uniqId(_MODULE);
 };
 
-_.extend(Module.prototype, Events.core.prototype, {
+_.extend(Module.prototype, Events.prototype, {
 	/** @constructor */
 	constructor: Module,
 

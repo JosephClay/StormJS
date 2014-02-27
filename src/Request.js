@@ -78,7 +78,7 @@ var _REQUEST = 'request',
  *
  * Possible events are: 'send', done', 'fail', 'abort', 'always'
  */
-Storm.request = Events.core.construct();
+Storm.request = Events.construct();
 _.extend(Storm.request, {
 
 	/**

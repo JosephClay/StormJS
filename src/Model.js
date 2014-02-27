@@ -19,7 +19,7 @@ var _MODEL = 'Model';
  * @param {Object} opts
  */
 var Model = Storm.Model = function(data, opts) {
-	Events.core.call(this);
+	Events.call(this);
 
 	/**
 	 * @type {Id}
@@ -70,7 +70,7 @@ var Model = Storm.Model = function(data, opts) {
 	if (this.comparator) { this.comparator.bind(this); }
 };
 
-_.extend(Model.prototype, Events.core.prototype, {
+_.extend(Model.prototype, Events.prototype, {
 	/** @constructor */
 	constructor: Model,
 

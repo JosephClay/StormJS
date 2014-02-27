@@ -14,7 +14,7 @@ var _COLLECTION = 'Collection';
  * @class Storm.Collection
  */
 var Collection = Storm.Collection = function(data) {
-	Events.core.call(this);
+	Events.call(this);
 	data = data || {};
 
 	/**
@@ -33,7 +33,7 @@ var Collection = Storm.Collection = function(data) {
 	this.add(data.models, data, { isSilent: true });
 };
 
-_.extend(Collection.prototype, Events.core.prototype, {
+_.extend(Collection.prototype, Events.prototype, {
 	/** @constructor */
 	constructor: Collection,
 

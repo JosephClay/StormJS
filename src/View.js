@@ -15,7 +15,7 @@ var _VIEW = 'View';
  * @param {Object} [opts]
  */
 var View = Storm.View = function(opts) {
-	Events.core.call(this);
+	Events.call(this);
 
 	opts = opts || {};
 
@@ -35,7 +35,7 @@ var View = Storm.View = function(opts) {
 	this.template = this.template || opts.template || '';
 };
 
-_.extend(View.prototype, Events.core.prototype, {
+_.extend(View.prototype, Events.prototype, {
 	/** @constructor */
 	constructor: View,
 
