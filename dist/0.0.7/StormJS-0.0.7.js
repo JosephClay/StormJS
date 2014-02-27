@@ -241,7 +241,7 @@ var Extend = Storm.Extend = function(constructor, extension) {
  * @class  Storm.Events
  * @type {Signal}
  */
-var Events = Storm.Events = Signal;
+var Events = Storm.Events = Signal.core;
 
 /**
  * Instantiate and merge a new Event system
@@ -2856,7 +2856,8 @@ var _MODULE = 'Module';
  * @class Storm.Module
  */
 var Module = Storm.Module = function() {
-	Events.core.call(this);
+	Events.call(this);
+
 	/**
 	 * @type {Id}
 	 * @private
