@@ -345,7 +345,7 @@ _.extend(Collection.prototype, Events.prototype, {
 	 * @return {Storm.Model}
 	 */
 	findById: function(id) {
-		id = !(id > -1) ? parseInt(id, 10) : id; // make sure id is a number
+		id = (id > -1) === false ? parseInt(id, 10) : id; // make sure id is a number
 
 		var models = this.getModels(),
 			idx = models.length,
