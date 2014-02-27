@@ -200,6 +200,34 @@ Cache.prototype = {
 	}
 };
 
+// Underscore methods that we want to implement on the Cache.
+_.each([
+	'keys',
+	'values',
+	'pairs',
+	'functions',
+	'pick',
+	'omit',
+	'tap',
+	'has',
+	'isEqual',
+	'isEmpty',
+	'each'
+], function(method) {
+	Cache.prototype[method] = function() {
+		var args = _.toArray(arguments);
+
+		// Add this Model's data as the first
+		// argument
+		args.unshift(this._cache);
+
+		// the method is the underscore methods with
+		// an underscore context and the arguments with
+		// the models first
+		return _[method].apply(_, args);
+	};
+});
+
 /**
  * Expose a default cache to use in the application
  * @type {Storm.Cache}
