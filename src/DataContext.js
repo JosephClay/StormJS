@@ -45,7 +45,7 @@ DataContext.settings = (function() {
  * @return {Object} DataContext.settings
  */
 DataContext.addSettings = function(settings) {
-	return _.extend(DataContext.setting, settings);
+	return _.extend(DataContext.settings, settings);
 };
 
 DataContext.prototype = {

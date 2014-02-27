@@ -171,7 +171,7 @@ AjaxCall.prototype = {
 	 * @return {*}
 	 */
 	get: function(key) {
-		return this.call[key];
+		return this._call[key];
 	},
 
 	/**
@@ -181,7 +181,7 @@ AjaxCall.prototype = {
 	 * @return {Storm.AjaxCall}
 	 */
 	set: function(key, value) {
-		this.call[key] = value;
+		this._call[key] = value;
 		return this;
 	},
 

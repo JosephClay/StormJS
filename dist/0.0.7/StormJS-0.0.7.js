@@ -1123,7 +1123,7 @@ AjaxCall.prototype = {
 	 * @return {*}
 	 */
 	get: function(key) {
-		return this.call[key];
+		return this._call[key];
 	},
 
 	/**
@@ -1133,7 +1133,7 @@ AjaxCall.prototype = {
 	 * @return {Storm.AjaxCall}
 	 */
 	set: function(key, value) {
-		this.call[key] = value;
+		this._call[key] = value;
 		return this;
 	},
 
@@ -1278,7 +1278,7 @@ DataContext.settings = (function() {
  * @return {Object} DataContext.settings
  */
 DataContext.addSettings = function(settings) {
-	return _.extend(DataContext.setting, settings);
+	return _.extend(DataContext.settings, settings);
 };
 
 DataContext.prototype = {
@@ -2668,7 +2668,7 @@ _.extend(Collection.prototype, Events.prototype, {
 	 * @return {Storm.Model}
 	 */
 	findById: function(id) {
-		id = !(id > -1) ? parseInt(id, 10) : id; // make sure id is a number
+		id = (id > -1) === false ? parseInt(id, 10) : id; // make sure id is a number
 
 		var models = this.getModels(),
 			idx = models.length,
