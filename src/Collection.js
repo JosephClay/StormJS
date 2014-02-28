@@ -30,7 +30,7 @@ var Collection = Storm.Collection = function(data) {
 	 */
 	this._models = [];
 
-	this.add(data.models, _.extend({ isSilent: true }, data);
+	this.add(data.models, _.extend({ isSilent: true }, data));
 };
 
 _.extend(Collection.prototype, Events.prototype, {
@@ -107,10 +107,10 @@ _.extend(Collection.prototype, Events.prototype, {
 	},
 
 	/**
-	 * Overwrites the private _models array 
+	 * Overwrites the private _models array
 	 * with a new array of models
-	 * @param  {Array.{Storm.Model>} models
-	 * @return {Array.{Storm.Model>}       
+	 * @param  {Array.<Storm.Model>} models
+	 * @return {Array.<Storm.Model>}
 	 */
 	overwrite: function(models) {
 		return (this._models = models);
