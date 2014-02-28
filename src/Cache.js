@@ -121,6 +121,8 @@ Cache.prototype = {
 	 * @private
 	 */
 	_store: function(key, data, opts) {
+		opts = opts || {};
+
 		// Expiration
 		if (_exists(opts.expiration)) {
 			this._setExpiration(key, opts.expiration);
