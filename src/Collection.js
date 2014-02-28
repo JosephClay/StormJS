@@ -94,6 +94,15 @@ _.extend(Collection.prototype, Events.prototype, {
 	},
 
 	/**
+	 * Clear all of the models from the collection
+	 * @return {Storm.Collection}
+	 */
+	clear: function() {
+		this._models.length = 0;
+		return this;
+	},
+
+	/**
 	 * Retrieve a model at the provided index
 	 * @param  {Number} idx
 	 * @return {Storm.Model}
