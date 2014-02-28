@@ -75,9 +75,9 @@ var When = Storm.when = (function(Promise) {
 				evt = events[idx];
 				// We're waiting for everything to complete
 				// so if there's an item with no status, stop
-				if (evt.status === Promise.STATUS.idle) { return; }
-				if (evt.status === Promise.STATUS.done) { done += 1; continue; }
-				if (evt.status === Promise.STATUS.failed) { failed += 1; continue; }
+				if (evt.status() === Promise.STATUS.idle) { return; }
+				if (evt.status() === Promise.STATUS.done) { done += 1; continue; }
+				if (evt.status() === Promise.STATUS.failed) { failed += 1; continue; }
 			}
 			this._fire(total, done, failed, arguments);
 		},
