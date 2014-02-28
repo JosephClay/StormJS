@@ -98,6 +98,11 @@ _.extend(Collection.prototype, Events.prototype, {
 	 * @return {Storm.Collection}
 	 */
 	clear: function() {
+		var models = this._models,
+			idx = models.length;
+		while (idx--) {
+			models[idx].trigger('destroy');
+		}
 		this._models.length = 0;
 		return this;
 	},
