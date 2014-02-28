@@ -30,7 +30,7 @@ var Collection = Storm.Collection = function(data) {
 	 */
 	this._models = [];
 
-	this.add(data.models, data, { isSilent: true });
+	this.add(data.models, _.extend({ isSilent: true }, data);
 };
 
 _.extend(Collection.prototype, Events.prototype, {
@@ -52,11 +52,10 @@ _.extend(Collection.prototype, Events.prototype, {
 	 * Create a new model
 	 * @param  {Object} model the model data
 	 * @param  {Object} [opts]
-	 * @param  {Object} data additional data to pass to the new models
 	 * @return {Storm.Model}
 	 */
-	newModel: function(model, opts, data) {
-		return new this.Model(model, opts, data);
+	newModel: function(model, opts) {
+		return new this.Model(model, opts);
 	},
 
 	/**
@@ -149,7 +148,7 @@ _.extend(Collection.prototype, Events.prototype, {
 	 * @param {Object} [opts]
 	 * @param {Object} data additional data to pass to the new models
 	 */
-	add: function(models, data, opts) {
+	add: function(models, opts) {
 		models = _.isArray(models) ? models.slice() : [models];
 		opts = opts || {};
 
@@ -165,7 +164,7 @@ _.extend(Collection.prototype, Events.prototype, {
 
 			// If the model is not a Storm.Model, make it into one
 			if (!(model instanceof Storm.Model)) {
-				model = this.newModel(model, opts, data);
+				model = this.newModel(model, opts);
 			}
 
 			// Check if the model is valid
