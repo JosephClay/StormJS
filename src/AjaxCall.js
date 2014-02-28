@@ -204,6 +204,10 @@ AjaxCall.prototype = {
 					if (promise) { promise.notify(); }
 				},
 				error: function(req, status, err) {
+					self.req = req;
+					self.status = status;
+					self.err = err;
+					
 					if (promise) { promise.reject(req); }
 
 					// Abort
