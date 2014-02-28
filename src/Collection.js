@@ -108,6 +108,16 @@ _.extend(Collection.prototype, Events.prototype, {
 	},
 
 	/**
+	 * Overwrites the private _models array 
+	 * with a new array of models
+	 * @param  {Array.{Storm.Model>} models
+	 * @return {Array.{Storm.Model>}       
+	 */
+	overwrite: function(models) {
+		return (this._models = models);
+	},
+
+	/**
 	 * Retrieve a model at the provided index
 	 * @param  {Number} idx
 	 * @return {Storm.Model}
