@@ -1,4 +1,4 @@
-/*! StormJS - v0.0.7 - 2014-02-27
+/*! StormJS - v0.0.7 - 2014-03-01
  * https://github.com/JosephClay/StormJS
  * Copyright (c) 2012-2014 Joe Clay; Licensed  */
 (function(root, _, Signal, undefined) {
@@ -602,9 +602,9 @@ var When = Storm.when = (function(Promise) {
 				evt = events[idx];
 				// We're waiting for everything to complete
 				// so if there's an item with no status, stop
-				if (evt.status === Promise.STATUS.idle) { return; }
-				if (evt.status === Promise.STATUS.done) { done += 1; continue; }
-				if (evt.status === Promise.STATUS.failed) { failed += 1; continue; }
+				if (evt.status() === Promise.STATUS.idle) { return; }
+				if (evt.status() === Promise.STATUS.done) { done += 1; continue; }
+				if (evt.status() === Promise.STATUS.failed) { failed += 1; continue; }
 			}
 			this._fire(total, done, failed, arguments);
 		},
@@ -1156,6 +1156,10 @@ AjaxCall.prototype = {
 					if (promise) { promise.notify(); }
 				},
 				error: function(req, status, err) {
+					self.req = req;
+					self.status = status;
+					self.err = err;
+					
 					if (promise) { promise.reject(req); }
 
 					// Abort
@@ -2356,7 +2360,7 @@ var Collection = Storm.Collection = function(data) {
 	 */
 	this._models = [];
 
-	this.add(data.models, data, { isSilent: true });
+	this.add(data.models, _.extend({ isSilent: true }, data));
 };
 
 _.extend(Collection.prototype, Events.prototype, {
@@ -2378,11 +2382,10 @@ _.extend(Collection.prototype, Events.prototype, {
 	 * Create a new model
 	 * @param  {Object} model the model data
 	 * @param  {Object} [opts]
-	 * @param  {Object} data additional data to pass to the new models
 	 * @return {Storm.Model}
 	 */
-	newModel: function(model, opts, data) {
-		return new this.Model(model, opts, data);
+	newModel: function(model, opts) {
+		return new this.Model(model, opts);
 	},
 
 	/**
@@ -2420,6 +2423,30 @@ _.extend(Collection.prototype, Events.prototype, {
 	},
 
 	/**
+	 * Clear all of the models from the collection
+	 * @return {Storm.Collection}
+	 */
+	clear: function() {
+		var models = this._models,
+			idx = models.length;
+		while (idx--) {
+			models[idx].trigger('destroy');
+		}
+		this._models.length = 0;
+		return this;
+	},
+
+	/**
+	 * Overwrites the private _models array
+	 * with a new array of models
+	 * @param  {Array.<Storm.Model>} models
+	 * @return {Array.<Storm.Model>}
+	 */
+	overwrite: function(models) {
+		return (this._models = models);
+	},
+
+	/**
 	 * Retrieve a model at the provided index
 	 * @param  {Number} idx
 	 * @return {Storm.Model}
@@ -2451,7 +2478,7 @@ _.extend(Collection.prototype, Events.prototype, {
 	 * @param {Object} [opts]
 	 * @param {Object} data additional data to pass to the new models
 	 */
-	add: function(models, data, opts) {
+	add: function(models, opts) {
 		models = _.isArray(models) ? models.slice() : [models];
 		opts = opts || {};
 
@@ -2467,7 +2494,7 @@ _.extend(Collection.prototype, Events.prototype, {
 
 			// If the model is not a Storm.Model, make it into one
 			if (!(model instanceof Storm.Model)) {
-				model = this.newModel(model, opts, data);
+				model = this.newModel(model, opts);
 			}
 
 			// Check if the model is valid
@@ -2671,6 +2698,7 @@ _.extend(Collection.prototype, Events.prototype, {
 	 * @return {Storm.Model}
 	 */
 	findById: function(id) {
+		if (!_exists(id)) { return null; }
 		id = (id > -1) === false ? parseInt(id, 10) : id; // make sure id is a number
 
 		var models = this.getModels(),
@@ -2701,6 +2729,7 @@ _.extend(Collection.prototype, Events.prototype, {
 	 */
 	getById: function(id) {
 		if (!_exists(id)) { return null; }
+		id = (id > -1) === false ? parseInt(id, 10) : id; // make sure id is a number
 
 		var models = this._models,
 			idx = models.length;
@@ -3013,6 +3042,8 @@ Cache.prototype = {
 	 * @private
 	 */
 	_store: function(key, data, opts) {
+		opts = opts || {};
+
 		// Expiration
 		if (_exists(opts.expiration)) {
 			this._setExpiration(key, opts.expiration);
