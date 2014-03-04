@@ -399,7 +399,7 @@ _.extend(Collection.prototype, Events.prototype, {
 	 */
 	getById: function(id) {
 		if (!_exists(id)) { return null; }
-		id = (id > -1) === false ? parseInt(id, 10) : id; // make sure id is a number
+		id = parseInt(id, 10); // make sure id is a number
 
 		var models = this._models,
 			idx = models.length;
