@@ -146,7 +146,7 @@ Storage.prototype = {
 		if (this.hasStorage) {
 			var storedValue = this.storage.getItem(key);
 			if (!_exists(storedValue)) { return storedValue; }
-			return JSON.parse(storedValue);
+			return (storedValue === '') ? '' : JSON.parse(storedValue);
 		}
 
 		return this.data[key];
