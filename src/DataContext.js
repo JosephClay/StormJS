@@ -48,6 +48,15 @@ DataContext.addSettings = function(settings) {
 	return _.extend(DataContext.settings, settings);
 };
 
+/**
+ * Get a setting from the global DataContext.settings
+ * @param {String} setting
+ * @return {*} value
+ */
+DataContext.getSetting = function(setting) {
+	return DataContext.settings[setting];
+};
+
 DataContext.prototype = {
 	/** @constructor */
 	constructor: DataContext,
