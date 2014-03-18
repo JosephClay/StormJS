@@ -344,7 +344,7 @@ _.extend(Collection.prototype, Events.prototype, {
 		if (_.isEmpty(values)) { return first ? undefined : []; }
 
 		var method = this[first ? 'find' : 'filter'];
-		return method(function(model) {
+		return method.call(this, function(model) {
 			var key;
 			for (key in values) {
 				if (values[key] !== model.get(key)) { return false; }
