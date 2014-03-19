@@ -198,12 +198,17 @@ _.extend(Collection.prototype, Events.prototype, {
 		// Add the new models
 		if (add.length) {
 			if (_exists(at)) {
-				this._models.splice(([at, 0]).concat(add));
+				var i = 0, len = add.length;
+				for (; i < len; i++) {
+					this._models.splice(at + i, 0, add[i]);
+				}
 			} else {
 				this._models = this._models.concat(add);
-			}
 
-			this.sort(opts);
+				// Only sort if we're not adding the models
+				// at a specific point
+				this.sort(opts);
+			}
 		}
 
 		// Stop if silent
