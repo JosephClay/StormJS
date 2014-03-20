@@ -8,6 +8,10 @@
  */
 var _COLLECTION = 'Collection';
 
+var _getModelId = function(model) {
+	return (model instanceof Storm.Model) ? model.getId() : parseInt(model, 10) || -1;
+};
+
 /**
  * A collection of Models
  * @param {Object} [data]
@@ -260,13 +264,16 @@ _.extend(Collection.prototype, Events.prototype, {
 		models = _.isArray(models) ? models.slice() : [models];
 		opts = opts || {};
 
-		var idx = 0, length = models.length, model;
-		for (; idx < length; idx++) {
+		var idx = models.length, model;
+		while (idx--) {
 			model = models[idx];
-			model = model instanceof Storm.Model ? model : this.get(model);
+			model = (model instanceof Storm.Model) ? model : this.get(model);
 			if (!model) { continue; }
 
-			this._models.splice(idx, 1);
+			var index = this.indexOf(model);
+			if (index === -1) { continue; }
+
+			this._models.splice(index, 1);
 			if (!opts.isSilent) {
 				model.trigger('collection:remove', this);
 			}
@@ -275,6 +282,23 @@ _.extend(Collection.prototype, Events.prototype, {
 		if (opts.isSilent) { return this; }
 		this.trigger('remove', models, opts);
 		return this;
+	},
+
+	/**
+	 * Ad you would expect
+	 * @param  {Storm.Model|Id} model
+	 * @return {Number}
+	 */
+	indexOf: function(model) {
+		var idx = this._models.length,
+			id = _getModelId(model);
+		while (idx--) {
+			if (this._models[idx].getId() === id) {
+				return idx;
+			}
+		}
+
+		return -1;
 	},
 
 	/**
@@ -515,7 +539,6 @@ _.each([
 	'last',
 	'without',
 	'difference',
-	'indexOf',
 	'shuffle',
 	'lastIndexOf',
 	'isEmpty',
