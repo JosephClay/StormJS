@@ -262,7 +262,8 @@ _.extend(Collection.prototype, Events.prototype, {
 
 		var idx = 0, length = models.length, model;
 		for (; idx < length; idx++) {
-			model = this.get(models[idx]);
+			model = models[idx];
+			model = model instanceof Storm.Model ? model : this.get(model);
 			if (!model) { continue; }
 
 			this._models.splice(idx, 1);
