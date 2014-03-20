@@ -131,11 +131,11 @@ _.extend(Collection.prototype, Events.prototype, {
 
 	/**
 	 * Get the index of a model
-	 * @param  {Storm.Model} model
+	 * @param  {Storm.Model|Id} model
 	 * @return {Number} index
 	 */
 	indexOf: function(model) {
-		var id = model.getId(),
+		var id = _getModelId(model),
 			models = this._models,
 			idx = models.length;
 		while (idx--) {
@@ -282,23 +282,6 @@ _.extend(Collection.prototype, Events.prototype, {
 		if (opts.isSilent) { return this; }
 		this.trigger('remove', models, opts);
 		return this;
-	},
-
-	/**
-	 * Ad you would expect
-	 * @param  {Storm.Model|Id} model
-	 * @return {Number}
-	 */
-	indexOf: function(model) {
-		var idx = this._models.length,
-			id = _getModelId(model);
-		while (idx--) {
-			if (this._models[idx].getId() === id) {
-				return idx;
-			}
-		}
-
-		return -1;
 	},
 
 	/**
