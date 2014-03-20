@@ -419,7 +419,10 @@ _.extend(Collection.prototype, Events.prototype, {
 	 * Proxy for getById
 	 * @alias {#getById}
 	 */
-	get: function() { return this.getById.apply(this, arguments); },
+	get: function(modelOrId) {
+		var id = modelOrId instanceof Storm.Model ? modelOrId.getId() : modelOrId;
+		return this.getById(id);
+	},
 
 	/**
 	 * Drops all models from the collection
