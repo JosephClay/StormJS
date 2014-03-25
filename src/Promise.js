@@ -144,6 +144,8 @@ Promise.prototype = {
 		this._fire(_PROMISE_CALL.fail, arguments)
 			._fire(_PROMISE_CALL.always, arguments);
 
+		this._cleanup();
+
 		return this;
 	},
 
@@ -162,6 +164,8 @@ Promise.prototype = {
 		var args = this._runPipe(arguments);
 		this._fire(_PROMISE_CALL.done, args)
 			._fire(_PROMISE_CALL.always, args);
+
+		this._cleanup();
 
 		return this;
 	},
@@ -248,6 +252,16 @@ Promise.prototype = {
 	},
 	apply: function(ctx, args) {
 		this.notify.apply(this, args);
+	},
+
+	/**
+	 * Cleanup references to functions stored in
+	 * arrays that are no longer able to be called
+	 */
+	_cleanup: function() {
+		this._getCalls(_PROMISE_CALL.done).length = 0;
+		this._getCalls(_PROMISE_CALL.fail).length = 0;
+		this._getCalls(_PROMISE_CALL.always).length = 0;
 	},
 
 	/**
