@@ -1,4 +1,4 @@
-/*! StormJS - v0.0.8 - 2014-03-14
+/*! StormJS - v0.0.8 - 2014-03-24
  * https://github.com/JosephClay/StormJS
  * Copyright (c) 2012-2014 Joe Clay; Licensed  */
 (function(root, _, Signal, undefined) {
@@ -21,9 +21,16 @@ var previousStorm = root.Storm,
 
 // Helpers ##########################################################################
 
+/**
+ * Noop
+ * @return {undefined}
+ * @private
+ */
+var _noop = function() {};
+
 // Small polyfill for console
 var console = root.console || {};
-console.log = console.log || function() {};
+console.log = console.log || _noop;
 console.error = console.error || console.log;
 
 /**
@@ -399,6 +406,8 @@ Promise.prototype = {
 		this._fire(_PROMISE_CALL.fail, arguments)
 			._fire(_PROMISE_CALL.always, arguments);
 
+		this._cleanup();
+
 		return this;
 	},
 
@@ -417,6 +426,8 @@ Promise.prototype = {
 		var args = this._runPipe(arguments);
 		this._fire(_PROMISE_CALL.done, args)
 			._fire(_PROMISE_CALL.always, args);
+
+		this._cleanup();
 
 		return this;
 	},
@@ -503,6 +514,16 @@ Promise.prototype = {
 	},
 	apply: function(ctx, args) {
 		this.notify.apply(this, args);
+	},
+
+	/**
+	 * Cleanup references to functions stored in
+	 * arrays that are no longer able to be called
+	 */
+	_cleanup: function() {
+		this._getCalls(_PROMISE_CALL.done).length = 0;
+		this._getCalls(_PROMISE_CALL.fail).length = 0;
+		this._getCalls(_PROMISE_CALL.always).length = 0;
 	},
 
 	/**
@@ -1203,7 +1224,7 @@ AjaxCall.prototype = {
 	 * Fired when an xhr request completes.
 	 * Feel free to overwrite
 	 */
-	complete: function() {},
+	complete: _noop,
 
 	/**
 	 * Aborts the current request
@@ -1603,7 +1624,7 @@ _.extend(View.prototype, Events.prototype, {
 	/**
 	 * Here to be overwritten
 	 */
-	render: function() {},
+	render: _noop,
 
 	/**
 	 * Returns the cached elem or caches and returns
@@ -2347,6 +2368,10 @@ Comparator.prototype = {
  */
 var _COLLECTION = 'Collection';
 
+var _getModelId = function(model) {
+	return (model instanceof Storm.Model) ? model.getId() : parseInt(model, 10) || -1;
+};
+
 /**
  * A collection of Models
  * @param {Object} [data]
@@ -2466,11 +2491,11 @@ _.extend(Collection.prototype, Events.prototype, {
 
 	/**
 	 * Get the index of a model
-	 * @param  {Storm.Model} model
+	 * @param  {Storm.Model|Id} model
 	 * @return {Number} index
 	 */
 	indexOf: function(model) {
-		var id = model.getId(),
+		var id = _getModelId(model),
 			models = this._models,
 			idx = models.length;
 		while (idx--) {
@@ -2537,12 +2562,17 @@ _.extend(Collection.prototype, Events.prototype, {
 		// Add the new models
 		if (add.length) {
 			if (_exists(at)) {
-				this._models.splice(([at, 0]).concat(add));
+				var i = 0, len = add.length;
+				for (; i < len; i++) {
+					this._models.splice(at + i, 0, add[i]);
+				}
 			} else {
 				this._models = this._models.concat(add);
-			}
 
-			this.sort(opts);
+				// Only sort if we're not adding the models
+				// at a specific point
+				this.sort(opts);
+			}
 		}
 
 		// Stop if silent
@@ -2594,12 +2624,16 @@ _.extend(Collection.prototype, Events.prototype, {
 		models = _.isArray(models) ? models.slice() : [models];
 		opts = opts || {};
 
-		var idx = 0, length = models.length, model;
-		for (; idx < length; idx++) {
-			model = this.get(models[idx]);
+		var idx = models.length, model;
+		while (idx--) {
+			model = models[idx];
+			model = (model instanceof Storm.Model) ? model : this.get(model);
 			if (!model) { continue; }
 
-			this._models.splice(idx, 1);
+			var index = this.indexOf(model);
+			if (index === -1) { continue; }
+
+			this._models.splice(index, 1);
 			if (!opts.isSilent) {
 				model.trigger('collection:remove', this);
 			}
@@ -2683,7 +2717,7 @@ _.extend(Collection.prototype, Events.prototype, {
 		if (_.isEmpty(values)) { return first ? undefined : []; }
 
 		var method = this[first ? 'find' : 'filter'];
-		return method(function(model) {
+		return method.call(this, function(model) {
 			var key;
 			for (key in values) {
 				if (values[key] !== model.get(key)) { return false; }
@@ -2753,7 +2787,10 @@ _.extend(Collection.prototype, Events.prototype, {
 	 * Proxy for getById
 	 * @alias {#getById}
 	 */
-	get: function() { return this.getById.apply(this, arguments); },
+	get: function(modelOrId) {
+		var id = modelOrId instanceof Storm.Model ? modelOrId.getId() : modelOrId;
+		return this.getById(id);
+	},
 
 	/**
 	 * Drops all models from the collection
@@ -2845,7 +2882,6 @@ _.each([
 	'last',
 	'without',
 	'difference',
-	'indexOf',
 	'shuffle',
 	'lastIndexOf',
 	'isEmpty',
