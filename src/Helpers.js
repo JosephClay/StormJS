@@ -1,8 +1,15 @@
 // Helpers ##########################################################################
 
+/**
+ * Noop
+ * @return {undefined}
+ * @private
+ */
+var _noop = function() {};
+
 // Small polyfill for console
 var console = root.console || {};
-console.log = console.log || function() {};
+console.log = console.log || _noop;
 console.error = console.error || console.log;
 
 /**

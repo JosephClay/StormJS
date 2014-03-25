@@ -251,7 +251,7 @@ AjaxCall.prototype = {
 	 * Fired when an xhr request completes.
 	 * Feel free to overwrite
 	 */
-	complete: function() {},
+	complete: _noop,
 
 	/**
 	 * Aborts the current request

@@ -56,7 +56,7 @@ _.extend(View.prototype, Events.prototype, {
 	/**
 	 * Here to be overwritten
 	 */
-	render: function() {},
+	render: _noop,
 
 	/**
 	 * Returns the cached elem or caches and returns
