@@ -6,9 +6,8 @@
 
 	/**
 	 * Generate a unique id
-	 * @param  {String}         [prefix] Defines a scope for the identifiers
+	 * @param  {String}        [prefix] Defines a scope for the identifiers
 	 * @return {Number|String} id
-	 * @private
 	 */
 var _uniqId = Storm.uniqId = (function() {
 
@@ -25,7 +24,6 @@ var _uniqId = Storm.uniqId = (function() {
 	 * Generates a unqiue id string - prefixed with the scope
 	 * @param  {String} scope
 	 * @return {String} id
-	 * @private
 	 */
 	_uniqIdStr = Storm.uniqIdStr = function(scope) {
 		return (scope || 'id') + '' + _uniqId(scope);

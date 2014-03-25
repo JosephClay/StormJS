@@ -64,8 +64,7 @@ var Promise = Storm.Promise = function() {
 Promise.STATUS = _PROMISE_STATUS;
 Promise.CALL = _PROMISE_CALL;
 
-Promise.prototype = {
-	/** @constructor */
+Promise.prototype = /** @lends Storm.Promise.prototype */ {
 	constructor: Promise,
 
 	/**
@@ -257,6 +256,7 @@ Promise.prototype = {
 	/**
 	 * Cleanup references to functions stored in
 	 * arrays that are no longer able to be called
+	 * @private
 	 */
 	_cleanup: function() {
 		this._getCalls(_PROMISE_CALL.done).length = 0;

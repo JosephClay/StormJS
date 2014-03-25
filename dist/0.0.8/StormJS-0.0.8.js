@@ -162,6 +162,7 @@ var memo = Storm.memo = function(getter) {
 	};
 };
 
+
 //----
 
 // Unique Id ########################################################################
@@ -172,9 +173,8 @@ var memo = Storm.memo = function(getter) {
 
 	/**
 	 * Generate a unique id
-	 * @param  {String}         [prefix] Defines a scope for the identifiers
+	 * @param  {String}        [prefix] Defines a scope for the identifiers
 	 * @return {Number|String} id
-	 * @private
 	 */
 var _uniqId = Storm.uniqId = (function() {
 
@@ -191,7 +191,6 @@ var _uniqId = Storm.uniqId = (function() {
 	 * Generates a unqiue id string - prefixed with the scope
 	 * @param  {String} scope
 	 * @return {String} id
-	 * @private
 	 */
 	_uniqIdStr = Storm.uniqIdStr = function(scope) {
 		return (scope || 'id') + '' + _uniqId(scope);
@@ -245,8 +244,8 @@ var Extend = Storm.Extend = function(constructor, extension) {
  * Proxy to Signal. Use "Events" internally
  * so that it's easier to change to a different
  * pub/sub system if need be
- * @class  Storm.Events
- * @type {Signal}
+ * @class Storm.Events
+ * @alias Signal
  */
 var Events = Storm.Events = Signal.core;
 
@@ -326,8 +325,7 @@ var Promise = Storm.Promise = function() {
 Promise.STATUS = _PROMISE_STATUS;
 Promise.CALL = _PROMISE_CALL;
 
-Promise.prototype = {
-	/** @constructor */
+Promise.prototype = /** @lends Storm.Promise.prototype */ {
 	constructor: Promise,
 
 	/**
@@ -519,6 +517,7 @@ Promise.prototype = {
 	/**
 	 * Cleanup references to functions stored in
 	 * arrays that are no longer able to be called
+	 * @private
 	 */
 	_cleanup: function() {
 		this._getCalls(_PROMISE_CALL.done).length = 0;
@@ -576,7 +575,6 @@ var When = Storm.when = (function(Promise) {
 	};
 
 	When.prototype = {
-		/** @constructor */
 		constructor: When,
 
 		/**
@@ -591,7 +589,7 @@ var When = Storm.when = (function(Promise) {
 			var promise = new Promise();
 			promise.then = function() { this.done.apply(this, arguments); };
 			this._p = promise;
-			return promise; // Return the promise so that it can be subscibed to
+			return promise; // Return the promise so that it can be subscribed to
 		},
 
 		/**
@@ -939,6 +937,8 @@ var _REQUEST = 'request',
  * passing the AjaxCalls that trigger the events.
  *
  * Possible events are: 'send', done', 'fail', 'abort', 'always'
+ *
+ * @type {Storm.Events}
  */
 Storm.request = Events.construct();
 _.extend(Storm.request, {
@@ -1026,7 +1026,7 @@ var AjaxCall = Storm.AjaxCall = function(callObj, opts, callTemplate) {
 	this._call = this._configure(callObj, opts, callTemplate);
 };
 
-_.extend(AjaxCall, {
+_.extend(AjaxCall, /** @lends Storm.AjaxCall */ {
 	/**
 	 * @readonly
 	 * @enum {Number}
@@ -1051,8 +1051,7 @@ _.extend(AjaxCall, {
 	}
 });
 
-AjaxCall.prototype = {
-	/** @constructor */
+AjaxCall.prototype = /** @lends Storm.AjaxCall.prototype */ {
 	constructor: AjaxCall,
 
 	/**
@@ -1065,19 +1064,15 @@ AjaxCall.prototype = {
 		content: 'application/json; charset=utf-8',
 		url: '',
 		cache: false,
-		/**
-		 * The classification of this call.
-		 * @type {Number} classification id
-		 * @default nonblocking
-		 */
 		classification: _CLASSIFICATION.nonblocking
 	},
 
 	/**
 	 * Configure the call object so that it's ready to ajax
-	 * @param  {Object} providedCall call object
-	 * @param  {Object} opts      configurations for the url
-	 * @return {Object} callTemplate
+	 * @param {Object} providedCall call object
+	 * @param {Object} opts         configurations for the url
+	 * @param {Object} callTemplate
+	 * @returns {Storm.AjaxCall}
 	 * @private
 	 */
 	_configure: function(providedCall, opts, callTemplate) {
@@ -1180,7 +1175,7 @@ AjaxCall.prototype = {
 					self.req = req;
 					self.status = status;
 					self.err = err;
-					
+
 					if (promise) { promise.reject(req); }
 
 					// Abort
@@ -1312,8 +1307,7 @@ DataContext.getSetting = function(setting) {
 	return DataContext.settings[setting];
 };
 
-DataContext.prototype = {
-	/** @constructor */
+DataContext.prototype = /** @lends Storm.DataContext.prototype */ {
 	constructor: DataContext,
 
 	/**
@@ -1527,7 +1521,7 @@ Storm.template = (function() {
 		return tpl(data || {});
 	};
 
-	return {
+	return /** @lends Storm.template */ {
 		add: _register,
 		remove: _remove,
 		render: _render,
@@ -1555,7 +1549,7 @@ Storm.template = (function() {
 		 * Debug string
 		 * @return {String}
 		 */
-		toString: function(key) {
+		toString: function() {
 			return _toString(_TEMPLATE, {
 				size: _.size(_templates)
 			});
@@ -1580,6 +1574,7 @@ var _VIEW = 'View';
  * A view at its most basic. Sets up a couple
  * defaults for cloning and commonly used methods
  * @class Storm.View
+ * @extends Storm.Events
  * @param {Object} [opts]
  */
 var View = Storm.View = function(opts) {
@@ -1599,12 +1594,11 @@ var View = Storm.View = function(opts) {
 	/** @type {Element} */
 	this.elem = opts.elem || null;
 
-	/** @type {String} id */
+	/** @type {String} */
 	this.template = this.template || opts.template || '';
 };
 
-_.extend(View.prototype, Events.prototype, {
-	/** @constructor */
+_.extend(View.prototype, Events.prototype, /** @lends Storm.View.prototype */ {
 	constructor: View,
 
 	/**
@@ -1666,8 +1660,10 @@ var _MODEL = 'Model';
  * with a Collection to organize data into sets
  *
  * @class Storm.Model
- * @param {Object} data
- * @param {Object} opts
+ * @extends Storm.Events
+ *
+ * @param {Object} data Key-value pairs.
+ * @param {Object} [opts]
  */
 var Model = Storm.Model = function(data, opts) {
 	Events.call(this);
@@ -1721,8 +1717,7 @@ var Model = Storm.Model = function(data, opts) {
 	if (this.comparator) { this.comparator.bind(this); }
 };
 
-_.extend(Model.prototype, Events.prototype, {
-	/** @constructor */
+_.extend(Model.prototype, Events.prototype, /** @lends Storm.Model.prototype */ {
 	constructor: Model,
 
 	/**
@@ -2216,14 +2211,14 @@ var Comparator = Storm.Comparator = function(key, type) {
 
 	/**
 	 * The type of sorting we'll be doing
-	 * @type {Storm.Comparator.SORT} type
+	 * @type {Storm.Comparator.SORT}
 	 * @default alphabetical
 	 * @private
 	 */
 	this._type = type || _SORT.alphabetical;
 };
 
-_.extend(Comparator, {
+_.extend(Comparator, /** @lends Storm.Comparator.prototype */ {
 
 	/**
 	 * Default string to use if no value is present to
@@ -2263,7 +2258,6 @@ _.extend(Comparator, {
 });
 
 Comparator.prototype = {
-	/** @constructor */
 	constructor: Comparator,
 
 	/**
@@ -2376,6 +2370,7 @@ var _getModelId = function(model) {
  * A collection of Models
  * @param {Object} [data]
  * @class Storm.Collection
+ * @extends Storm.Events
  */
 var Collection = Storm.Collection = function(data) {
 	Events.call(this);
@@ -2397,8 +2392,7 @@ var Collection = Storm.Collection = function(data) {
 	this.add(data.models, _.extend({ isSilent: true }, data));
 };
 
-_.extend(Collection.prototype, Events.prototype, {
-	/** @constructor */
+_.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection.prototype */ {
 	constructor: Collection,
 
 	/** @type {Storm.Model} */
@@ -2934,6 +2928,7 @@ var _MODULE = 'Module';
 /**
  * A reusable module equipped with events
  * @class Storm.Module
+ * @extends Storm.Events
  */
 var Module = Storm.Module = function() {
 	Events.call(this);
@@ -2945,8 +2940,7 @@ var Module = Storm.Module = function() {
 	this._id = _uniqId(_MODULE);
 };
 
-_.extend(Module.prototype, Events.prototype, {
-	/** @constructor */
+_.extend(Module.prototype, Events.prototype, /** @lends Storm.Module.prototype */ {
 	constructor: Module,
 
 	getId: function() {
@@ -2980,6 +2974,7 @@ var _CACHE = 'Cache';
 /**
  * An in-memory key-value store
  * @class Storm.Cache
+ * @constructor
  */
 var Cache = Storm.Cache = function() {
 	/**
@@ -3003,8 +2998,7 @@ var Cache = Storm.Cache = function() {
 	this._timeouts = {};
 };
 
-Cache.prototype = {
-	/** @constructor */
+Cache.prototype = /** @lends Storm.Cache.prototype */ {
 	constructor: Cache,
 
 	/**
@@ -3264,7 +3258,8 @@ var Storage = Storm.Storage = function(type, opts) {
 
 	/**
 	 * The type of storage we're using
-	 * @type {String} localStorage || sessionStorage
+	 * @type {String}
+	 * @example localStorage || sessionStorage
 	 */
 	this.storage = root[storageTypeName[this.type]];
 
@@ -3294,8 +3289,7 @@ var Storage = Storm.Storage = function(type, opts) {
  */
 Storage.TYPE = _STORAGE_TYPE;
 
-Storage.prototype = {
-	/** @constructor */
+Storage.prototype = /** @lends Storm.Storage.prototype */ {
 	constructor: Storage,
 
 	/**
@@ -3478,6 +3472,7 @@ Storage.prototype = {
 
 	/**
 	 * Clear the cooke
+	 * @private
 	 */
 	_clearCookieData: function() {
 		this._createCookie('', 365);

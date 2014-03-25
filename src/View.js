@@ -12,6 +12,7 @@ var _VIEW = 'View';
  * A view at its most basic. Sets up a couple
  * defaults for cloning and commonly used methods
  * @class Storm.View
+ * @extends Storm.Events
  * @param {Object} [opts]
  */
 var View = Storm.View = function(opts) {
@@ -31,12 +32,11 @@ var View = Storm.View = function(opts) {
 	/** @type {Element} */
 	this.elem = opts.elem || null;
 
-	/** @type {String} id */
+	/** @type {String} */
 	this.template = this.template || opts.template || '';
 };
 
-_.extend(View.prototype, Events.prototype, {
-	/** @constructor */
+_.extend(View.prototype, Events.prototype, /** @lends Storm.View.prototype */ {
 	constructor: View,
 
 	/**

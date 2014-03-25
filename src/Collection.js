@@ -16,6 +16,7 @@ var _getModelId = function(model) {
  * A collection of Models
  * @param {Object} [data]
  * @class Storm.Collection
+ * @extends Storm.Events
  */
 var Collection = Storm.Collection = function(data) {
 	Events.call(this);
@@ -37,8 +38,7 @@ var Collection = Storm.Collection = function(data) {
 	this.add(data.models, _.extend({ isSilent: true }, data));
 };
 
-_.extend(Collection.prototype, Events.prototype, {
-	/** @constructor */
+_.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection.prototype */ {
 	constructor: Collection,
 
 	/** @type {Storm.Model} */

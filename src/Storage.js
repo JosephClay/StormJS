@@ -54,7 +54,8 @@ var Storage = Storm.Storage = function(type, opts) {
 
 	/**
 	 * The type of storage we're using
-	 * @type {String} localStorage || sessionStorage
+	 * @type {String}
+	 * @example localStorage || sessionStorage
 	 */
 	this.storage = root[storageTypeName[this.type]];
 
@@ -84,8 +85,7 @@ var Storage = Storm.Storage = function(type, opts) {
  */
 Storage.TYPE = _STORAGE_TYPE;
 
-Storage.prototype = {
-	/** @constructor */
+Storage.prototype = /** @lends Storm.Storage.prototype */ {
 	constructor: Storage,
 
 	/**
@@ -268,6 +268,7 @@ Storage.prototype = {
 
 	/**
 	 * Clear the cooke
+	 * @private
 	 */
 	_clearCookieData: function() {
 		this._createCookie('', 365);

@@ -77,6 +77,8 @@ var _REQUEST = 'request',
  * passing the AjaxCalls that trigger the events.
  *
  * Possible events are: 'send', done', 'fail', 'abort', 'always'
+ *
+ * @type {Storm.Events}
  */
 Storm.request = Events.construct();
 _.extend(Storm.request, {

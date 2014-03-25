@@ -11,6 +11,7 @@ var _MODULE = 'Module';
 /**
  * A reusable module equipped with events
  * @class Storm.Module
+ * @extends Storm.Events
  */
 var Module = Storm.Module = function() {
 	Events.call(this);
@@ -22,8 +23,7 @@ var Module = Storm.Module = function() {
 	this._id = _uniqId(_MODULE);
 };
 
-_.extend(Module.prototype, Events.prototype, {
-	/** @constructor */
+_.extend(Module.prototype, Events.prototype, /** @lends Storm.Module.prototype */ {
 	constructor: Module,
 
 	getId: function() {

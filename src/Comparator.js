@@ -69,14 +69,14 @@ var Comparator = Storm.Comparator = function(key, type) {
 
 	/**
 	 * The type of sorting we'll be doing
-	 * @type {Storm.Comparator.SORT} type
+	 * @type {Storm.Comparator.SORT}
 	 * @default alphabetical
 	 * @private
 	 */
 	this._type = type || _SORT.alphabetical;
 };
 
-_.extend(Comparator, {
+_.extend(Comparator, /** @lends Storm.Comparator.prototype */ {
 
 	/**
 	 * Default string to use if no value is present to
@@ -116,7 +116,6 @@ _.extend(Comparator, {
 });
 
 Comparator.prototype = {
-	/** @constructor */
 	constructor: Comparator,
 
 	/**

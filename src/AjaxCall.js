@@ -53,7 +53,7 @@ var AjaxCall = Storm.AjaxCall = function(callObj, opts, callTemplate) {
 	this._call = this._configure(callObj, opts, callTemplate);
 };
 
-_.extend(AjaxCall, {
+_.extend(AjaxCall, /** @lends Storm.AjaxCall */ {
 	/**
 	 * @readonly
 	 * @enum {Number}
@@ -78,8 +78,7 @@ _.extend(AjaxCall, {
 	}
 });
 
-AjaxCall.prototype = {
-	/** @constructor */
+AjaxCall.prototype = /** @lends Storm.AjaxCall.prototype */ {
 	constructor: AjaxCall,
 
 	/**
@@ -92,19 +91,15 @@ AjaxCall.prototype = {
 		content: 'application/json; charset=utf-8',
 		url: '',
 		cache: false,
-		/**
-		 * The classification of this call.
-		 * @type {Number} classification id
-		 * @default nonblocking
-		 */
 		classification: _CLASSIFICATION.nonblocking
 	},
 
 	/**
 	 * Configure the call object so that it's ready to ajax
-	 * @param  {Object} providedCall call object
-	 * @param  {Object} opts      configurations for the url
-	 * @return {Object} callTemplate
+	 * @param {Object} providedCall call object
+	 * @param {Object} opts         configurations for the url
+	 * @param {Object} callTemplate
+	 * @returns {Storm.AjaxCall}
 	 * @private
 	 */
 	_configure: function(providedCall, opts, callTemplate) {
@@ -207,7 +202,7 @@ AjaxCall.prototype = {
 					self.req = req;
 					self.status = status;
 					self.err = err;
-					
+
 					if (promise) { promise.reject(req); }
 
 					// Abort

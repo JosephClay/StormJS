@@ -57,8 +57,7 @@ DataContext.getSetting = function(setting) {
 	return DataContext.settings[setting];
 };
 
-DataContext.prototype = {
-	/** @constructor */
+DataContext.prototype = /** @lends Storm.DataContext.prototype */ {
 	constructor: DataContext,
 
 	/**

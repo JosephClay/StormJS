@@ -136,7 +136,7 @@ Storm.template = (function() {
 		return tpl(data || {});
 	};
 
-	return {
+	return /** @lends Storm.template */ {
 		add: _register,
 		remove: _remove,
 		render: _render,
@@ -164,7 +164,7 @@ Storm.template = (function() {
 		 * Debug string
 		 * @return {String}
 		 */
-		toString: function(key) {
+		toString: function() {
 			return _toString(_TEMPLATE, {
 				size: _.size(_templates)
 			});

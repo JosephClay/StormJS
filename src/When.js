@@ -28,7 +28,6 @@ var When = Storm.when = (function(Promise) {
 	};
 
 	When.prototype = {
-		/** @constructor */
 		constructor: When,
 
 		/**
@@ -43,7 +42,7 @@ var When = Storm.when = (function(Promise) {
 			var promise = new Promise();
 			promise.then = function() { this.done.apply(this, arguments); };
 			this._p = promise;
-			return promise; // Return the promise so that it can be subscibed to
+			return promise; // Return the promise so that it can be subscribed to
 		},
 
 		/**

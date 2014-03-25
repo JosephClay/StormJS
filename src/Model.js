@@ -15,8 +15,10 @@ var _MODEL = 'Model';
  * with a Collection to organize data into sets
  *
  * @class Storm.Model
- * @param {Object} data
- * @param {Object} opts
+ * @extends Storm.Events
+ *
+ * @param {Object} data Key-value pairs.
+ * @param {Object} [opts]
  */
 var Model = Storm.Model = function(data, opts) {
 	Events.call(this);
@@ -70,8 +72,7 @@ var Model = Storm.Model = function(data, opts) {
 	if (this.comparator) { this.comparator.bind(this); }
 };
 
-_.extend(Model.prototype, Events.prototype, {
-	/** @constructor */
+_.extend(Model.prototype, Events.prototype, /** @lends Storm.Model.prototype */ {
 	constructor: Model,
 
 	/**

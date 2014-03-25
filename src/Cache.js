@@ -11,6 +11,7 @@ var _CACHE = 'Cache';
 /**
  * An in-memory key-value store
  * @class Storm.Cache
+ * @constructor
  */
 var Cache = Storm.Cache = function() {
 	/**
@@ -34,8 +35,7 @@ var Cache = Storm.Cache = function() {
 	this._timeouts = {};
 };
 
-Cache.prototype = {
-	/** @constructor */
+Cache.prototype = /** @lends Storm.Cache.prototype */ {
 	constructor: Cache,
 
 	/**
