@@ -332,7 +332,7 @@ _.extend(Collection.prototype, Events.prototype, {
 			return this;
 		}
 
-		this._models.sort(function(a, b) {
+		Collection.arraySort.call(this._models, function(a, b) {
 			return a.compareTo(b);
 		});
 
@@ -484,6 +484,9 @@ _.extend(Collection.prototype, Events.prototype, {
 		});
 	}
 });
+
+/** @type {Function} */
+Collection.arraySort = Array.prototype.sort;
 
 // Underscore methods that we want to implement on the Collection.
 _.each([
