@@ -1,4 +1,4 @@
-/*! StormJS - v0.0.8 - 2014-03-24
+/*! StormJS - v0.0.8 - 2014-03-25
  * https://github.com/JosephClay/StormJS
  * Copyright (c) 2012-2014 Joe Clay; Licensed  */
 (function(root, _, Signal, undefined) {
@@ -2692,7 +2692,7 @@ _.extend(Collection.prototype, Events.prototype, {
 			return this;
 		}
 
-		this._models.sort(function(a, b) {
+		Collection.arraySort.call(this._models, function(a, b) {
 			return a.compareTo(b);
 		});
 
@@ -2844,6 +2844,9 @@ _.extend(Collection.prototype, Events.prototype, {
 		});
 	}
 });
+
+/** @type {Function} */
+Collection.arraySort = Array.prototype.sort;
 
 // Underscore methods that we want to implement on the Collection.
 _.each([
