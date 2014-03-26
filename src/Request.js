@@ -79,12 +79,14 @@ var _REQUEST = 'request',
  * Possible events are: 'send', done', 'fail', 'abort', 'always'
  *
  * @type {Storm.Events}
+ * @memberOf Storm
  */
 Storm.request = Events.construct();
-_.extend(Storm.request, {
+_.extend(Storm.request, /** @lends Storm.request */ {
 
 	/**
-	 * Get the requests in-progress
+	 * Get the requests in-progress.
+	 * @function Storm.request.getQueue
 	 * @return {Object}
 	 */
 	getQueue: function() {
@@ -92,7 +94,8 @@ _.extend(Storm.request, {
 	},
 
 	/**
-	 * Get the total number of requests in-progress
+	 * Get the total number of requests in-progress.
+	 * @function Storm.request.getTotal
 	 * @return {Number}
 	 */
 	getTotal: function() {
@@ -101,6 +104,7 @@ _.extend(Storm.request, {
 
 	/**
 	 * Debug string
+	 * @function Storm.request.toString
 	 * @return {String}
 	 */
 	toString: function() {

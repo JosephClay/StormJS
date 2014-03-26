@@ -5,9 +5,11 @@
  */
 
 	/**
-	 * Generate a unique id
-	 * @param  {String}        [prefix] Defines a scope for the identifiers
-	 * @return {Number|String} id
+	 * Generates an ID number that is unique within the context of the current {@link Storm} instance.
+	 * The internal counter does not persist between page loads.
+	 * @function Storm.uniqId
+	 * @param  {String} [prefix] Defines an optional scope (i.e., namespace) for the identifiers.
+	 * @return {Id} Unique ID number.
 	 */
 var _uniqId = Storm.uniqId = (function() {
 
@@ -21,10 +23,12 @@ var _uniqId = Storm.uniqId = (function() {
 
 	}()),
 	/**
-	 * Generates a unqiue id string - prefixed with the scope
-	 * @param  {String} scope
-	 * @return {String} id
+	 * Generates an ID number prefixed with the given string that is unique within the context of the current {@link Storm} instance.
+	 * The internal counter does not persist between page loads.
+	 * @function Storm.uniqIdStr
+	 * @param  {String} prefix String to prepend the generated ID number with.  Also used to scope (namespace) the unique ID number.
+	 * @return {String} Unique ID number prefixed with the given string.
 	 */
-	_uniqIdStr = Storm.uniqIdStr = function(scope) {
-		return (scope || 'id') + '' + _uniqId(scope);
+	_uniqIdStr = Storm.uniqIdStr = function(prefix) {
+		return (prefix || 'id') + '' + _uniqId(prefix);
 	};
