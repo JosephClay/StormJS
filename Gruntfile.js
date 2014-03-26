@@ -67,7 +67,7 @@ module.exports = function(grunt) {
 		},
 		jshint: {
 			beforeconcat: [ 'src/**/*.js' ],
-			afterconcat: [ '<%= filenames.full %>' ],
+			afterconcat: [ '<%= concat.dist.dest %>' ],
 			options: {
 				'-W093': true, // Disable "Did you mean to return a conditional instead of an assignment?" warning
 				ignores: [ 'src/Intro.js', 'src/Outro.js' ]
@@ -120,6 +120,6 @@ module.exports = function(grunt) {
 		}
 	});
 
-	grunt.registerTask('default', ['clean', 'jshint', 'concat', 'uglify', 'rename']);
+	grunt.registerTask('default', ['clean', 'jshint:beforeconcat', 'concat', 'jshint:afterconcat', 'uglify', 'rename']);
 
 };
