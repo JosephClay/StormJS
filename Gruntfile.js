@@ -115,7 +115,8 @@ module.exports = function(grunt) {
 				src: ['<%= rename.full.dest %>'],
 				options: {
 					destination: 'doc',
-					private: false
+					private: false,
+					configure: 'jsdoc.conf.json'
 				}
 			}
 		}
