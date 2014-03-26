@@ -11,7 +11,6 @@ var _CACHE = 'Cache';
 /**
  * An in-memory key-value store
  * @class Storm.Cache
- * @constructor
  */
 var Cache = Storm.Cache = function() {
 	/**
@@ -183,7 +182,7 @@ Cache.prototype = /** @lends Storm.Cache# */ {
 	 * Gets the value (or entire cache) to
 	 * serialize to JSON
 	 * @param  {String} [key]
-	 * @return {*}
+	 * @return {Object|Array} JSON object.
 	 */
 	toJSON: function(key) {
 		var value = (key) ? this.get(key) : this._cache;
@@ -194,7 +193,7 @@ Cache.prototype = /** @lends Storm.Cache# */ {
 	 * Debug string
 	 * @return {String}
 	 */
-	toString: function(key) {
+	toString: function() {
 		return _toString(_CACHE, {
 			id: this._id,
 			size: _.size(this._cache)

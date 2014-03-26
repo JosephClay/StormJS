@@ -48,6 +48,8 @@ if (!Date.now) {
  *
  * Also automatically calls TWEEN if it's present
  * https://github.com/sole/tween.js/
+ *
+ * @namespace Storm.tick
  */
 Storm.tick = (function() {
 
@@ -75,11 +77,6 @@ Storm.tick = (function() {
 		 * @private
 		 */
 		_loop = [],
-		/**
-		 * Reference to requestAnimationFrame
-		 * @type {requestAnimationFrame}
-		 */
-		_raf = root.requestAnimationFrame,
 		/**
 		 * The id of this animation until another
 		 * is called
@@ -113,22 +110,27 @@ Storm.tick = (function() {
 
 	_tick(); // Auto-start
 
-	return {
+	return /** @lends Storm.tick */ {
 		/**
-		 * Add a function to requestAnimationFrame
-		 * @param  {Function} func
-		 * @return {String}   id
+		 * Add a function to requestAnimationFrame.
+		 * @param  {Function|Array.<Function>} func A function or an array of functions to hook.
+		 * @return {Id|Array.<Id>} Unique ID assigned to the hook, or an array of unique IDs if <code>func</code> was an array of functions.
 		 */
 		hook: function(func) {
 			if (_.isArray(func)) {
-				var idx = 0, length = func.length;
+				var ids = [],
+					idx = 0,
+					length = func.length;
 				for (; idx < length; idx++) {
-					func[idx] = this.hook(func[idx]);
+					ids[idx] = this.hook(func[idx]);
 				}
-				return func;
+				return ids;
 			}
 
-			if (!_.isFunction(func)) { return console.error(_errorMessage(_TICK, 'Parameter must be a function'), func); }
+			if (!_.isFunction(func)) {
+				return console.error(_errorMessage(_TICK, 'Parameter must be a function'), func);
+			}
+
 			var id = _uniqId(_TICK);
 			_hooks[id] = _loop.length;
 			_loop.push(func);
@@ -136,8 +138,8 @@ Storm.tick = (function() {
 		},
 
 		/**
-		 * Remove a function from requestAnimationFrame
-		 * @param  {String} id Function id
+		 * Remove a function from requestAnimationFrame.
+		 * @param  {Id} id Hook function ID to remove.
 		 * @return {Storm.tick}
 		 */
 		unhook: function(id) {
@@ -147,15 +149,15 @@ Storm.tick = (function() {
 		},
 
 		/**
-		 * Check if animate is running
+		 * Check if animate is running.
 		 * @return {Boolean}
 		 */
 		isRunning: function() {
-			return this._isRunning;
+			return _isRunning;
 		},
 
 		/**
-		 * Start requestAnimationFrame calling hooked functions
+		 * Start requestAnimationFrame calling hooked functions.
 		 * @return {Storm.tick}
 		 */
 		start: function() {
@@ -167,7 +169,7 @@ Storm.tick = (function() {
 		},
 
 		/**
-		 * Stop requestAnimationFrame from calling hooked functions
+		 * Stop requestAnimationFrame from calling hooked functions.
 		 * @return {Storm.tick}
 		 */
 		stop: function() {
