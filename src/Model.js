@@ -72,7 +72,7 @@ var Model = Storm.Model = function(data, opts) {
 	if (this.comparator) { this.comparator.bind(this); }
 };
 
-_.extend(Model.prototype, Events.prototype, /** @lends Storm.Model.prototype */ {
+_.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 	constructor: Model,
 
 	/**

@@ -77,7 +77,7 @@ _.extend(AjaxCall, /** @lends Storm.AjaxCall */ {
 	}
 });
 
-AjaxCall.prototype = /** @lends Storm.AjaxCall.prototype */ {
+AjaxCall.prototype = /** @lends Storm.AjaxCall# */ {
 	constructor: AjaxCall,
 
 	/**

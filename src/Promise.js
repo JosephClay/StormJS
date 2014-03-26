@@ -64,7 +64,7 @@ var Promise = Storm.Promise = function() {
 Promise.STATUS = _PROMISE_STATUS;
 Promise.CALL = _PROMISE_CALL;
 
-Promise.prototype = /** @lends Storm.Promise.prototype */ {
+Promise.prototype = /** @lends Storm.Promise# */ {
 	constructor: Promise,
 
 	/**

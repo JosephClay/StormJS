@@ -76,7 +76,7 @@ var Comparator = Storm.Comparator = function(key, type) {
 	this._type = type || _SORT.alphabetical;
 };
 
-_.extend(Comparator, /** @lends Storm.Comparator.prototype */ {
+_.extend(Comparator, /** @lends Storm.Comparator# */ {
 
 	/**
 	 * Default string to use if no value is present to

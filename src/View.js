@@ -36,7 +36,7 @@ var View = Storm.View = function(opts) {
 	this.template = this.template || opts.template || '';
 };
 
-_.extend(View.prototype, Events.prototype, /** @lends Storm.View.prototype */ {
+_.extend(View.prototype, Events.prototype, /** @lends Storm.View# */ {
 	constructor: View,
 
 	/**

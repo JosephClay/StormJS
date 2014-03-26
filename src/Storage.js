@@ -85,7 +85,7 @@ var Storage = Storm.Storage = function(type, opts) {
  */
 Storage.TYPE = _STORAGE_TYPE;
 
-Storage.prototype = /** @lends Storm.Storage.prototype */ {
+Storage.prototype = /** @lends Storm.Storage# */ {
 	constructor: Storage,
 
 	/**

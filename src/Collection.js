@@ -38,7 +38,7 @@ var Collection = Storm.Collection = function(data) {
 	this.add(data.models, _.extend({ isSilent: true }, data));
 };
 
-_.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection.prototype */ {
+_.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */ {
 	constructor: Collection,
 
 	/** @type {Storm.Model} */

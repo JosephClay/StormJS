@@ -35,7 +35,7 @@ var Cache = Storm.Cache = function() {
 	this._timeouts = {};
 };
 
-Cache.prototype = /** @lends Storm.Cache.prototype */ {
+Cache.prototype = /** @lends Storm.Cache# */ {
 	constructor: Cache,
 
 	/**

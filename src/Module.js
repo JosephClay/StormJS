@@ -23,7 +23,7 @@ var Module = Storm.Module = function() {
 	this._id = _uniqId(_MODULE);
 };
 
-_.extend(Module.prototype, Events.prototype, /** @lends Storm.Module.prototype */ {
+_.extend(Module.prototype, Events.prototype, /** @lends Storm.Module# */ {
 	constructor: Module,
 
 	getId: function() {
