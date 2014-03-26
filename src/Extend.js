@@ -5,6 +5,7 @@
  * From: https://github.com/JosephClay/Extend.git
  * @param {Function} [constructor]
  * @param {Object}   [extension]
+ * @function Storm.Extend
  */
 var Extend = Storm.Extend = function(constructor, extension) {
 	var hasConstructor = (typeof constructor === 'function');

@@ -12,6 +12,7 @@ var _PROMISE = 'Promise',
 	 * what the promise's status is
 	 * @readonly
 	 * @enum {Number}
+	 * @alias Storm.Promise.STATUS
 	 */
 	_PROMISE_STATUS = {
 		idle:       0,
@@ -24,6 +25,7 @@ var _PROMISE = 'Promise',
 	 * what kind of functions to call
 	 * @readonly
 	 * @enum {Number}
+	 * @alias Storm.Promise.CALL
 	 */
 	_PROMISE_CALL = {
 		done:     0,

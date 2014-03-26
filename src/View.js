@@ -56,6 +56,7 @@ _.extend(View.prototype, Events.prototype, /** @lends Storm.View# */ {
 	/**
 	 * Generates the HTML markup for the view.
 	 * Must be overridden by subclasses.
+	 * @function
 	 * @return {String} HTML markup.
 	 */
 	render: _noop,

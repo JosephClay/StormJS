@@ -1,8 +1,8 @@
 /**
- * Memoizes the return value.
+ * Memoizes a return value.
+ * @function Storm.memo
  * @param {Function} getter
- * @returns {Function} Function that returns whatever {@code getter} returns.
- * @lends Storm
+ * @return {Function} Function that returns whatever <code>getter</code> returns.
  */
 var memo = Storm.memo = function(getter) {
 	var secret;

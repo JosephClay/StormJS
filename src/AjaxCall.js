@@ -14,11 +14,16 @@ var _AJAX_CALL = 'AjaxCall',
 	 * server
 	 * @readonly
 	 * @enum {Number}
+	 * @private
 	 */
 	_CLASSIFICATION = {
 		nonblocking: 0,
 		blocking: 1
 	},
+	/**
+	 * @param {String} type
+	 * @private
+	 */
 	_addClassification = function(type) {
 		// The type has already been defined
 		if (type in _CLASSIFICATION) { return; }
@@ -81,7 +86,7 @@ AjaxCall.prototype = /** @lends Storm.AjaxCall# */ {
 	constructor: AjaxCall,
 
 	/**
-	 * Defaults
+	 * Defaults.
 	 * @type {Object}
 	 */
 	defaults: {
@@ -229,21 +234,22 @@ AjaxCall.prototype = /** @lends Storm.AjaxCall# */ {
 	},
 
 	/**
-	 * Fired when an xhr request is successful
-	 * Feel free to overwrite
+	 * Fired when an xhr request is successful.
+	 * Feel free to override.
 	 * @param  {Object|String|null} data
 	 */
 	success: function(data) {},
 
 	/**
 	 * Fired when an xhr request completes.
-	 * Feel free to overwrite
+	 * Feel free to override.
 	 */
 	error: function(req, status, err) {},
 
 	/**
 	 * Fired when an xhr request completes.
-	 * Feel free to overwrite
+	 * Feel free to override.
+	 * @function
 	 */
 	complete: _noop,
 

@@ -11,7 +11,7 @@ var _STORAGE = 'Storage',
 	 * The storage type: local or session
 	 * @readonly
 	 * @enum {Number}
-	 * @private
+	 * @alias Storm.Storage.TYPE
 	 */
 	_STORAGE_TYPE = {
 		cookie: 0,
@@ -78,11 +78,6 @@ var Storage = Storm.Storage = function(type, opts) {
 	this.length = (this.hasStorage) ? this.storage.length : _.size(this.data);
 };
 
-/**
- * The storage type: local or session
- * @readonly
- * @enum {Number}
- */
 Storage.TYPE = _STORAGE_TYPE;
 
 Storage.prototype = /** @lends Storm.Storage# */ {
@@ -194,6 +189,11 @@ Storage.prototype = /** @lends Storm.Storage# */ {
 	 */
 	set: function() { this.setItem.apply(this, arguments); },
 
+	/**
+	 * @todo Document me!
+	 * @param {String} key
+	 * @returns {*}
+	 */
 	removeItem: function(key) {
 		if (this.hasStorage) {
 			var storage = this.storage.removeItem(key);
@@ -205,6 +205,11 @@ Storage.prototype = /** @lends Storm.Storage# */ {
 		this.length--;
 		this._setCookieData();
 	},
+	/**
+	 * @todo Document me!
+	 * @param {String} key
+	 * @returns {Storm.Storage}
+	 */
 	remove: function(key) {
 		this.removeItem(key);
 		return this;

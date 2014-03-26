@@ -12,6 +12,8 @@
  *
  * Common libraries that use this paradigm are:
  * Mustache, Handlebars, Underscore etc...
+ *
+ * @namespace Storm.template
  */
 Storm.template = (function() {
 

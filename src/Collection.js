@@ -30,7 +30,7 @@ var Collection = Storm.Collection = function(data) {
 
 	/**
 	 * Storage for the models
-	 * @type {Array.<Model>}
+	 * @type {Array.<Storm.Model>}
 	 * @private
 	 */
 	this._models = [];
@@ -64,7 +64,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 
 	/**
 	 * Get all models
-	 * @return {Array.<Model>}
+	 * @return {Array.<Storm.Model>}
 	 */
 	getModels: function() {
 		return this._models;
@@ -148,7 +148,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 	 * Add models to the collection, creating new models
 	 * if the model is not an instance of Storm.Model,
 	 * sorting the models and firing events
-	 * @param {Array.<Model>} models
+	 * @param {Array.<Storm.Model>} models
 	 * @param {Object} [opts]
 	 * @param {Object} data additional data to pass to the new models
 	 */
@@ -256,7 +256,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 
 	/**
 	 * Remove a model from the collection
-	 * @param  {Model|Model[]} models
+	 * @param  {Storm.Model|Storm.Model[]} models
 	 * @param  {Object} [opts]
 	 * @return {Storm.Collection}
 	 */
@@ -351,7 +351,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 	 * Get models matching the key-values passed
 	 * @param  {Object} values Hash containing key-value pairs
 	 * @param  {Boolean} [first] return first found
-	 * @return {Model|Array.<Model>}
+	 * @return {Storm.Model|Array.<Storm.Model>}
 	 */
 	where: function(values, first) {
 		if (_.isEmpty(values)) { return first ? undefined : []; }

@@ -22,40 +22,42 @@ var DataContext = Storm.DataContext = function() {
 	this._id = _uniqId(_DATA_CONTEXT);
 };
 
-/**
- * Default settings for the DataContext,
- * where we are is usually useful
- * @type {Object}
- */
-DataContext.settings = (function() {
-	var loc = root.location || {};
-	return {
-		host: loc.host,
-		hostname: loc.hostname,
-		origin: loc.origin,
-		pathname: loc.pathname,
-		port: loc.port
-	};
-}());
+_.extend(DataContext, /** @lends Storm.DataContext */ {
+	/**
+	 * Default settings for the DataContext,
+	 * where we are is usually useful
+	 * @type {Object}
+	 */
+	settings: (function() {
+		var loc = root.location || {};
+		return {
+			host: loc.host,
+			hostname: loc.hostname,
+			origin: loc.origin,
+			pathname: loc.pathname,
+			port: loc.port
+		};
+	}()),
 
-/**
- * Add settings to the global DataContext.settings
- * object. Basically a protected _.extend
- * @param {Object} settings
- * @return {Object} DataContext.settings
- */
-DataContext.addSettings = function(settings) {
-	return _.extend(DataContext.settings, settings);
-};
+	/**
+	 * Add settings to the global DataContext.settings
+	 * object. Basically a protected _.extend
+	 * @param {Object} settings
+	 * @return {Object} DataContext.settings
+	 */
+	addSettings: function(settings) {
+		return _.extend(DataContext.settings, settings);
+	},
 
-/**
- * Get a setting from the global DataContext.settings
- * @param {String} setting
- * @return {*} value
- */
-DataContext.getSetting = function(setting) {
-	return DataContext.settings[setting];
-};
+	/**
+	 * Get a setting from the global DataContext.settings
+	 * @param {String} setting
+	 * @return {*} value
+	 */
+	getSetting: function(setting) {
+		return DataContext.settings[setting];
+	}
+});
 
 DataContext.prototype = /** @lends Storm.DataContext# */ {
 	constructor: DataContext,
@@ -67,6 +69,9 @@ DataContext.prototype = /** @lends Storm.DataContext# */ {
 	 */
 	AjaxCall: AjaxCall,
 
+	/**
+	 * @type {Object}
+	 */
 	defaults: {},
 
 	/**
@@ -81,11 +86,12 @@ DataContext.prototype = /** @lends Storm.DataContext# */ {
 	 */
 	callTemplate: {},
 
+	/**
+	 * @instance
+	 * @see Storm.DataContext.getSetting
+	 */
 	getSetting: function() {
 		return DataContext.getSetting.apply(arguments);
-	},
-	removeSetting: function() {
-		return DataContext.removeSetting.apply(arguments);
 	},
 
 	/**

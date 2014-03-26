@@ -5,7 +5,7 @@
  * so that it's easier to change to a different
  * pub/sub system if need be
  * @class Storm.Events
- * @alias Signal
+ * @see Signal
  */
 var Events = Storm.Events = Signal.core;
 

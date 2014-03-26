@@ -16,8 +16,9 @@ var _mixin = function(name, prop) {
 
 /**
  * Protect Storm from mixins that would overwrite pre-existing keys.
+ * @function Storm.mixin
  * @param  {String|Object} name Name of the object
- * @param  {Object}         prop The object to mixin
+ * @param  {Object}        prop The object to mixin
  */
 Storm.mixin = function(name, prop) {
 	// Mix single

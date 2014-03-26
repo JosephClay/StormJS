@@ -82,7 +82,7 @@ var _REQUEST = 'request',
  * @memberOf Storm
  */
 Storm.request = Events.construct();
-_.extend(Storm.request, /** @lends Storm.request */ {
+_.extend(Storm.request, {
 
 	/**
 	 * Get the requests in-progress.
