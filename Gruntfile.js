@@ -7,39 +7,40 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-rename');
+	grunt.loadNpmTasks('grunt-jsdoc');
 
 	var srcFiles = [
 		'src/Intro.js',
-		
+
 		'src/Storm.js',
 		'src/Helpers.js',
 		'src/Mixin.js',
 		'src/Memo.js',
 		'src/UniqId.js',
 		'src/Extend.js',
-		
+
 		'src/Events.js',
 		'src/Promise.js',
 		'src/When.js',
-		
+
 		'src/Tick.js',
-		
+
 		'src/Request.js',
 		'src/AjaxCall.js',
 		'src/DataContext.js',
-		
+
 		'src/Template.js',
-		
+
 		'src/View.js',
 		'src/Model.js',
 		'src/Comparator.js',
 		'src/Collection.js',
 
 		'src/Module.js',
-		
+
 		'src/Cache.js',
 		'src/Storage.js',
-		
+
 		'src/Extensions.js',
 		'src/NoConflict.js',
 		'src/Outro.js'
@@ -107,6 +108,14 @@ module.exports = function(grunt) {
 			sourcemap: {
 				src: '<%= filenames.sourcemap %>',
 				dest: '<%= directories.dist %>/<%= filenames.sourcemap %>'
+			}
+		},
+		jsdoc : {
+			dist : {
+				src: ['<%= rename.full.dest %>'],
+				options: {
+					destination: 'doc'
+				}
 			}
 		}
 	});
