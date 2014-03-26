@@ -1,0 +1,515 @@
+// Clearfix
+.ClearFix() {
+  zoom: 1;
+
+  &:before, &:after { display: block; content: ''; }
+
+  &:after { clear: both; }
+}
+
+.Place(@top: 0, @left: 0) {
+  top: @top;
+  left: @left;
+}
+
+.Tab-Focus() {
+  // Any styles for focused state here
+}
+
+// Center-align a block level element
+.Center-Block() {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// Ellipsis a block of text. Element must be display: block; or inline-block
+.Ellipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Image Replacement
+.ir() {
+  display: block;
+  border: 0;
+  color: transparent;
+  text-shadow: none;
+  font: 0/0 a;
+  background-color: transparent;
+  
+  br { display: none; }
+}
+
+// Dividers (basically an hr) within dropdowns and nav lists
+.Nav-Divider(@color: #e5e5e5) {
+  height: 1px;
+  margin: ((@line-height-computed / 2) - 1) 0;
+  overflow: hidden;
+  background-color: @color;
+}
+
+// Alert variant
+.Alert-Variant(@background, @border, @text-color) {
+  border-color: @border;
+  color: @text-color;
+  background-color: @background;
+
+  hr {
+    border-top-color: darken(@border, 5%);
+  }
+  
+  .Alert-Link {
+    color: darken(@text-color, 10%);
+  }
+}
+
+// Progress bar variant
+.Progress-Bar-Variant(@color) {
+  background-color: @color;
+
+  .Progress-Striped & {
+    #Gradient > .Striped(@color);
+  }
+}
+
+// Navbar vertical align
+// Vertically center elements in the navbar.
+// Example: an element has a height of 30px, so write out `.Navbar-Vertical-Align(30px);` to calculate the appropriate top margin.
+.Navbar-Vertical-Align(@element-height) {
+  margin-top: ((@navbar-height - @element-height) / 2);
+  margin-bottom: ((@navbar-height - @element-height) / 2);
+}
+
+// ==============================================
+// Sizing
+// ==============================================
+.Size(@thesize) { width: @thesize; height: @thesize; }
+.Size(@width, @height) { width: @width; height: @height; }
+.Square(@size) {
+  .Size(@size, @size);
+}
+.Circle(@size) {
+  .Size(@size, @size); .Radius(50%);
+}
+
+// CSS image replacement
+// Source: https://github.com/h5bp/html5-boilerplate/commit/aa0396eae757
+.Hide-Text() { border: 0; color: transparent; text-shadow: none;
+  font: ~"0/0" a; background-color: transparent;
+}
+
+.Inline-Block() { display: inline-block; }
+
+// ==============================================
+// Shadows
+// ==============================================
+.Shadow(@shadow: 0 3px 5px rgba(0, 0, 0, 0.3)) {
+  -webkit-box-shadow: @shadow;
+     -moz-box-shadow: @shadow;
+          box-shadow: @shadow;
+}
+
+.No-Shadow() {
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+}
+
+.Text-Shadow(@shadow: 1px 1px 1px #ccc) {
+  text-shadow: @shadow;
+}
+
+// ==============================================
+// Backgrounds
+// ==============================================
+.Background(@color: transparent, @path: '', @repeat: no-repeat, @x: 0, @y: 0) {
+  background: @color url("/@{root}@{path}@{version}") @repeat @x @y;
+}
+
+.BackgroundImg(@path: '', @repeat: no-repeat, @x: 0, @y: 0) {
+  background: url("/@{root}@{path}@{version}") @repeat @x @y;
+}
+
+// .BackgroundUri(@path: '', @repeat: no-repeat, @x: 0, @y: 0) {
+//   background: data-uri("/@{root}@{path}@{version}") @repeat @x @y;
+// }
+
+.BgRgba(@r: 0, @g: 0, @b: 0, @a: 1) {
+  background: rgb(@r, @g, @b);
+  background: rgba(@r, @g, @b, @a);
+}
+
+// ==============================================
+// Radius
+// ==============================================
+.Radius(@r: 5px) {
+  -webkit-border-radius: @r;
+  border-radius: @r;
+
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+}
+.No-Radius() {
+  .Radius(0);
+}
+.RadiusExplicit (@t: 5px, @r: 5px, @b: 5px, @l: 5px) {
+	-webkit-border-radius: @t @r @b @l;
+	-moz-border-radius: @t @r @b @l;
+	border-radius: @t @r @b @l;
+
+	-moz-background-clip: padding;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+}
+// Single side border-radius
+.Border-Top-Radius(@radius) {
+  border-top-right-radius: @radius;
+   border-top-left-radius: @radius;
+}
+.Border-Right-Radius(@radius) {
+  border-bottom-right-radius: @radius;
+     border-top-right-radius: @radius;
+}
+.Border-Bottom-Radius(@radius) {
+  border-bottom-right-radius: @radius;
+   border-bottom-left-radius: @radius;
+}
+.Border-Left-Radius(@radius) {
+  border-bottom-left-radius: @radius;
+     border-top-left-radius: @radius;
+}
+
+// ==============================================
+// Transitioning
+// ==============================================
+.Transitions(@arguments) {
+  -webkit-transition: @arguments;
+  -moz-transition: @arguments;
+  -o-transition: @arguments;
+  transition: @arguments;
+}
+.Transition(@prop: all, @dur: .3s, @ease: ease-in-out) {
+  -webkit-transition: @prop @dur @ease;
+  -moz-transition: @prop @dur @ease;
+  -o-transition: @prop @dur @ease;
+  transition: @prop @dur @ease;
+}
+.Transition-Delay(@transition-delay) {
+  -webkit-transition-delay: @transition-delay;
+          transition-delay: @transition-delay;
+}
+.Transition-Duration(@transition-duration) {
+  -webkit-transition-duration: @transition-duration;
+          transition-duration: @transition-duration;
+}
+.Transition-Transform(@transition) {
+  -webkit-transition: -webkit-transform @transition;
+     -moz-transition: -moz-transform @transition;
+       -o-transition: -o-transform @transition;
+          transition: transform @transition;
+}
+.NoTransition() {
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
+}
+
+// ==============================================
+// Animation
+// ==============================================
+.Animation(@name: spin, @dur: .3s, @cycle: infinite, @ease: linear) {
+  -webkit-animation: @name @dur @cycle @ease; /* Chrome, Safari 5+ */
+     -moz-animation: @name @dur @cycle @ease; /* Firefox 5-15 */
+       -o-animation: @name @dur @cycle @ease; /* Opera 12.00 */
+          animation: @name @dur @cycle @ease; /* Chrome, Firefox 16+, IE 10+, Opera 12.10+ */
+}
+
+// ==============================================
+// Transformations
+// ==============================================
+.Rotate(@degrees) {
+  -webkit-transform: rotate(@degrees);
+      -ms-transform: rotate(@degrees); // IE9+
+          transform: rotate(@degrees);
+}
+.Scale(@ratio) {
+  -webkit-transform: scale(@ratio);
+      -ms-transform: scale(@ratio); // IE9+
+          transform: scale(@ratio);
+}
+.Translate(@x, @y) {
+  -webkit-transform: translate(@x, @y);
+      -ms-transform: translate(@x, @y); // IE9+
+          transform: translate(@x, @y);
+}
+.Skew(@x, @y) {
+  -webkit-transform: skew(@x, @y);
+      -ms-transform: skewX(@x) skewY(@y); // See https://github.com/twbs/bootstrap/issues/4885; IE9+
+          transform: skew(@x, @y);
+}
+.Translate3d(@x, @y, @z) {
+  -webkit-transform: translate3d(@x, @y, @z);
+          transform: translate3d(@x, @y, @z);
+}
+
+
+// Background clipping
+.Background-Clip(@clip) {
+  background-clip: @clip;
+}
+
+// Background sizing
+.Background-Size(@size) {
+  background-size: @size;
+}
+
+// Box sizing
+.Box-Sizing(@boxmodel) {
+  -webkit-box-sizing: @boxmodel;
+     -moz-box-sizing: @boxmodel;
+          box-sizing: @boxmodel;
+}
+
+// User select
+// For selecting text on the page
+.User-Select(@select) {
+  -webkit-user-select: @select;
+     -moz-user-select: @select;
+      -ms-user-select: @select; // IE10+
+       -o-user-select: @select;
+          user-select: @select;
+}
+
+// Resize anything
+.Resizable(@direction) {
+  resize: @direction; // Options: horizontal, vertical, both
+  overflow: auto; // Safari fix
+}
+
+// Optional hyphenation
+.Hyphens(@mode: auto) {
+  word-wrap: break-word;
+  -webkit-hyphens: @mode;
+     -moz-hyphens: @mode;
+      -ms-hyphens: @mode; // IE10+
+       -o-hyphens: @mode;
+          hyphens: @mode;
+}
+
+// Opacity
+.Opacity(@opacity) {
+  opacity: @opacity;
+  
+  // IE8 filter
+  @opacity-ie: (@opacity * 100);
+  filter: ~"alpha(opacity=@{opacity-ie})";
+}
+
+// ==============================================
+// Box Model
+// ==============================================
+.BorderBox() {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.ContentBox() {
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+}
+
+// ==============================================
+// Cursors
+// ==============================================
+.CursorPointer() { cursor: default; }
+.CursorHelp() { cursor: help; }
+.CursorHand() { cursor: pointer; }
+.CursorMove() { cursor: move; }
+.CursorHorz() { cursor: w-resize; }
+.CursorVert() { cursor: n-resize; }
+.CursorText() { cursor: text; }
+.CursorNotAllowed() { cursor: not-allowed; }
+
+// ==============================================
+// Grid System
+// ==============================================
+// Centered container element
+.Container-Fixed() {
+  margin: 0 auto;
+  margin-left: auto;
+  .ClearFix();
+}
+
+// Creates a wrapper for a series of columns
+.Make-Row(@gutter: @grid-gutter-width) {
+  // Then clear the floated columns
+  .ClearFix();
+
+  // Negative margin nested rows out to align the content of columns
+  .Row {
+    margin-left:  (@gutter / -2);
+    margin-right: (@gutter / -2);
+  }
+}
+
+// Generate the columns
+.Make-Column(@columns, @gutter: @grid-gutter-width) {
+  position: relative;
+  // Prevent columns from collapsing when empty
+  min-height: 1px;
+  // Inner gutter via padding
+  padding-left:  (@gutter / 2);
+  padding-right: (@gutter / 2);
+}
+
+// Generate the column offsets
+.Make-Column-Offset(@columns) {}
+.Make-Column-Push(@columns) {}
+.Make-Column-Pull(@columns) {}
+
+// Generate the small columns
+.Make-Small-Column(@columns, @gutter: @grid-gutter-width) {
+  position: relative;
+  float: left;
+  // Prevent columns from collapsing when empty
+  min-height: 1px;
+  // Inner gutter via padding
+  padding-left:  (@gutter / 2);
+  padding-right: (@gutter / 2);
+  @max-width: (@grid-float-breakpoint - 1);
+
+  // Calculate width based on number of columns available
+  @media (max-width: @max-width) {
+    width: percentage((@columns / @grid-columns));
+  }
+}
+
+// ==============================================
+// Labels
+// ==============================================
+.Label-Variant(@color) {
+  background-color: @color;
+
+  &:hover, &:focus {
+    background-color: darken(@color, 10%);
+  }
+}
+
+// ==============================================
+// Gradients
+// ==============================================
+.Gradient(@top, @bottom) {
+  background: @top;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, @top), color-stop(100%, @bottom));
+  background: -webkit-linear-gradient(top, @top 0%, @bottom 100%);
+  background: -moz-linear-gradient(top, @top 0%, @bottom 100%);
+  background: -o-linear-gradient(top, @top 0%, @bottom 100%);
+  background: linear-gradient(top, @top 0%, @bottom 100%);
+}
+
+#Gradient {
+
+  // Horizontal gradient, from left to right
+  //
+  // Creates two color stops, start and end, by specifying a color and position for each color stop.
+  // Color stops are not available in IE9 and below.
+  .Horizontal(@start-color: #555, @end-color: #333, @start-percent: 0%, @end-percent: 100%) {
+    background-image: -webkit-gradient(linear, @start-percent top, @end-percent top, from(@start-color), to(@end-color)); // Safari 4+, Chrome 2+
+    background-image: -webkit-linear-gradient(left, color-stop(@start-color @start-percent), color-stop(@end-color @end-percent)); // Safari 5.1+, Chrome 10+
+    background-image: -moz-linear-gradient(left, @start-color @start-percent, @end-color @end-percent); // FF 3.6+
+    background-image:  linear-gradient(to right, @start-color @start-percent, @end-color @end-percent); // Standard, IE10
+    background-repeat: repeat-x;
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=1)",argb(@start-color),argb(@end-color))); // IE9 and down
+  }
+  // Vertical gradient, from top to bottom
+  //
+  // Creates two color stops, start and end, by specifying a color and position for each color stop.
+  // Color stops are not available in IE9 and below.
+  .Vertical(@start-color: #555, @end-color: #333, @start-percent: 0%, @end-percent: 100%) {
+    background-image: -webkit-gradient(linear, left @start-percent, left @end-percent, from(@start-color), to(@end-color)); // Safari 4+, Chrome 2+
+    background-image: -webkit-linear-gradient(top, @start-color, @start-percent, @end-color, @end-percent); // Safari 5.1+, Chrome 10+
+    background-image:  -moz-linear-gradient(top, @start-color @start-percent, @end-color @end-percent); // FF 3.6+
+    background-image: linear-gradient(to bottom, @start-color @start-percent, @end-color @end-percent); // Standard, IE10
+    background-repeat: repeat-x;
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@start-color),argb(@end-color))); // IE9 and down
+  }
+  .Directional(@start-color: #555, @end-color: #333, @deg: 45deg) {
+    background-repeat: repeat-x;
+    background-image: -webkit-linear-gradient(@deg, @start-color, @end-color); // Safari 5.1+, Chrome 10+
+    background-image: -moz-linear-gradient(@deg, @start-color, @end-color); // FF 3.6+
+    background-image: linear-gradient(@deg, @start-color, @end-color); // Standard, IE10
+  }
+  .Horizontal-Three-Colors(@start-color: #00b3ee, @mid-color: #7a43b6, @color-stop: 50%, @end-color: #c3325f) {
+    background-image: -webkit-gradient(left, linear, 0 0, 0 100%, from(@start-color), color-stop(@color-stop, @mid-color), to(@end-color));
+    background-image: -webkit-linear-gradient(left, @start-color, @mid-color @color-stop, @end-color);
+    background-image: -moz-linear-gradient(left, @start-color, @mid-color @color-stop, @end-color);
+    background-image: linear-gradient(to right, @start-color, @mid-color @color-stop, @end-color);
+    background-repeat: no-repeat;
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=1)",argb(@start-color),argb(@end-color))); // IE9 and down, gets no color-stop at all for proper fallback
+  }
+  .Vertical-Three-Colors(@start-color: #00b3ee, @mid-color: #7a43b6, @color-stop: 50%, @end-color: #c3325f) {
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@start-color), color-stop(@color-stop, @mid-color), to(@end-color));
+    background-image: -webkit-linear-gradient(@start-color, @mid-color @color-stop, @end-color);
+    background-image: -moz-linear-gradient(top, @start-color, @mid-color @color-stop, @end-color);
+    background-image: linear-gradient(@start-color, @mid-color @color-stop, @end-color);
+    background-repeat: no-repeat;
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@start-color),argb(@end-color))); // IE9 and down, gets no color-stop at all for proper fallback
+  }
+  .Radial(@inner-color: #555, @outer-color: #333) {
+    background-image: -webkit-gradient(radial, center center, 0, center center, 460, from(@inner-color), to(@outer-color));
+    background-image: -webkit-radial-gradient(circle, @inner-color, @outer-color);
+    background-image: -moz-radial-gradient(circle, @inner-color, @outer-color);
+    background-image: radial-gradient(circle, @inner-color, @outer-color);
+    background-repeat: no-repeat;
+  }
+  .Striped(@color: #555, @angle: 45deg) {
+    background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, rgba(255,255,255,.15)), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, rgba(255,255,255,.15)), color-stop(.75, rgba(255,255,255,.15)), color-stop(.75, transparent), to(transparent));
+    background-image: -webkit-linear-gradient(@angle, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
+    background-image: -moz-linear-gradient(@angle, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
+    background-image: linear-gradient(@angle, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
+  }
+}
+
+// Reset filters for IE
+//
+// When you need to remove a gradient background, don't forget to use this to reset
+// the IE filter for IE9 and below.
+.Reset-Filter() {
+  filter: e(%("progid:DXImageTransform.Microsoft.gradient(enabled = false)"));
+}
+
+// ==============================================
+// Shades
+// ==============================================
+.Black90() { background: transparent; background: rgba(0, 0, 0, 0.9); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#E5000000,endColorstr=#E5000000)"; zoom: 1; }
+.Black80() { background: transparent; background: rgba(0, 0, 0, 0.8); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#CC000000,endColorstr=#CC000000)"; zoom: 1; }
+.Black70() { background: transparent; background: rgba(0, 0, 0, 0.7); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#B2000000,endColorstr=#B2000000)"; zoom: 1; }
+.Black60() { background: transparent; background: rgba(0, 0, 0, 0.6); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000,endColorstr=#99000000)"; zoom: 1; }
+.Black50() { background: transparent; background: rgba(0, 0, 0, 0.5); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#7F000000,endColorstr=#7F000000)"; zoom: 1; }
+.Black40() { background: transparent; background: rgba(0, 0, 0, 0.4); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#66000000,endColorstr=#66000000)"; zoom: 1; }
+.Black30() { background: transparent; background: rgba(0, 0, 0, 0.3); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#4C000000,endColorstr=#4C000000)"; zoom: 1; }
+.Black20() { background: transparent; background: rgba(0, 0, 0, 0.2); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#33000000,endColorstr=#33000000)"; zoom: 1; }
+.Black10() { background: transparent; background: rgba(0, 0, 0, 0.1); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#19000000,endColorstr=#19000000)"; zoom: 1; }
+
+.White90() { background: transparent; background: rgba(255, 255, 255, 0.9); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#E5FFFFFF,endColorstr=#E5FFFFFF)"; zoom: 1; }
+.White80() { background: transparent; background: rgba(255, 255, 255, 0.8); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#CCFFFFFF,endColorstr=#CCFFFFFF)"; zoom: 1; }
+.White70() { background: transparent; background: rgba(255, 255, 255, 0.7); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#B2FFFFFF,endColorstr=#B2FFFFFF)"; zoom: 1; }
+.White60() { background: transparent; background: rgba(255, 255, 255, 0.6); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#99FFFFFF,endColorstr=#99FFFFFF)"; zoom: 1; }
+.White50() { background: transparent; background: rgba(255, 255, 255, 0.5); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#7FFFFFFF,endColorstr=#7FFFFFFF)"; zoom: 1; }
+.White40() { background: transparent; background: rgba(255, 255, 255, 0.4); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#66FFFFFF,endColorstr=#66FFFFFF)"; zoom: 1; }
+.White30() { background: transparent; background: rgba(255, 255, 255, 0.3); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#4CFFFFFF,endColorstr=#4CFFFFFF)"; zoom: 1; }
+.White20() { background: transparent; background: rgba(255, 255, 255, 0.2); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#33FFFFFF,endColorstr=#33FFFFFF)"; zoom: 1; }
+.White10() { background: transparent; background: rgba(255, 255, 255, 0.1); filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=#19FFFFFF,endColorstr=#19FFFFFF)"; zoom: 1; }
+
+.Promote-To-Layer() {
+  -webkit-transform: translateZ(0);
+     -moz-transform: translateZ(0);
+       -o-transform: translateZ(0);
+      -ms-transform: translateZ(0);
+          transform: translateZ(0);
+}
