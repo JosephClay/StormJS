@@ -114,7 +114,8 @@ module.exports = function(grunt) {
 			dist : {
 				src: ['<%= rename.full.dest %>'],
 				options: {
-					destination: 'doc'
+					destination: 'doc',
+					configure: 'jsdoc.conf.json'
 				}
 			}
 		}
