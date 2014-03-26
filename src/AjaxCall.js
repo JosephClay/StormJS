@@ -18,7 +18,7 @@ var _AJAX_CALL = 'AjaxCall',
 	_CLASSIFICATION = {
 		nonblocking: 0,
 		blocking: 1
-	};
+	},
 	_addClassification = function(type) {
 		// The type has already been defined
 		if (type in _CLASSIFICATION) { return; }
@@ -57,7 +57,6 @@ _.extend(AjaxCall, /** @lends Storm.AjaxCall */ {
 	/**
 	 * @readonly
 	 * @enum {Number}
-	 *
 	 */
 	CLASSIFICATION: _CLASSIFICATION,
 
