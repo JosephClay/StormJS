@@ -1,4 +1,4 @@
-/*! StormJS - v0.0.8 - 2014-03-25
+/*! StormJS - v0.0.8 - 2014-03-26
  * https://github.com/JosephClay/StormJS
  * Copyright (c) 2012-2014 Joe Clay; Licensed  */
 (function(root, _, Signal, undefined) {
@@ -10,12 +10,13 @@
 // Hold on to previous Storm reference (can release with noConflict)
 var previousStorm = root.Storm,
 	// Define Storm
+	/** @namespace Storm */
 	Storm = root.Storm = {
 		name: 'StormJS',
-		VERSION: '0.0.1',
 		ajax: root.$ || { ajax: function() { console.error(_errorMessage('Storm.ajax', 'NYI')); } },
 		$: root.$ || function() { console.error(_errorMessage('Storm.$', 'NYI')); }
 	};
+
 
 //----
 
@@ -172,9 +173,11 @@ var memo = Storm.memo = function(getter) {
  */
 
 	/**
-	 * Generate a unique id
-	 * @param  {String}        [prefix] Defines a scope for the identifiers
-	 * @return {Number|String} id
+	 * Generates an ID number that is unique within the context of the current {@link Storm} instance.
+	 * The internal counter does not persist between page loads.
+	 * @function Storm.uniqId
+	 * @param  {String} [prefix] Defines an optional scope (i.e., namespace) for the identifiers.
+	 * @return {Id} Unique ID number.
 	 */
 var _uniqId = Storm.uniqId = (function() {
 
@@ -188,12 +191,14 @@ var _uniqId = Storm.uniqId = (function() {
 
 	}()),
 	/**
-	 * Generates a unqiue id string - prefixed with the scope
-	 * @param  {String} scope
-	 * @return {String} id
+	 * Generates an ID number prefixed with the given string that is unique within the context of the current {@link Storm} instance.
+	 * The internal counter does not persist between page loads.
+	 * @function Storm.uniqIdStr
+	 * @param  {String} prefix String to prepend the generated ID number with.  Also used to scope (namespace) the unique ID number.
+	 * @return {String} Unique ID number prefixed with the given string.
 	 */
-	_uniqIdStr = Storm.uniqIdStr = function(scope) {
-		return (scope || 'id') + '' + _uniqId(scope);
+	_uniqIdStr = Storm.uniqIdStr = function(prefix) {
+		return (prefix || 'id') + '' + _uniqId(prefix);
 	};
 
 
@@ -939,12 +944,14 @@ var _REQUEST = 'request',
  * Possible events are: 'send', done', 'fail', 'abort', 'always'
  *
  * @type {Storm.Events}
+ * @memberOf Storm
  */
 Storm.request = Events.construct();
-_.extend(Storm.request, {
+_.extend(Storm.request, /** @lends Storm.request */ {
 
 	/**
-	 * Get the requests in-progress
+	 * Get the requests in-progress.
+	 * @function Storm.request.getQueue
 	 * @return {Object}
 	 */
 	getQueue: function() {
@@ -952,7 +959,8 @@ _.extend(Storm.request, {
 	},
 
 	/**
-	 * Get the total number of requests in-progress
+	 * Get the total number of requests in-progress.
+	 * @function Storm.request.getTotal
 	 * @return {Number}
 	 */
 	getTotal: function() {
@@ -961,6 +969,7 @@ _.extend(Storm.request, {
 
 	/**
 	 * Debug string
+	 * @function Storm.request.toString
 	 * @return {String}
 	 */
 	toString: function() {
@@ -991,7 +1000,7 @@ var _AJAX_CALL = 'AjaxCall',
 	_CLASSIFICATION = {
 		nonblocking: 0,
 		blocking: 1
-	};
+	},
 	_addClassification = function(type) {
 		// The type has already been defined
 		if (type in _CLASSIFICATION) { return; }
@@ -1030,7 +1039,6 @@ _.extend(AjaxCall, /** @lends Storm.AjaxCall */ {
 	/**
 	 * @readonly
 	 * @enum {Number}
-	 *
 	 */
 	CLASSIFICATION: _CLASSIFICATION,
 
