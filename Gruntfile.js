@@ -7,7 +7,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-rename');
-	grunt.loadNpmTasks('grunt-jsdoc');
 
 	var srcFiles = [
 		'src/Intro.js',
@@ -108,16 +107,6 @@ module.exports = function(grunt) {
 			sourcemap: {
 				src: '<%= filenames.sourcemap %>',
 				dest: '<%= directories.dist %>/<%= filenames.sourcemap %>'
-			}
-		},
-		jsdoc : {
-			dist : {
-				src: ['<%= rename.full.dest %>'],
-				options: {
-					destination: 'doc',
-					private: false,
-					configure: 'jsdoc.conf.json'
-				}
 			}
 		}
 	});
