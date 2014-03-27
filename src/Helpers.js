@@ -46,7 +46,7 @@ var _stringFormat = (function() {
 
 	return function(str, fill) {
 		return str.replace(_REGEX, function(capture, value) {
-			return fill[value] || '';
+			return _exists(fill[value]) ? fill[value] + '' : '';
 		});
 	};
 
