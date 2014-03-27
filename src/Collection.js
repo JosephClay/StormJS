@@ -382,7 +382,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 	 */
 	findById: function(id) {
 		if (!_exists(id)) { return null; }
-		id = (id > -1) === false ? parseInt(id, 10) : id; // make sure id is a number
+		id = _.isNumber(id) ? id : parseInt(id, 10); // make sure id is a number
 
 		var models = this.getModels(),
 			idx = models.length,
