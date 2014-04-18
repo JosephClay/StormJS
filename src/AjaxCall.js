@@ -190,6 +190,11 @@ AjaxCall.prototype = /** @lends Storm.AjaxCall# */ {
 	 * @return {Storm.ajax} request
 	 */
 	send: function(promise) {
+		promise = promise || new Storm.Promise();
+
+		// Ensure the promise has the ability to abort
+		promise.abort = _.bind(this.abort, this);
+
 		var self = this,
 			call = this._call,
 			params = _.extend({}, call, {
@@ -230,7 +235,7 @@ AjaxCall.prototype = /** @lends Storm.AjaxCall# */ {
 
 		var request = this.request = Storm.ajax.ajax(params);
 
-		return request;
+		return promise;
 	},
 
 	/**
