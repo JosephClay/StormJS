@@ -187,7 +187,7 @@ AjaxCall.prototype = /** @lends Storm.AjaxCall# */ {
 	/**
 	 * Uses {@link Storm.ajax} to ajax the stored call object
 	 * @param  {Storm.Promise} [promise]
-	 * @return {Storm.ajax} request
+	 * @return {Storm.Promise} request
 	 */
 	send: function(promise) {
 		promise = promise || new Storm.Promise();
