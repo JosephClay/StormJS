@@ -69,7 +69,7 @@ var Model = Storm.Model = function(data, opts) {
 	 * If there's a Comparator, then bind it to this model
 	 * @type {Storm.Comparator}
 	 */
-	if (this.comparator) { this.comparator.bind(this); }
+	if (this.comparator) { _.bind(this.comparator, this); }
 };
 
 _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
