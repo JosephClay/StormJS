@@ -77,12 +77,11 @@ var _REQUEST = 'request',
  * passing the AjaxCalls that trigger the events.
  *
  * Possible events are: 'send', done', 'fail', 'abort', 'always'
- *
- * @type {Storm.Events}
- * @memberOf Storm
+ * 
+ * @namespace Storm.request
  */
 Storm.request = Events.construct();
-_.extend(Storm.request, {
+_.extend(Storm.request, /** @lends Storm.request# */ {
 
 	/**
 	 * Get the requests in-progress.

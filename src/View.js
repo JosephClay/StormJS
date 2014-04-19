@@ -40,7 +40,7 @@ _.extend(View.prototype, Events.prototype, /** @lends Storm.View# */ {
 	constructor: View,
 
 	/**
-	 * Get the private id of the Model
+	 * Get the private id of the view
 	 * @return {Number} id
 	 */
 	getId: function() { return this._id; },

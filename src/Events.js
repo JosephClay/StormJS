@@ -1,11 +1,9 @@
 // Events ###########################################################################
 
 /**
- * Proxy to Signal. Use "Events" internally
- * so that it's easier to change to a different
- * pub/sub system if need be
+ * Proxy to Signal.
  * @class Storm.Events
- * @see Signal
+ * @see {@link https://github.com/JosephClay/Signal Signal}
  */
 var Events = Storm.Events = Signal.core;
 

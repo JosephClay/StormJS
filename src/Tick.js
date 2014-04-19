@@ -29,25 +29,18 @@
 }());
 
 // Date.now polyfill
-if (!Date.now) {
-	Date.now = function () {
+var _now = (function(Date) {
+
+	return Date.now || function() {
 		return new Date().valueOf();
 	};
-}
+
+}(Date));
 
 /**
- * Hook into requestAnimationFrame through Storm. Keeps
- * a single raf so that there aren't multiple calls or miss-calls
- * that would cause raf from functioning, e.g.:
- *
- * var update = function() { raf(update); };
- * raf(update);
- *
- * later in the application:
- * raf(update);
- *
- * Also automatically calls TWEEN if it's present
- * https://github.com/sole/tween.js/
+ * A hook into a polyfilled requestAnimationFrame.
+ * Keeps a single raf that can be hooked into and
+ * prevent multiple implementations of raf.
  *
  * @namespace Storm.tick
  */
@@ -98,7 +91,7 @@ Storm.tick = (function() {
 			var idx = 0,
 				length = _loop.length;
 
-			_e.now = Date.now();
+			_e.now = _now();
 
 			while (idx < length) {
 				_loop[idx](_e);

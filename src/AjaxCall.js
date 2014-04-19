@@ -157,7 +157,8 @@ AjaxCall.prototype = /** @lends Storm.AjaxCall# */ {
 	/**
 	 * Determine if the classification passed is the same as this
 	 * call's classification
-	 * @param  {Storm.AjaxCall.CLASSIFICATION} type {@link Storm.AjaxCall.CLASSIFICATION}
+	 * @type {@link Storm.AjaxCall.CLASSIFICATION}
+	 * @param  {Storm.AjaxCall.CLASSIFICATION} classification
 	 * @return {Boolean}
 	 */
 	isClassification: function(type) {
