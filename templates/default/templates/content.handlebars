@@ -1,0 +1,50 @@
+<section id="{{ longname }}" class="{{ kind }}">
+
+    <header class="content-header {{ kind }}-header">
+        <h2 class="content-heading">
+            {{> ancestors ancestors}}
+            
+            {{ name }}
+            {{> linenumber}}
+
+            {{#if variation}}
+                <sup class="variation">{{ variation }}</sup>
+            {{/if}}
+        </h2>
+        {{#if classdesc }}
+            <div class="class-description">{{ classdesc }}</div>
+        {{/if}}
+    </header>
+
+    <article class="{{ kind }}-article">
+        <div class="container-overview">
+            {{#if_equal kind 'module'}}
+                {{#if module}}
+                    {{> method module}}
+                {{/if}}
+            {{/if_equal}}
+            
+            {{#if_not_equal kind 'module'}}
+                {{#if_not_equal kind 'class'}}
+                    
+                    {{#if description}}
+                        <p class="description">
+                            {{ description }}
+                        </p>
+                    {{/if}}
+
+                    {{> details}}
+
+                    {{#if_size examples}}
+                        <h3>Example{{#if_size examples}}s{{/if_size}}</h3>
+                        {{> examples examples}}
+                    {{/if_size}}
+
+                {{/if_not_equal}}
+            {{/if_not_equal}}
+        </div>
+
+        {{> contentarticle}}
+    </article>
+
+</section>

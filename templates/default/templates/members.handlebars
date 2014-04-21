@@ -1,0 +1,50 @@
+<div class="member">
+    <h4 class="name member-name" id="{{ longname }}">
+        {{ attribs }}
+        {{ name }}
+        {{ signature }}
+    </h4>
+
+    {{#if summary}}
+        <p class="summary">
+            {{ summary }}
+        </p>
+    {{/if}}
+    
+    <dd class="member-description">
+        {{#if type.names}}
+            <span class="member-type">Type:</span>
+            <ul class="member-types">
+                <li class="member-type-item">
+                    {{> type type.names}}
+                </li>
+            </ul>
+        {{/if}}
+
+        {{#if description}}
+            <p class="description">
+                {{ description }}
+            </p>
+        {{/if}}
+
+        {{> details}}
+        {{> linenumber}}
+
+        {{#if_size fires}}
+            <h5>Fires:</h5>
+            <ul>
+                {{#each fires}}
+                    <li>
+                        !!LINKTO!!
+                        <?js= self.linkto(f) ?>
+                    </li>
+                {{/each}}
+            </ul>
+        {{/if_size}}
+
+        {{#if_size examples}}
+            <h5>Example{{#if_size examples}}s{{/if_size}}</h5>
+            {{> examples examples}}
+        {{/if_size}}
+    </dd>
+</div>

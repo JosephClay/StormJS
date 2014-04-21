@@ -1,0 +1,135 @@
+<div class="link-lists clearfix">
+
+    {{#if_size augments}}
+        <div class="link-list">
+            <h3 class="subsection-title subsection-extends">Extends</h3>
+
+            <ul class="subsection-list subsection-extends">
+                {{#each augments}}
+                    <li>
+                        <a href="#{{ this }}">
+                            {{ this }}
+                        </a>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    {{/if_size}}
+
+    {{#if_size mixes}}
+        <div class="link-list">
+            <h3 class="subsection-title subsection-mixes">Mixes In</h3>
+
+            <ul class="subsection-list subsection-mixes">
+                {{#each mixes}}
+                    <li>
+                        {{linkto this}}
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    {{/if_size}}
+
+    {{#if_size requires}}
+        <div class="link-list">
+            <h3 class="subsection-title subsection-requires">Requires</h3>
+
+            <ul class="subsection-list subsection-requires">
+                {{#each requires}}
+                    <li>
+                        {{linkto this}}
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    {{/if_size}}
+
+    {{#if_size classes}}
+        <div class="link-list">
+            <h3 class="subsection-title subsection-classes">Classes</h3>
+
+            <dl class="subsection-list subsection-classes">
+                {{#each classes}}
+                    <dt>
+                        <a href="#{{ longname }}">
+                            {{ name }}
+                        </a>
+                    </dt>
+                    {{#if summary}}
+                        <dd>
+                            {{ summary }}
+                        </dd>
+                    {{/if}}
+                {{/each}}
+            </dl>
+        </div>
+    {{/if_size}}
+
+    {{#if_size namespaces}}
+        <div class="link-list">
+            <h3 class="subsection-title subsection-namespaces">Namespaces</h3>
+
+            <dl class="subsection-list subsection-namespaces">
+                {{#each namespaces}}
+                    <dt>
+                        <a href="#{{ longname }}">
+                            {{ name }}
+                        </a>
+                    </dt>
+                    {{#if summary}}
+                        <dd>
+                            {{ summary }}
+                        </dd>
+                    {{/if}}
+                {{/each}}
+            </dl>
+        </div>
+    {{/if_size}}
+
+</div>
+
+{{#if_size members}}
+    <h3 class="subsection-title subsection-members">Members</h3>
+
+    <dl class="subsection-list subsection-members">
+        <div class="members">
+            {{#each members}}
+                {{> members}}
+            {{/each}}
+        </div>
+    </dl>
+{{/if_size}}
+
+{{#if_size methods}}
+    <dl class="subsection-list subsection-methods">
+        {{#each methods}}
+            {{> method}}
+        {{/each}}
+    </dl>
+{{/if_size}}
+
+{{#if_size typedefs}}
+    <h3 class="subsection-title subsection-type-defs">Type Definitions</h3>
+
+    <dl class="subsection-list subsection-type-defs">
+        {{#each typedefs}}
+            {{#if signature}}
+                {{> method}}
+            {{else}}
+                <div class="members">
+                    {{> members}}
+                </div>
+            {{/if}}
+        {{/each}}
+    </dl>
+{{/if_size}}
+
+{{#if_size events}}
+    <h3 class="subsection-title subsection-events">Events</h3>
+
+    <dl class="subsection-list subsection-events">
+        {{#each events}}
+            {{> method}}
+        {{/each}}
+    </dl>
+{{/if_size}}

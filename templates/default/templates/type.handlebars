@@ -1,0 +1,22 @@
+{{#eachValue this}}
+	<span class="param-type">
+		{{#if_linkable val}}
+			<a href="#{{ val }}">
+				{{ val }}
+			</a>
+		{{ else }}
+			{{#withNormalType val}}
+				{{#if mdn}}
+					<a href="{{ mdn }}" target="_blank">
+						{{ type }}
+					</a>
+				{{else}}
+					{{ type }}
+				{{/if}}
+			{{/withNormalType}}
+		{{/if_linkable}}
+	</span>
+	{{#unless $last}}
+		<span class="param-or-sep">|</span>
+	{{/unless}}
+{{/eachValue}}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <title>{{ opts.title }}</title>
+
+        <link rel="stylesheet" href="styles/styles.css">
+        <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|Exo' rel='stylesheet' type='text/css'>
+
+        <script src="scripts/libs/modernizr.js"></script>
+    </head>
+
+    <body>
+        <aside id="Sidebar" class="sidebar">
+            {{> nav}}
+        </aside>
+
+        <div class="container">
+            
+            {{> main}}
+
+            <main id="Main" class="main">
+
+                {{#each namespaces}}
+                    {{> namespaces}}
+                {{/each}}
+
+                {{#each klasses}}
+                    {{> klass}}
+                {{/each}}
+
+                {{#each modules}}
+                    {{> content}}
+                {{/each}}
+
+                {{#each mixins}}
+                    {{> content}}
+                {{/each}}
+
+                {{#each externals}}
+                    {{> content}}
+                {{/each}}
+            </main>
+       
+            {{> footer}}
+        </div>
+        
+        {{> forkme}}
+
+        <script src="scripts/prettify/prettify.js"></script>
+        <script src="scripts/libs/underscore.js"></script>
+        <script src="scripts/libs/signal.js"></script>
+
+        <script src="scripts/StormJS.js"></script>
+        
+        <script src="scripts/linenumber.js"></script>
+        <script src="scripts/sidenav.js"></script>
+        <script>prettyPrint();</script>
+    </body>
+</html>

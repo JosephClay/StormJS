@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <title>{{ opts.title }}</title>
+
+        <link rel="stylesheet" href="styles/styles.css">
+        <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|Exo' rel='stylesheet' type='text/css'>
+
+        <script src="scripts/libs/modernizr.js"></script>
+    </head>
+
+    <body class="source-page">
+        <div class="container">
+            <main id="Main" class="main">
+                <section class="code-data">
+                    <article class="code-data-article">
+                        <pre id="Source" class="prettyprint source linenums"><code>{{{ source }}}</code></pre>
+                    </article>
+                </section>
+            </main>
+        </div>
+
+        <script src="scripts/prettify/prettify.js"></script>
+        <script>prettyPrint();</script>
+        <script src="scripts/linenumber.js"></script>
+    </body>
+</html>

@@ -1,0 +1,50 @@
+<ul class="props">
+    {{#each this}}
+        <li class="prop">
+            <p class="prop-name">
+                {{ name }}
+            </p>
+
+            <div class="prop-type">
+                Type: {{> type type.names}}
+
+                <ul class="prop-attributes">
+                    {{#if optional}}
+                        <li class="prop-attribute">
+                            optional
+                        </li>
+                    {{/if}}
+
+                    {{#if nullable}}
+                        <li class="prop-attribute">
+                            nullable
+                        </li>
+                    {{/if}}
+
+                    {{#if variable}}
+                        <li class="prop-attribute">
+                            repeatable
+                        </li>
+                    {{/if}}
+                </ul>
+            </div>
+
+            <div class="default">
+                {{#if defaultvalue}}
+                    {{ defaultvalue }}
+                {{/if}}
+            </div>
+
+            <p class="description prop-description">
+                {{ description }}
+            </p>
+
+            <p class="prop-properties">
+                {{#if subprops}}
+                    <h6>Properties</h6>
+                    {{> params subprops}}
+                {{/if}}
+            </p>
+        </li>
+    {{/each}}
+</ul>

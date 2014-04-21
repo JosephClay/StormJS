@@ -1,0 +1,11 @@
+{{#if_size this}}
+	<ul class="ancestors">
+		{{#each this}}
+			<li class="ancestor-item">
+				<a href="#{{ longname }}" class="ancestor-link">
+					{{ name }}{{ scopePunc }}
+				</a>
+			</li>
+		{{/each}}
+	</ul>
+{{/if_size}}

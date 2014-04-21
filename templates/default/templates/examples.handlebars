@@ -1,0 +1,8 @@
+{{#each this}}
+    {{#if caption}}
+        <p class="code-caption">
+            {{ caption }}
+        </p>
+    {{/if}}
+    <pre class="prettyprint"><code>{{{ code }}}</code></pre>
+{{/each}}

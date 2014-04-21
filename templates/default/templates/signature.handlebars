@@ -1,0 +1,11 @@
+{{#if_not_equal kind 'event'~}}
+    {{~signature~}}
+    (
+    {{~#foreach signatureParameters~}}
+        <span class="signature-parameter {{#if optional}}optional{{/if}}">
+        	{{~name~}}
+        </span>
+        {{~#unless $last}}, {{/unless~}}
+    {{~/foreach~}}
+    )
+{{~/if_not_equal}}

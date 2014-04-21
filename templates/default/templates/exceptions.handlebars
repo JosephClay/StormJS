@@ -1,0 +1,31 @@
+{{#if description}}
+    {{#if_size type.names}}
+        <dl>
+            <dt>
+                <div class="param-desc">
+                {{ description }}
+                </div>
+            </dt>
+            <dt>
+                <dl>
+                    <dt>
+                        Type
+                    </dt>
+                    <dd>
+                        {{> type type.names}}
+                    </dd>
+                </dl>
+            </dt>
+        </dl>
+    {{ else }}
+        <div class="param-desc">
+        {{#if description}}
+            {{ description }}
+        {{else}}
+            {{#if type.names}}
+                {{> type type.names}}
+            {{/if}}
+        {{/if}}
+        </div>
+    {{/if}}
+{{/if}}

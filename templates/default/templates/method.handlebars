@@ -1,0 +1,129 @@
+<div id="{{ longname }}" class="method-definition">
+
+    <div class="method-definition-header">
+        <h4 class="method-name">
+            {{#if_equal kind 'class'}}new Storm.{{else}}.{{/if_equal}}{{ name }}{{> signature}}
+        </h4>
+
+        {{#if_size returns}}
+            <p class="method-returns">
+               <span class="return-label">Returns:</span> 
+               {{#if_not_equal kind 'event'}}
+                    {{#eachValue returnTypes}}
+                        {{#if_linkable val}}
+                            <a href="#{{ val }}">
+                                {{ val }}
+                            </a>
+                        {{ else }}
+
+                            {{#withNormalType val}}
+                                {{#if mdn}}
+                                    <a href="{{ mdn }}" target="_blank">
+                                        {{ type }}
+                                    </a>
+                                {{else}}
+                                    {{ type }}
+                                {{/if}}
+                            {{/withNormalType}}
+                            
+                        {{/if_linkable}}
+
+                        {{#unless $last}}
+                            <span class="return-or">|</span>
+                        {{/unless}}
+                    {{/eachValue}}
+                {{/if_not_equal}}
+            </p>
+        {{/if_size}}
+    </div>
+
+    <div class="method-tag-source">
+        {{> linenumber}}
+    </div>
+
+    {{#if summary}}
+        <p class="summary">
+            {{ summary }}
+        </p>
+    {{/if}}
+
+    {{#if description }}
+        <p class="description method-description">
+            {{{ description }}}
+        </p>
+    {{/if}}
+
+    {{#if_equal kind 'event'}}
+        {{#if_size type.names}}
+            <h5>Type:</h5>
+            {{> type type.names}}
+        {{/if_size}}
+    {{/if_equal}}
+
+    {{#if_size params}}
+        {{> params params}}
+    {{/if_size}}
+
+    {{> details}}
+
+    {{#if_size requires}}
+        <h5>Requires:</h5>
+        <ul>
+            {{#each requires}}
+                <li>
+                    {{linkto this }}
+                </li>
+            {{/each}}
+        </ul>
+    {{/if_size}}
+
+    {{#if_size fires}}
+        <h5>Fires:</h5>
+        <ul>
+            {{#each fires}}
+                <li>
+                    {{linkto this }}
+                </li>
+            {{/each}}
+        </ul>
+    {{/if_size}}
+
+    {{#if_size listens}}
+        <h5>Listens to Events:</h5>
+        <ul>
+            {{#each listens}}
+                <li>
+                    {{linkto this}}
+                </li>
+            {{/each}}
+        </ul>
+    {{/if_size}}
+
+    {{#if_size listeners}}
+        <h5>Listeners of This Event:</h5>
+        <ul>
+            {{#each listeners}}
+                <li>
+                    {{linkto this}}
+                </li>
+            {{/each}}
+        </ul>
+    {{/if_size}}
+
+    {{#if_size exceptions}}
+        <h5>Throws:</h5>
+        <ul>
+            {{#each exceptions}}
+                <li>
+                    {{> exceptions this}}
+                </li>
+            {{/each}}
+        </ul>
+    {{/if_size}}
+
+    {{#if_size examples}}
+
+        {{> examples examples}}
+
+    {{/if_size}}
+</div>

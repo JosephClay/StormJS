@@ -1,0 +1,39 @@
+<section id="{{ longname }}" class="{{ kind }}">
+
+    {{!-- If there are no ancestors, then we're at the root; don't show, the main is above us --}}
+    {{#if_size ancestors}}
+        <header class="content-header {{ kind }}-header">
+            <h2 class="content-heading">
+                {{> ancestors ancestors}}
+                {{ name }}
+                
+                {{> linenumber}}
+
+                {{#if variation}}
+                    <sup class="variation">{{ variation }}</sup>
+                {{/if}}
+            </h2>
+            {{#if classdesc }}
+                <div class="class-description">{{ classdesc }}</div>
+            {{/if}}
+        </header>
+    {{/if_size}}
+
+    <article class="{{ kind }}-article">
+        {{#if description}}
+            <p class="description">
+                {{{ description }}}
+            </p>
+        {{/if}}
+
+        {{> details}}
+
+        {{#if_size examples}}
+            <h3>Example{{#if_size examples}}s{{/if_size}}</h3>
+            {{> examples examples}}
+        {{/if_size}}
+        
+        {{> contentarticle}}
+    </article>
+
+</section>

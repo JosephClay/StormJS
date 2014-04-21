@@ -1,0 +1,99 @@
+<dl class="details">
+
+    {{#if_size properties}}
+        <dl class="properties">
+            {{> properties properties}}
+        </dl>
+    {{/if_size}}
+
+    {{#if version}}
+        <dt class="tag-version">Version:</dt>
+        <dd class="tag-version">
+            {{ version }}
+        </dd>
+    {{/if}}
+
+    {{#if since}}
+        <dt class="tag-since">Since:</dt>
+        <dd class="tag-since">
+            {{ since }}
+        </dd>
+    {{/if}}
+
+    {{#if inherited}}
+        {{#if inherits}}
+            <dt class="inherited-from">Inherited From:</dt>
+            <dd class="inherited-from">
+                {{ linkto inherits }}
+            </dd>
+        {{/if}}
+    {{/if}}
+
+    {{#if deprecated}}
+        <dt class="important tag-deprecated">Deprecated:</dt>
+        <dd>
+            {{ deprecated }}
+        </dd>
+    {{/if}}
+
+    {{#if copyright}}
+        <dt class="tag-copyright">Copyright:</dt>
+        <dd class="tag-copyright">
+            {{ copyright }}
+        </dd>
+    {{/if}}
+
+    {{#if license}}
+        <dt class="tag-license">License:</dt>
+        <dd class="tag-license">
+            {{ license }}
+        </dd>
+    {{/if}}
+
+    {{#if defaultvalue}}
+        <dt class="tag-default">Default Value:</dt>
+        <dd class="tag-default">
+            {{#if defaultvalue}}
+                {{#if_is_code defaultvaluetype}}
+                    <pre class="prettyprint">
+                        <code>
+                            {{ defaultvalue }}
+                        </code>
+                    </pre>
+                {{ else }}
+                    {{ defaultvalue }}
+                {{/if_is_code}}
+            {{/if}}
+        </dd>
+    {{/if}}
+
+    {{#if_size see}}
+        <dt class="tag-see">See:</dt>
+        <dd class="tag-see">
+            <ul>
+                {{#each see}}
+                    <li>
+                        {{#linkTo this}}
+                            <a href="{{ url }}" target="_blank">
+                                {{ name }}
+                            </a>
+                        {{/linkTo}}
+                    </li>
+                {{/each}}
+            </ul>
+        </dd>
+    {{/if_size}}
+
+    {{#if_size todo}}
+        <dt class="tag-todo">TODO:</dt>
+        <dd class="tag-todo">
+            <ul>
+                {{#each todo}}
+                    <li>
+                        {{ this }}
+                    </li>
+                {{/each}}
+            </ul>
+        </dd>
+    {{/if_size}}
+</dl>

@@ -1,0 +1,52 @@
+<ul class="params">
+    {{#each this}}
+        <li class="param">
+            <p class="param-name">
+                {{ name }}
+            </p>
+            
+            <div class="param-type">
+                Type: {{> type type.names}}
+
+                {{#if_any optional nullable variable}}
+                    <ul class="param-attributes">
+                        {{#if optional}}
+                            <li class="param-attribute">
+                                optional
+                            </li>
+                        {{/if}}
+
+                        {{#if nullable}}
+                            <li class="param-attribute">
+                                nullable
+                            </li>
+                        {{/if}}
+
+                        {{#if variable}}
+                            <li class="param-attribute">
+                                repeatable
+                            </li>
+                        {{/if}}
+                    </ul>
+                {{/if_any}}
+            </div>
+
+            <div class="default">
+                {{#if defaultvalue}}
+                    {{ defaultvalue }}
+                {{/if}}
+            </div>
+
+            <p class="description param-description">
+                {{ description }}
+            </p>
+
+            <p class="param-properties">
+                {{#if subparams}}
+                    <h6>Properties</h6>
+                    {{> params subparams}}
+                {{/if}}
+            </p>
+        </li>
+    {{/each}}
+</ul>
