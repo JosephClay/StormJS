@@ -1,4 +1,4 @@
-/*! StormJS - v0.0.8 - 2014-03-26
+/*! Storm.JS - v0.0.8 - 2014-04-21
  * https://github.com/JosephClay/StormJS
  * Copyright (c) 2012-2014 Joe Clay; Licensed  */
 (function(root, _, Signal, undefined) {
@@ -68,7 +68,7 @@ var _stringFormat = (function() {
 
 	return function(str, fill) {
 		return str.replace(_REGEX, function(capture, value) {
-			return fill[value] || '';
+			return _exists(fill[value]) ? fill[value] + '' : '';
 		});
 	};
 
@@ -135,9 +135,11 @@ var _mixin = function(name, prop) {
 	Storm[name] = prop;
 };
 
+
 /**
- * Protect Storm from mixins that would overwrite pre-existing keys.
- * @function Storm.mixin
+ * Allows you to extend Storm with your own methods, classes and modules.
+ * Pass a hash of `{name: function}` definitions to have your functions added.
+ * @namespace Storm.mixin
  * @param  {String|Object} name Name of the object
  * @param  {Object}        prop The object to mixin
  */
@@ -197,8 +199,9 @@ var _uniqId = Storm.uniqId = (function() {
 	 * @function Storm.uniqIdStr
 	 * @param  {String} prefix String to prepend the generated ID number with.  Also used to scope (namespace) the unique ID number.
 	 * @return {String} Unique ID number prefixed with the given string.
+	 * @private
 	 */
-	_uniqIdStr = Storm.uniqIdStr = function(prefix) {
+	_uniqIdStr = function(prefix) {
 		return (prefix || 'id') + '' + _uniqId(prefix);
 	};
 
@@ -209,7 +212,7 @@ var _uniqId = Storm.uniqId = (function() {
 
 /**
  * Prototypical class extension
- * From: https://github.com/JosephClay/Extend.git
+ * @see {@link https://github.com/JosephClay/Extend.git Extend}
  * @param {Function} [constructor]
  * @param {Object}   [extension]
  * @function Storm.Extend
@@ -248,11 +251,9 @@ var Extend = Storm.Extend = function(constructor, extension) {
 // Events ###########################################################################
 
 /**
- * Proxy to Signal. Use "Events" internally
- * so that it's easier to change to a different
- * pub/sub system if need be
+ * Proxy to Signal.
  * @class Storm.Events
- * @see Signal
+ * @see {@link https://github.com/JosephClay/Signal Signal}
  */
 var Events = Storm.Events = Signal.core;
 
@@ -306,7 +307,7 @@ var _PROMISE = 'Promise',
 
 /**
  * A lightweight implementation of promises.
- * API based on jQuery.promise: https://api.jquery.com/promise/
+ * API based on {@link https://api.jquery.com/promise/ jQuery.promises}
  * @class Storm.Promise
  */
 var Promise = Storm.Promise = function() {
@@ -557,9 +558,9 @@ Promise.prototype = /** @lends Storm.Promise# */ {
 // When #############################################################################
 
 /**
- * When to go with Promise. Used by calling Storm.when() and passing
+ * When to go with Promise. Used by calling `Storm.when()` and passing
  * promises to listen to. Storm.when can be chained with multiple calls
- * e.g. Storm.when(p1, p2, p3).then(func).then(func).done(func).always(func);
+ * e.g. `Storm.when(p1, p2, p3).then(func).then(func).done(func).always(func);`
  * @function Storm.when
  * @param {...Storm.Promise} promises
  * @return {Storm.Promise} A new promise that resolves when all of the given <code>promises</code> resolve.
@@ -715,25 +716,18 @@ var When = Storm.when = (function(Promise) {
 }());
 
 // Date.now polyfill
-if (!Date.now) {
-	Date.now = function () {
+var _now = (function(Date) {
+
+	return Date.now || function() {
 		return new Date().valueOf();
 	};
-}
+
+}(Date));
 
 /**
- * Hook into requestAnimationFrame through Storm. Keeps
- * a single raf so that there aren't multiple calls or miss-calls
- * that would cause raf from functioning, e.g.:
- *
- * var update = function() { raf(update); };
- * raf(update);
- *
- * later in the application:
- * raf(update);
- *
- * Also automatically calls TWEEN if it's present
- * https://github.com/sole/tween.js/
+ * A hook into a polyfilled `requestAnimationFrame`.
+ * Keeps a single raf that can be hooked into and
+ * prevent multiple implementations of raf.
  *
  * @namespace Storm.tick
  */
@@ -784,7 +778,7 @@ Storm.tick = (function() {
 			var idx = 0,
 				length = _loop.length;
 
-			_e.now = Date.now();
+			_e.now = _now();
 
 			while (idx < length) {
 				_loop[idx](_e);
@@ -798,7 +792,7 @@ Storm.tick = (function() {
 
 	return /** @lends Storm.tick */ {
 		/**
-		 * Add a function to requestAnimationFrame.
+		 * Add a function to `raf`.
 		 * @param  {Function|Array.<Function>} func A function or an array of functions to hook.
 		 * @return {Id|Array.<Id>} Unique ID assigned to the hook, or an array of unique IDs if <code>func</code> was an array of functions.
 		 */
@@ -824,7 +818,7 @@ Storm.tick = (function() {
 		},
 
 		/**
-		 * Remove a function from requestAnimationFrame.
+		 * Remove a function from `raf`.
 		 * @param  {Id} id Hook function ID to remove.
 		 * @return {Storm.tick}
 		 */
@@ -843,7 +837,7 @@ Storm.tick = (function() {
 		},
 
 		/**
-		 * Start requestAnimationFrame calling hooked functions.
+		 * Start `raf` calling hooked functions.
 		 * @return {Storm.tick}
 		 */
 		start: function() {
@@ -855,7 +849,7 @@ Storm.tick = (function() {
 		},
 
 		/**
-		 * Stop requestAnimationFrame from calling hooked functions.
+		 * Stop `raf` from calling hooked functions.
 		 * @return {Storm.tick}
 		 */
 		stop: function() {
@@ -949,13 +943,12 @@ var _REQUEST = 'request',
  * Ajax tracking mechanism. Operates via events
  * passing the AjaxCalls that trigger the events.
  *
- * Possible events are: 'send', done', 'fail', 'abort', 'always'
- *
- * @type {Storm.Events}
- * @memberOf Storm
+ * Possible events are: `send`, `done`, `fail`, `abort`, `always`
+ * 
+ * @namespace Storm.request
  */
 Storm.request = Events.construct();
-_.extend(Storm.request, {
+_.extend(Storm.request, /** @lends Storm.request# */ {
 
 	/**
 	 * Get the requests in-progress.
@@ -1024,9 +1017,8 @@ var _AJAX_CALL = 'AjaxCall',
 	};
 
 /**
- * A wrapper for an ajax "call" configuration (referred to as a call
- * within AjaxCall). This object can ajax, abort and be passed
- * around the application.
+ * A wrapper for an ajax `call` configuration (referred to as a "call"). 
+ * This object can ajax, abort and be passed around the application.
  *
  * @class Storm.AjaxCall
  * @param {Object} callObj
@@ -1147,7 +1139,8 @@ AjaxCall.prototype = /** @lends Storm.AjaxCall# */ {
 	/**
 	 * Determine if the classification passed is the same as this
 	 * call's classification
-	 * @param  {Storm.AjaxCall.CLASSIFICATION} type {@link Storm.AjaxCall.CLASSIFICATION}
+	 * @type {@link Storm.AjaxCall.CLASSIFICATION}
+	 * @param  {Storm.AjaxCall.CLASSIFICATION} classification
 	 * @return {Boolean}
 	 */
 	isClassification: function(type) {
@@ -1177,9 +1170,14 @@ AjaxCall.prototype = /** @lends Storm.AjaxCall# */ {
 	/**
 	 * Uses {@link Storm.ajax} to ajax the stored call object
 	 * @param  {Storm.Promise} [promise]
-	 * @return {Storm.ajax} request
+	 * @return {Storm.Promise} request
 	 */
 	send: function(promise) {
+		promise = promise || new Storm.Promise();
+
+		// Ensure the promise has the ability to abort
+		promise.abort = _.bind(this.abort, this);
+
 		var self = this,
 			call = this._call,
 			params = _.extend({}, call, {
@@ -1220,24 +1218,24 @@ AjaxCall.prototype = /** @lends Storm.AjaxCall# */ {
 
 		var request = this.request = Storm.ajax.ajax(params);
 
-		return request;
+		return promise;
 	},
 
 	/**
-	 * Fired when an xhr request is successful.
+	 * Fired when an `xhr` request is successful.
 	 * Feel free to override.
 	 * @param  {Object|String|null} data
 	 */
 	success: function(data) {},
 
 	/**
-	 * Fired when an xhr request completes.
+	 * Fired when an `xhr` request completes.
 	 * Feel free to override.
 	 */
 	error: function(req, status, err) {},
 
 	/**
-	 * Fired when an xhr request completes.
+	 * Fired when an `xhr` request completes.
 	 * Feel free to override.
 	 * @function
 	 */
@@ -1281,9 +1279,9 @@ AjaxCall.prototype = /** @lends Storm.AjaxCall# */ {
 var _DATA_CONTEXT = 'DataContext';
 
 /**
- * Used to construct AjaxCalls to communicate with the server.
- * Intended to be a central location for configuration data
- * to get and send data about a specific model/collection type
+ * Used to construct ajax calls to communicate with the server.
+ * Is a central location for configuration data
+ * to get and send data about models and collections
  * @class Storm.DataContext
  */
 var DataContext = Storm.DataContext = function() {
@@ -1312,8 +1310,8 @@ _.extend(DataContext, /** @lends Storm.DataContext */ {
 	}()),
 
 	/**
-	 * Add settings to the global DataContext.settings
-	 * object. Basically a protected _.extend
+	 * Add settings to the global `DataContext.settings`
+	 * object. Basically a protected `_.extend`
 	 * @param {Object} settings
 	 * @return {Object} DataContext.settings
 	 */
@@ -1322,7 +1320,7 @@ _.extend(DataContext, /** @lends Storm.DataContext */ {
 	},
 
 	/**
-	 * Get a setting from the global DataContext.settings
+	 * Get a setting from the global `DataContext.settings`
 	 * @param {String} setting
 	 * @return {*} value
 	 */
@@ -1359,11 +1357,12 @@ DataContext.prototype = /** @lends Storm.DataContext# */ {
 	callTemplate: {},
 
 	/**
-	 * @instance
-	 * @see Storm.DataContext.getSetting
+	 * Get a setting from the global `DataContext.settings`
+	 * @param {String} setting
+	 * @return {*} value
 	 */
-	getSetting: function() {
-		return DataContext.getSetting.apply(arguments);
+	getSetting: function(setting) {
+		return DataContext.getSetting(setting);
 	},
 
 	/**
@@ -1419,7 +1418,7 @@ DataContext.prototype = /** @lends Storm.DataContext# */ {
  * templates
  *
  * The template engine only has one requirement,
- * a "compile" function that returns a render function.
+ * a `compile` function that returns a render function.
  * The render function will be called with the data
  * as the first parameter.
  *
@@ -1558,7 +1557,7 @@ Storm.template = (function() {
 
 		/**
 		 * Sets the client-side templating engine
-		 * for Storm.template to use.
+		 * for `Storm.template` to use.
 		 * @param {Object} engine
 		 */
 		setEngine: function(engine) {
@@ -1606,6 +1605,7 @@ var _VIEW = 'View';
  * @class Storm.View
  * @extends Storm.Events
  * @param {Object} [opts]
+ * @example a.js
  */
 var View = Storm.View = function(opts) {
 	Events.call(this);
@@ -1632,7 +1632,7 @@ _.extend(View.prototype, Events.prototype, /** @lends Storm.View# */ {
 	constructor: View,
 
 	/**
-	 * Get the private id of the Model
+	 * Get the private id of the view
 	 * @return {Number} id
 	 */
 	getId: function() { return this._id; },
@@ -1689,8 +1689,8 @@ var _MODEL = 'Model';
 /**
  * The base data object for the application. Stores
  * and protects a piece of data and gives an interface
- * to follow and manipulate the data. Works in conjunction
- * with a Collection to organize data into sets
+ * to manipulate it. Works in conjunction
+ * with a Collection to organize data into sets.
  *
  * @class Storm.Model
  * @extends Storm.Events
@@ -1743,11 +1743,13 @@ var Model = Storm.Model = function(data, opts) {
 	 */
 	this.__originalData = this.__previousData = this._duplicate(data);
 
-	/**
-	 * If there's a Comparator, then bind it to this model
-	 * @type {Storm.Comparator}
-	 */
-	if (this.comparator) { this.comparator.bind(this); }
+	if (this.comparator) {
+		/**
+		 * If there's a Comparator, then bind it to this model
+		 * @type {Storm.Comparator}
+		 */
+		this.comparator = _.bind(this.comparator, this);
+	}
 };
 
 _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
@@ -1757,12 +1759,12 @@ _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 	 * If not supporting complex data types (default), the model
 	 * creates a reference-free version of the data to keep the
 	 * data from being contaminated.
-	 *
+	 * 
 	 * If supporting complex data types, non-primitive values
 	 * will be maintained in the model data, but exposes the
 	 * possibility of contaminating the data object by outside
 	 * sources
-	 *
+	 * 
 	 * @type {Boolean}
 	 * @default false
 	 */
@@ -1808,7 +1810,7 @@ _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 	/**
 	 * Adds a getter for the property
 	 * @param  {String}   prop
-	 * @param  {Function} func <code>{*} function({*} value)</code>
+	 * @param  {Function} func
 	 * @return {Storm.Model}
 	 */
 	getter: function(prop, func) {
@@ -1821,7 +1823,7 @@ _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 	/**
 	 * Adds a setter for the property
 	 * @param  {String}   prop
-	 * @param  {Function} func <code>{*} function({*} value)</code>
+	 * @param  {Function} func
 	 * @return {Storm.Model}
 	 */
 	setter: function(prop, func) {
@@ -1871,7 +1873,7 @@ _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 
 	/**
 	 * Sets the value of a property in the Model. Values can be set
-	 * in key-value pairs in an object, or as string + value as
+	 * in key-value pairs in an object, or as string/value as
 	 * separate parameters
 	 * @param {String|Object} prop
 	 * @param {*} data
@@ -1937,7 +1939,7 @@ _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 
 	/**
 	 * Removes properties from the model data. Only works to remove
-	 * data the pre-exists in the data. No remove event will be fired
+	 * items that pre-exist in the data. No remove event will be fired
 	 * if the property has an undefined value. An array can be passed
 	 * to remove multiple properties or a string as a single parameter
 	 * @param {String|Array.<String>} prop
@@ -2005,12 +2007,12 @@ _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 	 * If not supporting complex data types (default), _duplicate
 	 * creates a reference-free version of the data passed
 	 * using native JSON.parse and JSON.stringify.
-	 *
+	 * 
 	 * If supporting complex data types, underscore's _.clone
 	 * method is used, which will not create a reference-free
 	 * version of complex data types, which may lead to pollution
 	 * of the data, but will allow non-primitive values
-	 *
+	 * 
 	 * @param  {*} data
 	 * @return {*}
 	 * @private
@@ -2100,7 +2102,7 @@ _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 
 	/**
 	 * Compares this model to another. Used by Collection for
-	 * sorting. Checks for Storm.Comparator to use natively but
+	 * sorting. Checks for `Storm.Comparator` to use natively but
 	 * can be overwritten
 	 * @param  {Storm.Model} comparisonModel
 	 * @return {Number} sort order (1, 0, -1)
@@ -2258,11 +2260,10 @@ _.extend(Comparator, /** @lends Storm.Comparator */ {
 	 * compare against.
 	 * @type {String}
 	 */
-	HOISTING_STR: '___',
+	HOIST: '___',
 
 	/**
-	 * Expose _SORT as its values are needed
-	 * in order to setup specific Comparators
+	 * Sort types
 	 * @readonly
 	 * @enum {Number}
 	 * @default alphabetical
@@ -2339,7 +2340,7 @@ Comparator.prototype = /** @lends Storm.Comparator# */ {
 	 */
 	alphabetical: function(model) {
 		var value = model.get(this._key);
-		value = _.exists(value) ? (value + '').toLocaleLowerCase() : Comparator.HOISTING_STR;
+		value = _.exists(value) ? (value + '').toLocaleLowerCase() : Comparator.HOIST;
 		return value;
 	},
 
@@ -2432,7 +2433,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 	Model: Model,
 
 	/**
-	 * Get the private id of the Collection
+	 * Get the private id of the collection
 	 * @return {Id} id
 	 */
 	getId: function() {
@@ -2476,7 +2477,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 
 	/**
 	 * Return the length of the models,
-	 * same as getModels().length
+	 * same as `getModels().length`
 	 * @return {Number} length
 	 */
 	length: function() {
@@ -2498,7 +2499,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 	},
 
 	/**
-	 * Overwrites the private _models array
+	 * Overwrites the private models array
 	 * with a new array of models
 	 * @param  {Array.<Storm.Model>} models
 	 * @return {Array.<Storm.Model>}
@@ -2533,7 +2534,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 
 	/**
 	 * Add models to the collection, creating new models
-	 * if the model is not an instance of Storm.Model,
+	 * if the model is not an instance of `Storm.Model`,
 	 * sorting the models and firing events
 	 * @param {Array.<Storm.Model>} models
 	 * @param {Object} [opts]
@@ -2754,7 +2755,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 	},
 
 	/**
-	 * Proxy for where(values, true)
+	 * Proxy for `.where(values, true)`
 	 * @param  {Object} values
 	 * @return {Storm.Model}
 	 */
@@ -2769,7 +2770,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 	 */
 	findById: function(id) {
 		if (!_exists(id)) { return null; }
-		id = (id > -1) === false ? parseInt(id, 10) : id; // make sure id is a number
+		id = _.isNumber(id) ? id : parseInt(id, 10); // make sure id is a number
 
 		var models = this.getModels(),
 			idx = models.length,
@@ -2842,7 +2843,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 	},
 
 	/**
-	 * Similar to Model.retrieve, returns all model data
+	 * Similar to `Storm.Model.retrieve`, returns all model data
 	 * in the collection
 	 * @return {Array.<Object>}
 	 */
@@ -2975,7 +2976,11 @@ var Module = Storm.Module = function() {
 
 _.extend(Module.prototype, Events.prototype, /** @lends Storm.Module# */ {
 	constructor: Module,
-
+	
+	/**
+	 * Get the private id of the Module
+	 * @return {Number} id
+	 */
 	getId: function() {
 		return this._id;
 	},
@@ -3098,7 +3103,7 @@ Cache.prototype = /** @lends Storm.Cache# */ {
 	},
 
 	/**
-	 * Resets the cache, emptying the cache
+	 * Resets the cache, emptying it 
 	 * and clearing any expirations
 	 * @return {Storm.Cache}
 	 */
@@ -3256,12 +3261,12 @@ var _STORAGE = 'Storage',
 	};
 
 /**
- * Based off of Remy's polyfill: https://gist.github.com/remy/350433
+ * Based off of {@link https://gist.github.com/remy/350433 Remy's} polyfill. 
  *
- * Adapted to use the same Storage object for both
- * local and session storage (for simplicity)
+ * Adapted to use the same Storage object for both local and session storage.
+ * 
  * @class Storm.Storage
- * @param {Storm.Storage.TYPE} type
+ * @param {Storm.Storage.TYPE} [type]
  * @param {Object} [opts]
  */
 var Storage = Storm.Storage = function(type, opts) {
@@ -3426,7 +3431,7 @@ Storage.prototype = /** @lends Storm.Storage# */ {
 	set: function() { this.setItem.apply(this, arguments); },
 
 	/**
-	 * @todo Document me!
+	 * Remove an item from storage by key
 	 * @param {String} key
 	 * @returns {*}
 	 */
@@ -3442,7 +3447,7 @@ Storage.prototype = /** @lends Storm.Storage# */ {
 		this._setCookieData();
 	},
 	/**
-	 * @todo Document me!
+	 * Remove an item from storage by key
 	 * @param {String} key
 	 * @returns {Storm.Storage}
 	 */
@@ -3573,9 +3578,10 @@ Events.extend = Cache.extend = AjaxCall.extend = DataContext.extend = Model.exte
 // No Conflict ######################################################################
 
 /**
- * Return the "Storm" global to its previous assignment
+ * Return the `Storm` global to its previous assignment
  * and return Storm back to caller.
  * @return {Storm}
+ * @namespace Storm.noConflict
  */
 Storm.noConflict = function() {
 	root.Storm = previousStorm;
