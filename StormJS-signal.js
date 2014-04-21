@@ -1943,7 +1943,6 @@ var _VIEW = 'View';
  * @class Storm.View
  * @extends Storm.Events
  * @param {Object} [opts]
- * @example a.js
  */
 var View = Storm.View = function(opts) {
 	Events.call(this);
