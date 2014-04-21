@@ -1,0 +1,53 @@
+.members {
+	.radius(5px);
+
+	margin: 0 20px 20px 0;
+	padding: 20px;
+
+	border: 1px solid #ccc;
+
+	background: #eee;
+
+	.description { padding: 0; }
+
+	.tag-source {
+		position: absolute;
+		#pos.br(100%, 0);
+	}
+}
+	.member {
+		border-bottom: 1px solid #ccc;
+		
+		padding: 10px 0;
+
+		&:first-child {
+			padding-top: 0;
+		}
+		&:last-child {
+			padding-bottom: 0;
+			border: none;
+		}
+	}
+		.member-name {
+			margin: 0; 
+			
+			color: #000;
+			font-weight: bold;
+		}
+		.member-type {
+			display: inline;
+			margin: 0;
+		}
+			.member-types,
+				.member-type-item {
+					display: inline;
+				}
+		.member-description {
+			position: relative;
+			margin: 0;
+
+			.prop-name { margin: 0; }
+			.description { margin: 0; }
+
+			.details { padding: 0 0 0 20px; }
+		}

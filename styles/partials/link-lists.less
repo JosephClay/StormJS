@@ -1,0 +1,33 @@
+.link-lists {
+	.subsection-title {
+		font-size: 15px;
+		border-bottom: 1px solid #ccc;
+	}
+	.subsection-list {
+		margin: 0 0 20px 0;
+
+		font-size: 13px;
+	}
+}
+	.link-list {
+		.subsection-title {}
+			.subsection-list {
+				position: relative;
+
+				dt, a { display: inline-block; }
+				dt { margin: 0 5px 5px 0; }
+				a {
+					padding: 3px 10px;
+
+					.radius(3px);
+
+					color: #fff;
+
+					background: #04436f;
+					
+					&:hover {
+						background: lighten(#04436f, 10%);
+					}
+				}
+			}
+	}

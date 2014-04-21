@@ -1,0 +1,89 @@
+@import "core/reset";
+@import "core/mixins";
+@import "core/utilities";
+
+.droid() {
+	font-family: 'Droid Sans', sans-serif;
+}
+.exo() {
+	font-family: 'Exo', sans-serif;
+}
+.sans-serif() {
+	font-family: sans-serif;
+}
+
+// =General
+// =========================================================================================================================================================
+html, body { position: relative; }
+html { background: #fff; }
+
+// =Text
+// =========================================================================================================================================================
+body {
+	color: #444;
+	line-height: 21px;
+	font-size: 15px;
+	.droid();
+}
+
+h1, h2, h3, h4, h5, h6 { margin: 0 0 15px 0; }
+h1 { color: #0f78a3; font-size: 36px; }
+h2 { font-size: 21px; }
+
+p { margin: 0 0 20px 0; }
+a { color: #04436f; }
+
+
+.script-logo {
+	path { fill: #04436f; }
+}
+.script-title {
+	color: #04436f;
+	.exo();
+}
+.script-version {
+	position: absolute;
+	
+	#pos.br(5px);
+
+	line-height: 11px;
+	font-size: 11px;
+}
+
+.sep {
+	border-bottom: 1px solid #ccc;
+}
+
+.code {
+	padding: 0 5px;
+
+	border: 1px solid darken(#f3f3f3, 10%);
+	.radius(2px);
+
+	background: #f3f3f3;
+}
+
+@import "sections/sidebar";
+@import "sections/nav";
+@import "sections/container";
+@import "sections/header";
+@import "sections/main";
+@import "sections/forkme";
+@import "sections/footer";
+@import "sections/code";
+@import "sections/source-page";
+@import "sections/buttons";
+
+@import "partials/method";
+@import "partials/ancestors";
+@import "partials/type-sig";
+@import "partials/params";
+@import "partials/tag-source";
+@import "partials/tag-default";
+@import "partials/link-lists";
+@import "partials/klass";
+@import "partials/namespace";
+@import "partials/see";
+@import "partials/members";
+
+@import (less) "libs/prettify.css";

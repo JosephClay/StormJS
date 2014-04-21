@@ -1,0 +1,60 @@
+// Toggling content
+// -------------------------
+.hide { display: none !important; }
+.show { display: block !important; }
+.hide-text {
+	.hide-text();
+}
+
+// Display  --------------------------------
+.block { display: block; }
+.inline-block { display: inline-block; }
+.inline { display: inline; }
+
+// Affix  --------------------------------
+.affix { position: fixed; }
+
+// Image Replacement  --------------------------------
+.ir {
+	.ir();
+}
+
+// Hiding  --------------------------------
+.hidden { display: none !important; visibility: hidden; }
+.visuallyhidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; border: 0; clip: rect(0 0 0 0);
+	&.focusable:active, &.focusable:focus { position: static; width: auto; height: auto; overflow: visible; margin: 0; clip: auto; }
+}
+.invisible { visibility: hidden; } // Hide visually and from screenreaders, but maintain layout
+
+// Clearing  --------------------------------
+.clearfix {
+  .clearfix();
+}
+.clear-left { clear: left; }
+.clear-right { clear: right; }
+.clear-both { clear: both; }
+
+// Floats  --------------------------------
+.pull-right { float: right !important; }
+.pull-left { float: left !important; }
+.no-float { float: none !important; }
+
+// Ellipsis  --------------------------------
+.ellipsis {
+	.ellipsis();
+}
+
+// Selection  --------------------------------
+.prevent-selection {
+	.user-select(none);
+}
+
+.prevent-text-breakouts {
+	-ms-word-break: break-all;
+	word-break: break-all;
+	word-break: break-word;
+	
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	hyphens: auto;
+}

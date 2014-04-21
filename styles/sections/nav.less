@@ -1,0 +1,44 @@
+.func-list {
+		padding: 0;
+		margin: 0 0 10px 0;
+	}
+		.func-item {
+			margin: 0;
+
+			list-style-type: none;
+		}
+			.func-link {
+				display: block;
+
+				margin: 0 0 0 10px;
+				padding: 0 20px;
+
+				.radius(2px 0 0 2px);
+
+				color: #444;
+				line-height: 25px;
+				font-size: 15px;
+
+				&.top-level {
+					font-weight: bold;
+				}
+				&.sub-level {
+					padding-left: 30px;
+				}
+
+				&.active, &.active:hover {
+					border-top: 1px solid #1992d0;
+					border-bottom: 1px solid #033aa9;
+
+					color: #fff;
+					text-shadow: -1px -1px 0 #005599;
+
+					#gradient.vertical(#0086cc, #0044cc);
+				}
+
+				&:hover {
+					color: #000;
+
+					background: darken(#e5eaf4, 5%);
+				}
+			}

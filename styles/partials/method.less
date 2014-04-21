@@ -1,0 +1,72 @@
+.method-definition {
+	position: relative;
+
+	margin: 0 0 20px 0;
+
+	.description,
+	.details {
+		padding: 0 20px;
+	}
+
+	.method-tag-source {
+		margin-top: -5px;
+	}
+}
+	.method-definition-header {
+		position: relative;
+		.clearfix();
+
+		margin: 0 0 10px 0;
+		padding: 5px 20px;
+
+		border: 1px solid #aaa;
+		.radius(5px);
+
+		line-height: 30px;
+
+		background: #f2f2f2;
+	}
+		.method-description {
+			clear: both;
+		}
+		.method-name {
+			float: left;
+			margin: 0;
+		}
+		.method-returns {
+			float: right;
+			margin: 0;
+
+			.sans-serif();
+
+			a {
+				font-weight: bold;
+			}
+		}
+			.return-or { padding: 0 5px; }
+			.return-label {}
+
+		.signature-parameter {
+			&.optional {
+				&:before,
+				&:after {
+					.opacity(0.5);
+					font-weight: normal;
+				}
+
+				&:before { content: '['; }
+				&:after { content: ']'; }
+			}
+		}
+
+		.subsection-methods {
+			.method-definition-header {
+				margin: 0 0 10px 0;
+				padding: 5px 20px;
+
+				border: 1px solid #aaa;
+				.radius(3px);
+
+				line-height: 20px;
+			}
+		}

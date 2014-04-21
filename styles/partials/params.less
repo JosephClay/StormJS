@@ -1,0 +1,47 @@
+.params {
+	.radius(5px);
+
+	margin: 0 20px 20px 20px;
+	padding: 20px;
+
+	border: 1px solid #ccc;
+
+	background: #eee;
+
+	.description { padding: 0; }
+}
+	.param {
+		border-bottom: 1px solid #ccc;
+		
+		padding: 10px 0;
+
+		&:first-child {
+			padding-top: 0;
+		}
+		&:last-child {
+			padding-bottom: 0;
+			border: none;
+		}
+	}
+		.param-name {
+			margin: 0; 
+			
+			color: #000;
+			font-weight: bold;
+		}
+		.param-type { margin: 0; }
+			.param-or-sep {}
+		.param-description { margin: 0; }
+		.param-properties { margin: 0; }
+		.param-attributes {
+			.inline-block();
+
+			margin: 0;
+			padding: 0 0 0 10px;
+
+			.opacity(0.7);
+			
+			li {
+				display: inline;
+			}
+		}
