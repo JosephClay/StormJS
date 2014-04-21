@@ -45,7 +45,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 	Model: Model,
 
 	/**
-	 * Get the private id of the Collection
+	 * Get the private id of the collection
 	 * @return {Id} id
 	 */
 	getId: function() {
@@ -89,7 +89,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 
 	/**
 	 * Return the length of the models,
-	 * same as getModels().length
+	 * same as `getModels().length`
 	 * @return {Number} length
 	 */
 	length: function() {
@@ -111,7 +111,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 	},
 
 	/**
-	 * Overwrites the private _models array
+	 * Overwrites the private models array
 	 * with a new array of models
 	 * @param  {Array.<Storm.Model>} models
 	 * @return {Array.<Storm.Model>}
@@ -146,7 +146,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 
 	/**
 	 * Add models to the collection, creating new models
-	 * if the model is not an instance of Storm.Model,
+	 * if the model is not an instance of `Storm.Model`,
 	 * sorting the models and firing events
 	 * @param {Array.<Storm.Model>} models
 	 * @param {Object} [opts]
@@ -367,7 +367,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 	},
 
 	/**
-	 * Proxy for where(values, true)
+	 * Proxy for `.where(values, true)`
 	 * @param  {Object} values
 	 * @return {Storm.Model}
 	 */
@@ -455,7 +455,7 @@ _.extend(Collection.prototype, Events.prototype, /** @lends Storm.Collection# */
 	},
 
 	/**
-	 * Similar to Model.retrieve, returns all model data
+	 * Similar to `Storm.Model.retrieve`, returns all model data
 	 * in the collection
 	 * @return {Array.<Object>}
 	 */

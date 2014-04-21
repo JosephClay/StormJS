@@ -102,7 +102,7 @@ Cache.prototype = /** @lends Storm.Cache# */ {
 	},
 
 	/**
-	 * Resets the cache, emptying the cache
+	 * Resets the cache, emptying it 
 	 * and clearing any expirations
 	 * @return {Storm.Cache}
 	 */

@@ -34,9 +34,8 @@ var _AJAX_CALL = 'AjaxCall',
 	};
 
 /**
- * A wrapper for an ajax "call" configuration (referred to as a call
- * within AjaxCall). This object can ajax, abort and be passed
- * around the application.
+ * A wrapper for an ajax `call` configuration (referred to as a "call"). 
+ * This object can ajax, abort and be passed around the application.
  *
  * @class Storm.AjaxCall
  * @param {Object} callObj
@@ -240,20 +239,20 @@ AjaxCall.prototype = /** @lends Storm.AjaxCall# */ {
 	},
 
 	/**
-	 * Fired when an xhr request is successful.
+	 * Fired when an `xhr` request is successful.
 	 * Feel free to override.
 	 * @param  {Object|String|null} data
 	 */
 	success: function(data) {},
 
 	/**
-	 * Fired when an xhr request completes.
+	 * Fired when an `xhr` request completes.
 	 * Feel free to override.
 	 */
 	error: function(req, status, err) {},
 
 	/**
-	 * Fired when an xhr request completes.
+	 * Fired when an `xhr` request completes.
 	 * Feel free to override.
 	 * @function
 	 */

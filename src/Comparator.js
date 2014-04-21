@@ -83,11 +83,10 @@ _.extend(Comparator, /** @lends Storm.Comparator */ {
 	 * compare against.
 	 * @type {String}
 	 */
-	HOISTING_STR: '___',
+	HOIST: '___',
 
 	/**
-	 * Expose _SORT as its values are needed
-	 * in order to setup specific Comparators
+	 * Sort types
 	 * @readonly
 	 * @enum {Number}
 	 * @default alphabetical
@@ -164,7 +163,7 @@ Comparator.prototype = /** @lends Storm.Comparator# */ {
 	 */
 	alphabetical: function(model) {
 		var value = model.get(this._key);
-		value = _.exists(value) ? (value + '').toLocaleLowerCase() : Comparator.HOISTING_STR;
+		value = _.exists(value) ? (value + '').toLocaleLowerCase() : Comparator.HOIST;
 		return value;
 	},
 
