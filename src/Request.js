@@ -76,7 +76,7 @@ var _REQUEST = 'request',
  * Ajax tracking mechanism. Operates via events
  * passing the AjaxCalls that trigger the events.
  *
- * Possible events are: 'send', done', 'fail', 'abort', 'always'
+ * Possible events are: `send`, `done`, `fail`, `abort`, `always`
  * 
  * @namespace Storm.request
  */

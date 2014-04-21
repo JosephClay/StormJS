@@ -38,7 +38,7 @@ var _now = (function(Date) {
 }(Date));
 
 /**
- * A hook into a polyfilled requestAnimationFrame.
+ * A hook into a polyfilled `requestAnimationFrame`.
  * Keeps a single raf that can be hooked into and
  * prevent multiple implementations of raf.
  *
@@ -105,7 +105,7 @@ Storm.tick = (function() {
 
 	return /** @lends Storm.tick */ {
 		/**
-		 * Add a function to requestAnimationFrame.
+		 * Add a function to `raf`.
 		 * @param  {Function|Array.<Function>} func A function or an array of functions to hook.
 		 * @return {Id|Array.<Id>} Unique ID assigned to the hook, or an array of unique IDs if <code>func</code> was an array of functions.
 		 */
@@ -131,7 +131,7 @@ Storm.tick = (function() {
 		},
 
 		/**
-		 * Remove a function from requestAnimationFrame.
+		 * Remove a function from `raf`.
 		 * @param  {Id} id Hook function ID to remove.
 		 * @return {Storm.tick}
 		 */
@@ -150,7 +150,7 @@ Storm.tick = (function() {
 		},
 
 		/**
-		 * Start requestAnimationFrame calling hooked functions.
+		 * Start `raf` calling hooked functions.
 		 * @return {Storm.tick}
 		 */
 		start: function() {
@@ -162,7 +162,7 @@ Storm.tick = (function() {
 		},
 
 		/**
-		 * Stop requestAnimationFrame from calling hooked functions.
+		 * Stop `raf` from calling hooked functions.
 		 * @return {Storm.tick}
 		 */
 		stop: function() {

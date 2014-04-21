@@ -2,7 +2,7 @@
 
 /**
  * Prototypical class extension
- * From: https://github.com/JosephClay/Extend.git
+ * @see {@link https://github.com/JosephClay/Extend.git Extend}
  * @param {Function} [constructor]
  * @param {Object}   [extension]
  * @function Storm.Extend

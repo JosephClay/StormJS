@@ -20,12 +20,12 @@ var _STORAGE = 'Storage',
 	};
 
 /**
- * Based off of Remy's polyfill: https://gist.github.com/remy/350433
+ * Based off of {@link https://gist.github.com/remy/350433 Remy's} polyfill. 
  *
- * Adapted to use the same Storage object for both
- * local and session storage (for simplicity)
+ * Adapted to use the same Storage object for both local and session storage.
+ * 
  * @class Storm.Storage
- * @param {Storm.Storage.TYPE} type
+ * @param {Storm.Storage.TYPE} [type]
  * @param {Object} [opts]
  */
 var Storage = Storm.Storage = function(type, opts) {
@@ -190,7 +190,7 @@ Storage.prototype = /** @lends Storm.Storage# */ {
 	set: function() { this.setItem.apply(this, arguments); },
 
 	/**
-	 * @todo Document me!
+	 * Remove an item from storage by key
 	 * @param {String} key
 	 * @returns {*}
 	 */
@@ -206,7 +206,7 @@ Storage.prototype = /** @lends Storm.Storage# */ {
 		this._setCookieData();
 	},
 	/**
-	 * @todo Document me!
+	 * Remove an item from storage by key
 	 * @param {String} key
 	 * @returns {Storm.Storage}
 	 */

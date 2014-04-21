@@ -9,9 +9,9 @@
 var _DATA_CONTEXT = 'DataContext';
 
 /**
- * Used to construct AjaxCalls to communicate with the server.
- * Intended to be a central location for configuration data
- * to get and send data about a specific model/collection type
+ * Used to construct ajax calls to communicate with the server.
+ * Is a central location for configuration data
+ * to get and send data about models and collections
  * @class Storm.DataContext
  */
 var DataContext = Storm.DataContext = function() {
@@ -40,8 +40,8 @@ _.extend(DataContext, /** @lends Storm.DataContext */ {
 	}()),
 
 	/**
-	 * Add settings to the global DataContext.settings
-	 * object. Basically a protected _.extend
+	 * Add settings to the global `DataContext.settings`
+	 * object. Basically a protected `_.extend`
 	 * @param {Object} settings
 	 * @return {Object} DataContext.settings
 	 */
@@ -50,7 +50,7 @@ _.extend(DataContext, /** @lends Storm.DataContext */ {
 	},
 
 	/**
-	 * Get a setting from the global DataContext.settings
+	 * Get a setting from the global `DataContext.settings`
 	 * @param {String} setting
 	 * @return {*} value
 	 */
@@ -87,11 +87,12 @@ DataContext.prototype = /** @lends Storm.DataContext# */ {
 	callTemplate: {},
 
 	/**
-	 * @instance
-	 * @see Storm.DataContext.getSetting
+	 * Get a setting from the global `DataContext.settings`
+	 * @param {String} setting
+	 * @return {*} value
 	 */
-	getSetting: function() {
-		return DataContext.getSetting.apply(arguments);
+	getSetting: function(setting) {
+		return DataContext.getSetting(setting);
 	},
 
 	/**

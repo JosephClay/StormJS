@@ -6,7 +6,7 @@
  * templates
  *
  * The template engine only has one requirement,
- * a "compile" function that returns a render function.
+ * a `compile` function that returns a render function.
  * The render function will be called with the data
  * as the first parameter.
  *
@@ -145,7 +145,7 @@ Storm.template = (function() {
 
 		/**
 		 * Sets the client-side templating engine
-		 * for Storm.template to use.
+		 * for `Storm.template` to use.
 		 * @param {Object} engine
 		 */
 		setEngine: function(engine) {

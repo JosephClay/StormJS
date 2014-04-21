@@ -25,7 +25,11 @@ var Module = Storm.Module = function() {
 
 _.extend(Module.prototype, Events.prototype, /** @lends Storm.Module# */ {
 	constructor: Module,
-
+	
+	/**
+	 * Get the private id of the Module
+	 * @return {Number} id
+	 */
 	getId: function() {
 		return this._id;
 	},

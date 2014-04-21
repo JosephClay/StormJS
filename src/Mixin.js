@@ -14,9 +14,11 @@ var _mixin = function(name, prop) {
 	Storm[name] = prop;
 };
 
+
 /**
- * Protect Storm from mixins that would overwrite pre-existing keys.
- * @function Storm.mixin
+ * Allows you to extend Storm with your own methods, classes and modules.
+ * Pass a hash of `{name: function}` definitions to have your functions added.
+ * @namespace Storm.mixin
  * @param  {String|Object} name Name of the object
  * @param  {Object}        prop The object to mixin
  */

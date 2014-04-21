@@ -1,9 +1,9 @@
 // When #############################################################################
 
 /**
- * When to go with Promise. Used by calling Storm.when() and passing
+ * When to go with Promise. Used by calling `Storm.when()` and passing
  * promises to listen to. Storm.when can be chained with multiple calls
- * e.g. Storm.when(p1, p2, p3).then(func).then(func).done(func).always(func);
+ * e.g. `Storm.when(p1, p2, p3).then(func).then(func).done(func).always(func);`
  * @function Storm.when
  * @param {...Storm.Promise} promises
  * @return {Storm.Promise} A new promise that resolves when all of the given <code>promises</code> resolve.

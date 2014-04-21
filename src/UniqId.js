@@ -28,7 +28,8 @@ var _uniqId = Storm.uniqId = (function() {
 	 * @function Storm.uniqIdStr
 	 * @param  {String} prefix String to prepend the generated ID number with.  Also used to scope (namespace) the unique ID number.
 	 * @return {String} Unique ID number prefixed with the given string.
+	 * @private
 	 */
-	_uniqIdStr = Storm.uniqIdStr = function(prefix) {
+	_uniqIdStr = function(prefix) {
 		return (prefix || 'id') + '' + _uniqId(prefix);
 	};

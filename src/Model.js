@@ -11,8 +11,8 @@ var _MODEL = 'Model';
 /**
  * The base data object for the application. Stores
  * and protects a piece of data and gives an interface
- * to follow and manipulate the data. Works in conjunction
- * with a Collection to organize data into sets
+ * to manipulate it. Works in conjunction
+ * with a Collection to organize data into sets.
  *
  * @class Storm.Model
  * @extends Storm.Events
@@ -65,11 +65,13 @@ var Model = Storm.Model = function(data, opts) {
 	 */
 	this.__originalData = this.__previousData = this._duplicate(data);
 
-	/**
-	 * If there's a Comparator, then bind it to this model
-	 * @type {Storm.Comparator}
-	 */
-	if (this.comparator) { _.bind(this.comparator, this); }
+	if (this.comparator) {
+		/**
+		 * If there's a Comparator, then bind it to this model
+		 * @type {Storm.Comparator}
+		 */
+		this.comparator = _.bind(this.comparator, this);
+	}
 };
 
 _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
@@ -79,12 +81,12 @@ _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 	 * If not supporting complex data types (default), the model
 	 * creates a reference-free version of the data to keep the
 	 * data from being contaminated.
-	 *
+	 * 
 	 * If supporting complex data types, non-primitive values
 	 * will be maintained in the model data, but exposes the
 	 * possibility of contaminating the data object by outside
 	 * sources
-	 *
+	 * 
 	 * @type {Boolean}
 	 * @default false
 	 */
@@ -130,7 +132,7 @@ _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 	/**
 	 * Adds a getter for the property
 	 * @param  {String}   prop
-	 * @param  {Function} func <code>{*} function({*} value)</code>
+	 * @param  {Function} func
 	 * @return {Storm.Model}
 	 */
 	getter: function(prop, func) {
@@ -143,7 +145,7 @@ _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 	/**
 	 * Adds a setter for the property
 	 * @param  {String}   prop
-	 * @param  {Function} func <code>{*} function({*} value)</code>
+	 * @param  {Function} func
 	 * @return {Storm.Model}
 	 */
 	setter: function(prop, func) {
@@ -193,7 +195,7 @@ _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 
 	/**
 	 * Sets the value of a property in the Model. Values can be set
-	 * in key-value pairs in an object, or as string + value as
+	 * in key-value pairs in an object, or as string/value as
 	 * separate parameters
 	 * @param {String|Object} prop
 	 * @param {*} data
@@ -259,7 +261,7 @@ _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 
 	/**
 	 * Removes properties from the model data. Only works to remove
-	 * data the pre-exists in the data. No remove event will be fired
+	 * items that pre-exist in the data. No remove event will be fired
 	 * if the property has an undefined value. An array can be passed
 	 * to remove multiple properties or a string as a single parameter
 	 * @param {String|Array.<String>} prop
@@ -327,12 +329,12 @@ _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 	 * If not supporting complex data types (default), _duplicate
 	 * creates a reference-free version of the data passed
 	 * using native JSON.parse and JSON.stringify.
-	 *
+	 * 
 	 * If supporting complex data types, underscore's _.clone
 	 * method is used, which will not create a reference-free
 	 * version of complex data types, which may lead to pollution
 	 * of the data, but will allow non-primitive values
-	 *
+	 * 
 	 * @param  {*} data
 	 * @return {*}
 	 * @private
@@ -422,7 +424,7 @@ _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 
 	/**
 	 * Compares this model to another. Used by Collection for
-	 * sorting. Checks for Storm.Comparator to use natively but
+	 * sorting. Checks for `Storm.Comparator` to use natively but
 	 * can be overwritten
 	 * @param  {Storm.Model} comparisonModel
 	 * @return {Number} sort order (1, 0, -1)

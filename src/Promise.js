@@ -38,7 +38,7 @@ var _PROMISE = 'Promise',
 
 /**
  * A lightweight implementation of promises.
- * API based on jQuery.promise: https://api.jquery.com/promise/
+ * API based on {@link https://api.jquery.com/promise/ jQuery.promises}
  * @class Storm.Promise
  */
 var Promise = Storm.Promise = function() {
