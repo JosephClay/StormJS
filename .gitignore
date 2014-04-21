@@ -13,4 +13,5 @@ doc
 results
 
 npm-debug.log
+jsdoc.conf.json
 node_modules
