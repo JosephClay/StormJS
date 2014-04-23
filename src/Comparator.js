@@ -134,7 +134,7 @@ Comparator.prototype = /** @lends Storm.Comparator# */ {
 	 * @return {Storm.Comparator}
 	 */
 	invalidateSortValue: function(model) {
-		delete this.store[model.getId()];
+		delete _store[model.getId()];
 		return this;
 	},
 
