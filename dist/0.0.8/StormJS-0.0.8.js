@@ -1,4 +1,4 @@
-/*! Storm.JS - v0.0.8 - 2014-04-21
+/*! Storm.JS - v0.0.8 - 2014-05-28
  * https://github.com/JosephClay/StormJS
  * Copyright (c) 2012-2014 Joe Clay; Licensed  */
 (function(root, _, Signal, undefined) {
@@ -1747,7 +1747,7 @@ var Model = Storm.Model = function(data, opts) {
 		 * If there's a Comparator, then bind it to this model
 		 * @type {Storm.Comparator}
 		 */
-		this.comparator = _.bind(this.comparator, this);
+		this.comparator.bind(this);
 	}
 };
 
@@ -1758,12 +1758,12 @@ _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 	 * If not supporting complex data types (default), the model
 	 * creates a reference-free version of the data to keep the
 	 * data from being contaminated.
-	 * 
+	 *
 	 * If supporting complex data types, non-primitive values
 	 * will be maintained in the model data, but exposes the
 	 * possibility of contaminating the data object by outside
 	 * sources
-	 * 
+	 *
 	 * @type {Boolean}
 	 * @default false
 	 */
@@ -2006,12 +2006,12 @@ _.extend(Model.prototype, Events.prototype, /** @lends Storm.Model# */ {
 	 * If not supporting complex data types (default), _duplicate
 	 * creates a reference-free version of the data passed
 	 * using native JSON.parse and JSON.stringify.
-	 * 
+	 *
 	 * If supporting complex data types, underscore's _.clone
 	 * method is used, which will not create a reference-free
 	 * version of complex data types, which may lead to pollution
 	 * of the data, but will allow non-primitive values
-	 * 
+	 *
 	 * @param  {*} data
 	 * @return {*}
 	 * @private
@@ -2310,7 +2310,7 @@ Comparator.prototype = /** @lends Storm.Comparator# */ {
 	 * @return {Storm.Comparator}
 	 */
 	invalidateSortValue: function(model) {
-		delete this.store[model.getId()];
+		delete _store[model.getId()];
 		return this;
 	},
 
