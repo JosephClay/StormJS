@@ -54,12 +54,6 @@ Storm.tick = (function() {
 		 */
 	var _TICK = 'tick',
 		/**
-		 * Stores the index of loop functions
-		 * @type {Object}
-		 * @private
-		 */
-		_hooks = {},
-		/**
 		 * Our event object (for reuse)
 		 * @type {Object}
 		 */
@@ -124,8 +118,7 @@ Storm.tick = (function() {
 				return console.error(_errorMessage(_TICK, 'Parameter must be a function'), func);
 			}
 
-			var id = _uniqId(_TICK);
-			_hooks[id] = _loop.length;
+			func.__hook__ = _uniqId(_TICK);
 			_loop.push(func);
 			return id;
 		},
@@ -136,8 +129,21 @@ Storm.tick = (function() {
 		 * @return {Storm.tick}
 		 */
 		unhook: function(id) {
-			_loop.splice(_hooks[id], 1);
-			delete _hooks[id];
+			// Quick indexOf check based
+			// on the loop function __hook__
+			var index = -1,
+				idx = _loop.length;
+			while (idx--) {
+				if (_loop[idx].__hook__ === id) {
+					index = idx;
+					break;
+				}
+			}
+
+			// id wasn't in the loop ;()
+			if (index === -1) { return this; }
+
+			_loop.splice(index, 1);
 			return this;
 		},
 
