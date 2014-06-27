@@ -2,7 +2,7 @@
   "name": "StormJS",
   "title": "Storm.JS",
   "description": "Client-side MVC framework inspired by Backbone",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "homepage": "https://github.com/JosephClay/StormJS",
   "author": {
     "name": "Joe Clay",
