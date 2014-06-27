@@ -1,4 +1,4 @@
-/*! Storm.JS - v0.0.8 - 2014-05-28
+/*! Storm.JS - v0.0.8 - 2014-06-27
  * https://github.com/JosephClay/StormJS
  * Copyright (c) 2012-2014 Joe Clay; Licensed  */
 (function(root, _, Signal, undefined) {
@@ -741,12 +741,6 @@ Storm.tick = (function() {
 		 */
 	var _TICK = 'tick',
 		/**
-		 * Stores the index of loop functions
-		 * @type {Object}
-		 * @private
-		 */
-		_hooks = {},
-		/**
 		 * Our event object (for reuse)
 		 * @type {Object}
 		 */
@@ -811,8 +805,7 @@ Storm.tick = (function() {
 				return console.error(_errorMessage(_TICK, 'Parameter must be a function'), func);
 			}
 
-			var id = _uniqId(_TICK);
-			_hooks[id] = _loop.length;
+			func.__hook__ = _uniqId(_TICK);
 			_loop.push(func);
 			return id;
 		},
@@ -823,8 +816,21 @@ Storm.tick = (function() {
 		 * @return {Storm.tick}
 		 */
 		unhook: function(id) {
-			_loop.splice(_hooks[id], 1);
-			delete _hooks[id];
+			// Quick indexOf check based
+			// on the loop function __hook__
+			var index = -1,
+				idx = _loop.length;
+			while (idx--) {
+				if (_loop[idx].__hook__ === id) {
+					index = idx;
+					break;
+				}
+			}
+
+			// id wasn't in the loop ;()
+			if (index === -1) { return this; }
+
+			_loop.splice(index, 1);
 			return this;
 		},
 
@@ -3248,6 +3254,13 @@ Storm.cache = new Cache();
 	 */
 var _STORAGE = 'Storage',
 	/**
+	 * Stores timeouts for all
+	 * instaces of Storage
+	 * @type {Object}
+	 * @private
+	 */
+	_timeouts = {},
+	/**
 	 * The storage type: local or session
 	 * @readonly
 	 * @enum {Number}
@@ -3396,16 +3409,24 @@ Storage.prototype = /** @lends Storm.Storage# */ {
 	 * Adds to data
 	 * @param {String|Object} key
 	 * @param {*|undefined} value
+	 * @param {Object} [opts] for setting the expiration
 	 */
-	setItem: function(key, value) {
+	setItem: function(key, value, opts) {
 		// Not a string, must be an object,
 		// multiple items are being set
 		if (!_.isString(key)) {
 			var k;
 			for (k in key) {
-				this.setItem(k, key[k]);
+				this.setItem(k, key[k], opts);
 			}
 			return;
+		}
+
+		// Expiration
+		if (opts) {
+			if (_exists(opts.expiration)) {
+				this._setExpiration(key, opts.expiration || 0);
+			}
 		}
 
 		if (this.hasStorage) {
@@ -3418,6 +3439,7 @@ Storage.prototype = /** @lends Storm.Storage# */ {
 		this.length++;
 		this._setCookieData();
 	},
+
 	/**
 	 * Proxy for setItem
 	 * @alias {#setItem}
@@ -3428,6 +3450,18 @@ Storage.prototype = /** @lends Storm.Storage# */ {
 	 * @alias {#setItem}
 	 */
 	set: function() { this.setItem.apply(this, arguments); },
+
+	/**
+	 * Remove all data in storage
+	 * @return {Storm.Storage}
+	 */
+	flush: function() {
+		var key;
+		for (key in this.data) {
+		   this.removeItem(key);
+		}
+		return this;
+	},
 
 	/**
 	 * Remove an item from storage by key
@@ -3527,6 +3561,24 @@ Storage.prototype = /** @lends Storm.Storage# */ {
 	_getData: function() {
 		var data = (this.hasStorage) ? null : this._readCookie();
 		return (data) ? JSON.parse(data) : {};
+	},
+
+	/**
+	 * Removes data from a key after an interval
+	 * @param {String} key
+	 * @param {Number} duration
+	 * @private
+	 */
+	_setExpiration: function(key, duration) {
+		var self = this,
+			timeoutKey = this._id + key;
+
+		if (_timeouts[timeoutKey]) { clearTimeout(_timeouts[timeoutKey]); }
+
+		_timeouts[timeoutKey] = setTimeout(function() {
+			self.removeItem(key);
+			delete _timeouts[timeoutKey];
+		}, duration);
 	},
 
 	/**
