@@ -171,7 +171,7 @@ Storage.prototype = /** @lends Storm.Storage# */ {
 		if (!_.isString(key)) {
 			var k;
 			for (k in key) {
-				this.setItem(k, key[k], opts);
+				this.setItem(k, key[k], value);
 			}
 			return;
 		}
