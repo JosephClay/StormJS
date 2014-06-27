@@ -206,6 +206,18 @@ Storage.prototype = /** @lends Storm.Storage# */ {
 	set: function() { this.setItem.apply(this, arguments); },
 
 	/**
+	 * Remove all data in storage
+	 * @return {Storm.Storage}
+	 */
+	flush: function() {
+		var key;
+		for (key in this.data) {
+		   this.removeItem(key);
+		}
+		return this;
+	},
+
+	/**
 	 * Remove an item from storage by key
 	 * @param {String} key
 	 * @returns {*}
