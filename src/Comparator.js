@@ -29,14 +29,17 @@ var _COMPARATOR = 'Comparator',
 	/**
 	 * Add a sort type to the _SORT object
 	 * @param {String} type
+	 * @param {Function} fn comparator
 	 */
-	_addSort = function(type) {
+	_addSort = function(type, fn) {
 		// The type has already been defined
 		if (type in _SORT) { return; }
 
 		// Using _.size ensures a unique id
 		// for the type passed
 		_SORT[type] = _.size(_SORT);
+
+		Comparator.prototype[type] = fn || _noop;
 	},
 
 	/**
