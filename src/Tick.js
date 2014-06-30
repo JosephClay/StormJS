@@ -118,7 +118,8 @@ Storm.tick = (function() {
 				return console.error(_errorMessage(_TICK, 'Parameter must be a function'), func);
 			}
 
-			func.__hook__ = _uniqId(_TICK);
+			var id = _uniqId(_TICK);
+			func.__hook__ = id;
 			_loop.push(func);
 			return id;
 		},

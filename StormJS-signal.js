@@ -1,4 +1,4 @@
-/*! Storm.JS - v0.0.9 - 2014-06-27
+/*! Storm.JS - v0.0.9 - 2014-06-30
  * https://github.com/JosephClay/StormJS
  * Copyright (c) 2012-2014 Joe Clay; Licensed  */
 (function(root, undefined) {
@@ -1143,7 +1143,8 @@ Storm.tick = (function() {
 				return console.error(_errorMessage(_TICK, 'Parameter must be a function'), func);
 			}
 
-			func.__hook__ = _uniqId(_TICK);
+			var id = _uniqId(_TICK);
+			func.__hook__ = id;
 			_loop.push(func);
 			return id;
 		},
